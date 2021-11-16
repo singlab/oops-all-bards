@@ -5,10 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class BaseItem
 {
-    private string name { get; set; }
-    private string description { get; set; }
-    private ItemTypes type { get; set; }
-    private int value { get; set; }
+    public string name { get; set; }
+    public string description { get; set; }
+    public ItemTypes type { get; set; }
+    public int value { get; set; }
 
     public enum ItemTypes
     {

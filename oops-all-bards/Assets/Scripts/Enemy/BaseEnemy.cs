@@ -5,6 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class BaseEnemy
 {
-    private string name { get; set; }
-    private BaseClass enemyClass { get; set; }
+    public string name { get; set; }
+    public BaseClass enemyClass { get; set; }
+
+    public BaseEnemy(string name, BaseClass enemyClass)
+    {
+        this.name = name;
+        this.enemyClass = enemyClass;
+    }
 }

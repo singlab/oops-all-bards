@@ -7,11 +7,11 @@ using System;
 public class BaseClass 
 {
 
-	private string name { get; set; }
-	private string description { get; set; }
-	private ClassTypes type { get; set; }
-	private List<BaseStat> stats { get; set; } = new List<BaseStat>();
-	private List<BaseAbility> abilities { get; set; } = new List<BaseAbility>();
+	public string name { get; set; }
+	public string description { get; set; }
+	public ClassTypes type { get; set; }
+	public List<BaseStat> stats { get; set; } = new List<BaseStat>();
+	public List<BaseAbility> abilities { get; set; } = new List<BaseAbility>();
 
 	public enum ClassTypes
 	{
@@ -19,5 +19,14 @@ public class BaseClass
 		MUSICIAN,
 		SKALD,
 		SIREN
+	}
+
+	public BaseClass(string name, string desc, ClassTypes type, List<BaseStat> stats, List<BaseAbility> abilities) 
+	{
+		this.name = name;
+		this.description = desc;
+		this.type = type;
+		this.stats = stats;
+		this.abilities = abilities;
 	}
 }

@@ -5,11 +5,22 @@ using UnityEngine;
 [System.Serializable]
 public class BasePlayer
 {
-    private string name { get; set; }
-    private BaseClass playerClass { get; set; }
-    private List<BaseStat> playerStats { get; set; } = new List<BaseStat>();
-    private int fame { get; set; }
-	private int gold { get; set; }
-    private List<BaseItem> equipment { get; set; } = new List<BaseItem>();
-	private List<BaseItem> inventory { get; set; } = new List<BaseItem>();
+    public string name { get; set; }
+    public BaseClass playerClass { get; set; }
+    public List<BaseStat> playerStats { get; set; } = new List<BaseStat>();
+    public int fame { get; set; }
+	public int gold { get; set; }
+    public List<BaseItem> equipment { get; set; } = new List<BaseItem>();
+	public List<BaseItem> inventory { get; set; } = new List<BaseItem>();
+
+    public BasePlayer(string name, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory)
+    {
+        this.name = name;
+        this.playerClass = playerClass;
+        this.playerStats = playerStats;
+        this.fame = fame;
+        this.gold = gold;
+        this.equipment = equipment;
+        this.inventory = inventory;
+    }
 }
