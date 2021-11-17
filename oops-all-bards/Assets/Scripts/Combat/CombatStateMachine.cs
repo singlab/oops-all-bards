@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CombatStateMachine : MonoBehaviour
 {
+    // What if, stateless state machine? I.e. phase-based queueing of actions so that we can strategically insert things into the action queue.
+    
     // 1. Start/Init
     // 2. Determine turn order based on all actors' Tempo stat
     // BEGIN LOOP
@@ -16,7 +18,9 @@ public class CombatStateMachine : MonoBehaviour
     //              notes: Could do small symbol set ("peril" or "not") and use ABL to begin GetOutOfPeril routine?
     //      b. Await player input
     //          i. If attacking: Call to ABL - Check for opportunities of assistance from party/audience (e.g. high affinity, low enemy health)
-    //      c. Call to CiF - Compare chosen action to expected action for party members under stress and adjust affinity between stressed char and controlled char
+    //          ii. If defending: ...
+    //          iii. If using item: ...
+    //      c. Call to CiF/ABL - Compare chosen action to expected action for party members under stress and adjust affinity between stressed char and controlled char
     //      d. Action effect changes -- calculate damage/modify stats
     //      e. End turn, change turn owner
     // 7. If enemy turn:
@@ -30,7 +34,7 @@ public class CombatStateMachine : MonoBehaviour
     // 2. Enemy health
     // 3. Party member affinities (currently controlled character vs. others)
 
-    // What ABL actions do we need for the above to actually work?
+    // What ABL actions do we need for the above to actually work? some are pure response, some are combos, each will have a slightly diff. abl incarnation
     // 1. AssistAttack
     // 2. AssistDefend
     // 3. Attack

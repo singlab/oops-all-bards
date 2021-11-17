@@ -48,6 +48,10 @@ public class DemoManager : MonoBehaviour
 
         // Render the UI.
         RenderUI();
+
+        // Debug player objects.
+        DebugPlayer(player);
+        DebugPlayer(ally);
     }
 
     // A function that returns a class based on class type. Only for demo use.
