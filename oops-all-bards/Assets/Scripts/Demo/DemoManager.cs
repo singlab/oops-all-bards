@@ -15,8 +15,13 @@ public class DemoManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cm = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+        // Subscribe to events that the demo manager should be aware of.
+        SubscribeToEvents();
+        // Setup party and enemies for demo.
         GatherParty();
+        // Get reference to CombatManager.
+        cm = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+        // Have CombatManager init combat with preselected party/enemies above.
         cm.InitCombatQueue(party, enemies);
     }
 
@@ -107,5 +112,19 @@ public class DemoManager : MonoBehaviour
         {
             Debug.Log(ability.name + " " + ability.damage + " " + ability.cost);
         }
+    }
+
+    // A function that uses the event management system to subscribe to events used in this manager.
+    private void SubscribeToEvents()
+    {
+        // Listen to player input flags.
+        EventManager.Instance.SubscribeToEvent(EventType.AwaitPlayerInput, AwaitPlayerInput);
+    }
+
+    // A function that enables player input when it is the player's turn in the combat queue.
+    private void AwaitPlayerInput()
+    {
+        Debug.Log("Awaiting player input...");
+        
     }
 }
