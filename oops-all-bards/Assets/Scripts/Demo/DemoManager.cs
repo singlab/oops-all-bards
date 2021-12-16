@@ -9,27 +9,15 @@ public class DemoManager : MonoBehaviour
     List<BasePlayer> party = new List<BasePlayer>();
     // A reference to the enemies.
     List<BaseEnemy> enemies = new List<BaseEnemy>();
-    // A reference to the stage.
-    GameObject stage;
-    // A reference to the display area.
-    GameObject display;
-    // A reference to the gameobject queue.
-    GameObject queueableContainer;
-    // A reference to the queueable gameobject prefab.
-    public GameObject goQueueable;
-    // A reference to the combat queue.
-    CombatQueue combatQueue;
+    // A reference to the CombatManager.
+    CombatManager cm;
 
     // Start is called before the first frame update
     void Start()
     {
-        stage = GameObject.Find("Stage");
-        display = GameObject.Find("Display");
-        queueableContainer = GameObject.Find("CombatQueue");
-
-        stage.SetActive(false);
-        display.SetActive(false);
-        queueableContainer.SetActive(false);
+        cm = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+        GatherParty();
+        cm.InitCombatQueue(party, enemies);
     }
 
     // Update is called once per frame
@@ -39,7 +27,7 @@ public class DemoManager : MonoBehaviour
     }
 
     // A function that initializes the demo with all actors and starting values.
-    public void InitDemo()
+    public void GatherParty()
     {
         // Init player and ally.
         BaseClass playerClass = CreatePlayerClass(BaseClass.ClassTypes.SKALD);
@@ -53,12 +41,6 @@ public class DemoManager : MonoBehaviour
         enemies.Add(enemy);
         enemy = new BaseEnemy("Enemy 2", playerClass);
         enemies.Add(enemy);
-
-        // Render the UI.
-        RenderUI();
-
-        // Initialize the combat queue.
-        InitCombatQueue();
     }
 
     // A function that returns a class based on class type. Only for demo use.
@@ -125,37 +107,5 @@ public class DemoManager : MonoBehaviour
         {
             Debug.Log(ability.name + " " + ability.damage + " " + ability.cost);
         }
-    }
-
-    // A function used to render all UI elements for the demo.
-    private void RenderUI()
-    {
-        // Disable the init button.
-        GameObject.Find("InitButton").SetActive(false);
-
-        // Render the placeholder stage and queueable container.
-        stage.SetActive(true);
-        queueableContainer.SetActive(true);
-    }
-
-    // A function used to initialize the combat queue.
-    private void InitCombatQueue()
-    {
-        // Clean up for new combat scenario.
-        combatQueue = new CombatQueue();
-        combatQueue.Clear();
-        // Add standard functions for start, player input, enemy AI, and end.
-        PushAndCreateCombatQueueable(new CombatStart());
-        PushAndCreateCombatQueueable(new PlayerTurn(party[0]));
-        PushAndCreateCombatQueueable(new EnemyTurn(enemies[0]));
-    }
-
-    // A function used to push a CombatQueueable to the CombatQueue and create associated gameobject.
-    private void PushAndCreateCombatQueueable(ICombatQueueable queueable)
-    {
-        // Push the queueable to the CombatQueue.
-        combatQueue.Push(queueable);
-        // Create gameobject and set container as parent.
-        Instantiate(goQueueable, queueableContainer.transform.GetChild(0).transform);
     }
 }
