@@ -15,7 +15,7 @@ public class CombatManager : MonoBehaviour
     // A reference to the queueable gameobject prefab.
     public GameObject goQueueable;
     // A reference to the combat queue.
-    CombatQueue combatQueue;
+    public CombatQueue combatQueue;
 
     void Awake()
     {
@@ -67,6 +67,8 @@ public class CombatManager : MonoBehaviour
         PushAndCreateCombatQueueable(new CombatStart());
         PushAndCreateCombatQueueable(new PlayerTurn(party[0]));
         PushAndCreateCombatQueueable(new EnemyTurn(enemies[0]));
+        // Flag the DemoManager to begin checking queue.
+        EventManager.Instance.InvokeEvent(EventType.CombatStart, null);
     }
 
     // A function used to push a CombatQueueable to the CombatQueue and create associated gameobject.

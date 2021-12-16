@@ -22,8 +22,13 @@ public class CombatQueue
         this.queue.Enqueue(queueable);
     }
 
-    public void Pop()
+    public ICombatQueueable Pop()
     {
-        this.queue.Dequeue();
+        return this.queue.Dequeue();
+    }
+
+    public bool IsEmpty()
+    {  
+        return this.queue.Count == 0 ? true : false;
     }
 }

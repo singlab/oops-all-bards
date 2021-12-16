@@ -117,14 +117,23 @@ public class DemoManager : MonoBehaviour
     // A function that uses the event management system to subscribe to events used in this manager.
     private void SubscribeToEvents()
     {
-        // Listen to player input flags.
+        EventManager.Instance.SubscribeToEvent(EventType.CombatStart, CheckQueue);
         EventManager.Instance.SubscribeToEvent(EventType.AwaitPlayerInput, AwaitPlayerInput);
+    }
+
+    private void CheckQueue()
+    {
+        if (!cm.combatQueue.IsEmpty())
+        {
+            ICombatQueueable cq = cm.combatQueue.Pop();
+            cq.Execute();
+        }
     }
 
     // A function that enables player input when it is the player's turn in the combat queue.
     private void AwaitPlayerInput()
     {
         Debug.Log("Awaiting player input...");
-        
+
     }
 }

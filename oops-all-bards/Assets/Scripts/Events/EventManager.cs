@@ -5,6 +5,7 @@ using System;
 
 public enum EventType 
 {
+    CombatStart,
     AwaitPlayerInput,    
 };
 
