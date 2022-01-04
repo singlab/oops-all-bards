@@ -5,8 +5,8 @@ using System;
 
 public enum EventType 
 {
-    CombatStart,
-    AwaitPlayerInput,    
+    CheckQueue,
+    AwaitPlayerInput, // pass int id of acting character    
 };
 
 /// <summary>

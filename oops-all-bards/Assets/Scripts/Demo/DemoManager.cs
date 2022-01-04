@@ -36,15 +36,15 @@ public class DemoManager : MonoBehaviour
     {
         // Init player and ally.
         BaseClass playerClass = CreatePlayerClass(BaseClass.ClassTypes.SKALD);
-        BasePlayer player = new BasePlayer("Player", playerClass, playerClass.stats, 0, 0, null, null);
-        BasePlayer ally = new BasePlayer("Ally", playerClass, playerClass.stats, 0, 0, null, null);
+        BasePlayer player = new BasePlayer("Player", 20, playerClass, playerClass.stats, 0, 0, null, null);
+        BasePlayer ally = new BasePlayer("Ally", 20, playerClass, playerClass.stats, 0, 0, null, null);
         party.Add(player);
         party.Add(ally);
 
         // Init enemies.
-        BaseEnemy enemy = new BaseEnemy("Enemy 1", playerClass);
+        BaseEnemy enemy = new BaseEnemy("Enemy1", playerClass);
         enemies.Add(enemy);
-        enemy = new BaseEnemy("Enemy 2", playerClass);
+        enemy = new BaseEnemy("Enemy2", playerClass);
         enemies.Add(enemy);
     }
 
@@ -117,11 +117,11 @@ public class DemoManager : MonoBehaviour
     // A function that uses the event management system to subscribe to events used in this manager.
     private void SubscribeToEvents()
     {
-        EventManager.Instance.SubscribeToEvent(EventType.CombatStart, CheckQueue);
+        EventManager.Instance.SubscribeToEvent(EventType.CheckQueue, CheckQueue);
         EventManager.Instance.SubscribeToEvent(EventType.AwaitPlayerInput, AwaitPlayerInput);
     }
 
-    private void CheckQueue()
+    public void CheckQueue()
     {
         if (!cm.combatQueue.IsEmpty())
         {
