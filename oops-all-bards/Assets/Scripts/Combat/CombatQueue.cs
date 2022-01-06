@@ -22,6 +22,17 @@ public class CombatQueue
         this.queue.Enqueue(queueable);
     }
 
+    public void PriorityPush(ICombatQueueable queueable)
+    {
+        ICombatQueueable[] items = this.queue.ToArray();
+        this.queue.Clear();
+        this.queue.Enqueue(queueable);
+        foreach (ICombatQueueable item in items) 
+        {
+            this.queue.Enqueue(item);
+        }
+    }
+
     public ICombatQueueable Pop()
     {
         return this.queue.Dequeue();

@@ -13,10 +13,20 @@ public class CombatManager : MonoBehaviour
     GameObject display;
     // A reference to the gameobject queue.
     GameObject queueableContainer;
+    // A reference to the target menu.
+    GameObject targetMenu;
     // A reference to the queueable gameobject prefab.
     public GameObject goQueueable;
+    // A reference to the target button prefab.
+    public GameObject targetButton;
     // A reference to the combat queue.
     public CombatQueue combatQueue;
+    // A reference to the player party.
+    List<BasePlayer> party = new List<BasePlayer>();
+    // A reference to the enemies.
+    List<BaseEnemy> enemies = new List<BaseEnemy>();
+    // A reference to a target name, if any.
+    string target = null;
     public static CombatManager Instance => CombatManager._instance;
 
     void Awake()
@@ -36,6 +46,7 @@ public class CombatManager : MonoBehaviour
         stage = GameObject.Find("Stage");
         display = GameObject.Find("Display");
         queueableContainer = GameObject.Find("CombatQueue");
+        targetMenu = GameObject.Find("TargetMenu");
 
         stage.SetActive(false);
         display.SetActive(false);
@@ -81,14 +92,22 @@ public class CombatManager : MonoBehaviour
         // TODO: This is pretty hacky, should probably go by number of abilities available to player and then make button prefabs/place them in menu.
         for (int i = 1; i < 4; i++)
         {
-            GameObject abilityButton = GameObject.Find("Ability" + i + "Text");
-            abilityButton.GetComponent<Text>().text = actingCharacter.playerClass.abilities[i-1].name;
+            // Update the button text.
+            GameObject abilityButton = GameObject.Find("Ability" + i);
+            BaseAbility currentAbility = actingCharacter.playerClass.abilities[i-1];
+            abilityButton.GetComponentInChildren<Text>().text = currentAbility.name;
+            // Add on click functions to the buttons to create a PlayerAction queueable.
+            abilityButton.GetComponent<Button>().onClick.AddListener(() => 
+                {StartCoroutine(SelectTarget(currentAbility, actingCharacter));});
         }
     }
 
     // A function used to initialize the combat queue.
     public void InitCombatQueue(List<BasePlayer> party, List<BaseEnemy> enemies)
     {
+        // Set private references to party and enemies.
+        this.party = party;
+        this.enemies = enemies;
         // Clean up for new combat scenario.
         combatQueue = new CombatQueue();
         combatQueue.Clear();
@@ -97,11 +116,27 @@ public class CombatManager : MonoBehaviour
         foreach (BasePlayer p in party)
         {
             PushAndCreateCombatQueueable(new PlayerTurn(p));
+            // TODO: This needs to go elsewhere, preferably somewhere that has access to party and enemy lists.
+            // Populate the target menu with buttons for each player character/enemy.
+            GameObject toInstantiate = Instantiate(targetButton, targetMenu.transform.GetChild(0).transform.GetChild(0).transform);
+            toInstantiate.GetComponentInChildren<Text>().text = p.name;
+            toInstantiate.GetComponent<Button>().onClick.AddListener(() => {
+                target = p.name;
+            });
         }
         foreach (BaseEnemy e in enemies)
         {
             PushAndCreateCombatQueueable(new EnemyTurn(e));
+            // TODO: This needs to go elsewhere, preferably somewhere that has access to party and enemy lists.
+            // Populate the target menu with buttons for each player character/enemy.
+            GameObject toInstantiate = Instantiate(targetButton, targetMenu.transform.GetChild(0).transform.GetChild(0).transform);
+            toInstantiate.GetComponentInChildren<Text>().text = e.name;
+            toInstantiate.GetComponent<Button>().onClick.AddListener(() => {
+                target = e.name;
+            });
         }
+        // Hide the targetMenu.
+        targetMenu.SetActive(false);
         // Flag the DemoManager to begin checking queue.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
@@ -113,5 +148,42 @@ public class CombatManager : MonoBehaviour
         combatQueue.Push(queueable);
         // Create gameobject and set container as parent.
         Instantiate(goQueueable, queueableContainer.transform.GetChild(0).transform);
+    }
+
+    // A coroutine used to open the target menu after clicking on an ability button. Waits until target
+    // is selected, closes target menu, and then creates a PlayerAction.
+    IEnumerator SelectTarget(BaseAbility ability, BasePlayer actingCharacter)
+    {
+        ITargetable targetable = null;
+        targetMenu.SetActive(true);
+        target = null;
+        while (target == null) { yield return null; }
+        foreach (BasePlayer p in party)
+        {
+            if (target == p.name)
+            {
+                targetable = p;
+            }
+        }
+        foreach (BaseEnemy e in enemies)
+        {
+            if (target == e.name)
+            {
+                targetable = e;
+            }
+        }
+        AddPlayerAction(ability, actingCharacter, targetable);
+    }
+
+    // A function used to create a PlayerAction queueable and push it to the front of the queue.
+    public void AddPlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)
+    {
+        Debug.Log("Adding player action...");
+        // Create the PlayerAction queueable object for each ability.
+        PlayerAction action = new PlayerAction(ability, actingCharacter, target);
+        // Push the PlayerAction to the front of the queue.
+        combatQueue.PriorityPush(action);
+        // Tell DemoManager to check the queue and complete the action.
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
 }

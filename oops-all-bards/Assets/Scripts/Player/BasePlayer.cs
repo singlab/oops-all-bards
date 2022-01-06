@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class BasePlayer
+public class BasePlayer : ITargetable
 {
-    public string name { get; set; }
+    public override string name { get; set; }
     public int health { get; set; }
     public BaseClass playerClass { get; set; }
     public List<BaseStat> playerStats { get; set; } = new List<BaseStat>();

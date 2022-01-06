@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class BaseEnemy
+public class BaseEnemy : ITargetable
 {
-    public string name { get; set; }
+    public override string name { get; set; }
     public BaseClass enemyClass { get; set; }
 
     public BaseEnemy(string name, BaseClass enemyClass)
