@@ -51,12 +51,19 @@ public class CombatManager : MonoBehaviour
         stage.SetActive(false);
         display.SetActive(false);
         queueableContainer.SetActive(false);
+        SubscribeToEvents();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    // A function that uses the event management system to subscribe to events used in this manager.
+    private void SubscribeToEvents()
+    {
+        EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, TakeEnemyAction);
     }
 
     // A function used to render all UI elements for the demo.
@@ -77,6 +84,7 @@ public class CombatManager : MonoBehaviour
         Debug.Log("Rendering input menu for " + actingCharacter.name + " now.");
         display.SetActive(true);
         GameObject activeMenu = display.transform.Find(actingCharacter.name + "Info").gameObject;
+        activeMenu.SetActive(true);
         foreach (Transform child in display.transform)
         {
             if (child.gameObject.name != activeMenu.name)
@@ -85,15 +93,15 @@ public class CombatManager : MonoBehaviour
             }
         }
         // Fill in the name, health, and ability names of the acting character.
-        GameObject nameplate = GameObject.Find("Name");
+        GameObject nameplate = activeMenu.transform.GetChild(0).GetChild(0).Find("Name").gameObject;
         nameplate.GetComponent<Text>().text = actingCharacter.name;
-        GameObject health = GameObject.Find("Health");
+        GameObject health = activeMenu.transform.GetChild(0).GetChild(0).Find("Health").gameObject;
         health.GetComponent<Text>().text += actingCharacter.health.ToString();
         // TODO: This is pretty hacky, should probably go by number of abilities available to player and then make button prefabs/place them in menu.
         for (int i = 1; i < 4; i++)
         {
             // Update the button text.
-            GameObject abilityButton = GameObject.Find("Ability" + i);
+            GameObject abilityButton = activeMenu.transform.GetChild(0).GetChild(0).Find("Ability" + i).gameObject;
             BaseAbility currentAbility = actingCharacter.playerClass.abilities[i-1];
             abilityButton.GetComponentInChildren<Text>().text = currentAbility.name;
             // Add on click functions to the buttons to create a PlayerAction queueable.
@@ -173,6 +181,7 @@ public class CombatManager : MonoBehaviour
             }
         }
         AddPlayerAction(ability, actingCharacter, targetable);
+        targetMenu.SetActive(false);
     }
 
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
@@ -185,5 +194,50 @@ public class CombatManager : MonoBehaviour
         combatQueue.PriorityPush(action);
         // Tell DemoManager to check the queue and complete the action.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+    }
+
+    // A function used to resolve/apply effects of a PlayerAction queueable.
+    public void ResolvePlayerAction(PlayerAction action)
+    {
+        // TODO: Add flourish points/action economy. Remove the cost of ability in all cases.
+        // action.actingCharacter.flourish -= action.ability.cost;
+        if (action.ability.combatType == BaseAbility.CombatAbilityTypes.ATTACK)
+        {
+            action.target.health -= action.ability.damage;
+            Debug.Log(action.actingCharacter.name + " deals " + action.ability.damage + " damage to " + action.target.name + ".");
+        }
+        if (action.ability.combatType == BaseAbility.CombatAbilityTypes.HEAL)
+        {
+            action.target.health += action.ability.damage;
+            Debug.Log(action.actingCharacter.name + " heals " + action.target.name + " for " + action.ability.damage + " health!" );
+        }
+        if (action.ability.combatType == BaseAbility.CombatAbilityTypes.DEFEND)
+        {
+            action.target.shield += action.ability.damage;
+            Debug.Log(action.actingCharacter.name + " is shielding " + action.target.name + " for " + action.ability.damage + " damage." );
+        }
+        // TODO: Update the UI to reflect new values.
+        // Tell DemoManager to check the queue and continue to next turn.
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+    }
+
+    // A function used to calculate and push enemy actions to the queue.
+    public void TakeEnemyAction()
+    {
+        display.SetActive(false);
+        Debug.Log("Calculating enemy action...");
+        BaseEnemy actingCharacter = (BaseEnemy)EventManager.Instance.EventData;
+        
+        // TODO: This AI is very simple. Should change to be more interesting.
+        // Choose random party member and use Attack ability.
+        BasePlayer target = party[Random.Range(0, party.Count)];
+        BaseAbility ability = actingCharacter.enemyClass.abilities[0];
+
+        // Apply effects of ability and log the outcome.
+        target.health -= ability.damage;
+        Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+
+        // Tell DemoManager to check the queue and continue to next turn.
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
     }
 }

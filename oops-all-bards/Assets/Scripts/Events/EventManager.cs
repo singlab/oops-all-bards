@@ -6,7 +6,8 @@ using System;
 public enum EventType 
 {
     CheckQueue,
-    AwaitPlayerInput, // pass int id of acting character    
+    AwaitPlayerInput, // pass BasePlayer object
+    EnemyAI // pass BaseEnemy object    
 };
 
 /// <summary>

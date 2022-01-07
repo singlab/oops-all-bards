@@ -6,4 +6,6 @@ using UnityEngine;
 public class ITargetable
 {
     public virtual string name { get; set; }
+    public virtual int health { get; set; }
+    public virtual int shield { get; set; }
 }

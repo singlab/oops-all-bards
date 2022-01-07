@@ -8,7 +8,7 @@ public class EnemyTurn : MonoBehaviour, ICombatQueueable
     public BaseEnemy actingCharacter { get; set; }
     public void Execute()
     {
-        Debug.Log("Waiting for player input...");
+        EventManager.Instance.InvokeEvent(EventType.EnemyAI, actingCharacter);
         Debug.Log("It is currently " + actingCharacter.name + "'s turn.");
     }
 

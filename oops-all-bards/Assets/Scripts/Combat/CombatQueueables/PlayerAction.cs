@@ -11,6 +11,7 @@ public class PlayerAction : MonoBehaviour, ICombatQueueable
     public void Execute()
     {
         Debug.Log("Executing " + actingCharacter.name + "'s " + ability.name + " action on " + target.name + ".");
+        CombatManager.Instance.ResolvePlayerAction(this);
         done = true;
     }
 
