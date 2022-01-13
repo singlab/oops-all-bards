@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class CombatManager : MonoBehaviour
 {
@@ -205,6 +206,7 @@ public class CombatManager : MonoBehaviour
         {
             action.target.health -= action.ability.damage;
             Debug.Log(action.actingCharacter.name + " deals " + action.ability.damage + " damage to " + action.target.name + ".");
+            CheckCombatantsHealth(action.target);
         }
         if (action.ability.combatType == BaseAbility.CombatAbilityTypes.HEAL)
         {
@@ -217,6 +219,7 @@ public class CombatManager : MonoBehaviour
             Debug.Log(action.actingCharacter.name + " is shielding " + action.target.name + " for " + action.ability.damage + " damage." );
         }
         // TODO: Update the UI to reflect new values.
+
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
@@ -230,7 +233,7 @@ public class CombatManager : MonoBehaviour
         
         // TODO: This AI is very simple. Should change to be more interesting.
         // Choose random party member and use Attack ability.
-        BasePlayer target = party[Random.Range(0, party.Count)];
+        BasePlayer target = party[UnityEngine.Random.Range(0, party.Count)];
         BaseAbility ability = actingCharacter.enemyClass.abilities[0];
 
         // Apply effects of ability and log the outcome.
@@ -239,5 +242,85 @@ public class CombatManager : MonoBehaviour
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
+    }
+
+    // A function used to determine if any combatants are at 0 health; i.e., downed.
+    public void CheckCombatantsHealth(ITargetable target)
+    {
+        if (target.health <= 0)
+        {
+            Debug.Log(target.name + " was downed in the gig!");
+            RemoveCharacterFromCombat(target);
+        }
+    }
+
+    // A function used to remove a downed character from combat.
+    public void RemoveCharacterFromCombat(ITargetable character)
+    {
+        Tuple<BasePlayer, BaseEnemy> parsedCharacter = ParseTargetable(character);
+        // Remove instance of character from appropriate list and ensure no turns in the queue belong to the downed character.
+        if (parsedCharacter.Item1 != null)
+        {
+            party.Remove(parsedCharacter.Item1);
+            // TODO: Fix this!
+            // foreach (PlayerTurn t in combatQueue.ToArray())
+            // {
+            //     if (t.actingCharacter == parsedCharacter.Item1)
+            //     {
+            //         combatQueue.Remove(t);
+            //     }
+            // }
+        }
+        if (parsedCharacter.Item2 != null)
+        {
+            enemies.Remove(parsedCharacter.Item2);
+            // TODO: Fix this!
+            // foreach (EnemyTurn t in combatQueue.ToArray())
+            // {
+            //     if (t.actingCharacter == parsedCharacter.Item2)
+            //     {
+            //         combatQueue.Remove(t);
+            //     }
+            // }
+        }
+        // Update UI to no longer show character icon.
+        stage.transform.Find(character.name + "Icon").gameObject.SetActive(false);
+        // Check for win/loss.
+        CheckForWinLoss();
+    }
+
+    // A function used to determine a win/loss of combat.
+    public void CheckForWinLoss() 
+    {
+        if (party.Count == 0)
+        {
+            Debug.Log("Player has lost!");
+        }
+        if (enemies.Count == 0)
+        {
+            Debug.Log("Player has won!");
+        }
+    }
+
+    // A helper function used to return a Tuple<BasePlayer, BaseEnemy> from an ITargetable object.
+    // TODO: This is pretty hacky. Find a better solution.
+    public Tuple<BasePlayer, BaseEnemy> ParseTargetable(ITargetable character)
+    {
+        Tuple<BasePlayer, BaseEnemy> output = new Tuple<BasePlayer, BaseEnemy>(null, null);
+        foreach (BasePlayer p in party)
+        {
+            if (p.name == character.name)
+            {
+                output = new Tuple<BasePlayer, BaseEnemy>(p, null);
+            }
+        }
+        foreach (BaseEnemy e in enemies)
+        {
+            if (e.name == character.name)
+            {
+                output = new Tuple<BasePlayer, BaseEnemy>(null, e);
+            }
+        }
+        return output;
     }
 }

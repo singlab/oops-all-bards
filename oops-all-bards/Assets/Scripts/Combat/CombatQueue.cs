@@ -38,6 +38,19 @@ public class CombatQueue
         return this.queue.Dequeue();
     }
 
+    public void Remove(ICombatQueueable queueable)
+    {
+        ICombatQueueable[] items = this.queue.ToArray();
+        this.queue.Clear();
+        foreach (ICombatQueueable item in items)
+        {
+            if (item != queueable)
+            {
+                this.queue.Enqueue(item);
+            }
+        }
+    }
+
     public bool IsEmpty()
     {  
         return this.queue.Count == 0 ? true : false;
