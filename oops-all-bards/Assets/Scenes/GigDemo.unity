@@ -2519,6 +2519,9 @@ MonoBehaviour:
     type: 3}
   targetButton: {fileID: 7931463221168878973, guid: b60fc02891c552c4bb4b3907c0f0239a,
     type: 3}
+  party: []
+  enemies: []
+  rounds: 1
 --- !u!4 &1125771821
 Transform:
   m_ObjectHideFlags: 0

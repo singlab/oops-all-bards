@@ -23,9 +23,11 @@ public class CombatManager : MonoBehaviour
     // A reference to the combat queue.
     public CombatQueue combatQueue;
     // A reference to the player party.
-    List<BasePlayer> party = new List<BasePlayer>();
+    public List<BasePlayer> party = new List<BasePlayer>();
     // A reference to the enemies.
-    List<BaseEnemy> enemies = new List<BaseEnemy>();
+    public List<BaseEnemy> enemies = new List<BaseEnemy>();
+    // A counter for the number of rounds combat has lasted for.
+    public int rounds = 1;
     // A reference to a target name, if any.
     string target = null;
     public static CombatManager Instance => CombatManager._instance;
@@ -263,25 +265,25 @@ public class CombatManager : MonoBehaviour
         {
             party.Remove(parsedCharacter.Item1);
             // TODO: Fix this!
-            // foreach (PlayerTurn t in combatQueue.ToArray())
-            // {
-            //     if (t.actingCharacter == parsedCharacter.Item1)
-            //     {
-            //         combatQueue.Remove(t);
-            //     }
-            // }
+            foreach (PlayerTurn t in combatQueue.queue.ToArray())
+            {
+                if (t.actingCharacter == parsedCharacter.Item1)
+                {
+                    combatQueue.Remove(t);
+                }
+            }
         }
         if (parsedCharacter.Item2 != null)
         {
             enemies.Remove(parsedCharacter.Item2);
             // TODO: Fix this!
-            // foreach (EnemyTurn t in combatQueue.ToArray())
-            // {
-            //     if (t.actingCharacter == parsedCharacter.Item2)
-            //     {
-            //         combatQueue.Remove(t);
-            //     }
-            // }
+            foreach (EnemyTurn t in combatQueue.queue.ToArray())
+            {
+                if (t.actingCharacter == parsedCharacter.Item2)
+                {
+                    combatQueue.Remove(t);
+                }
+            }
         }
         // Update UI to no longer show character icon.
         stage.transform.Find(character.name + "Icon").gameObject.SetActive(false);

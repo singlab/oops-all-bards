@@ -9,6 +9,10 @@ public class CombatStart : MonoBehaviour, ICombatQueueable
     {
         // UI idea: Opening curtains. This should execute here.
         Debug.Log("The gig begins!");
+        if (CombatManager.Instance.rounds > 1)
+        {
+            EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+        }
         done = true;
     }
 }

@@ -126,6 +126,8 @@ public class DemoManager : MonoBehaviour
         } else 
         {
             Debug.Log("Combat round has ended. Resetting queue.");
+            CombatManager.Instance.rounds += 1;
+            CombatManager.Instance.InitCombatQueue(CombatManager.Instance.party, CombatManager.Instance.enemies);
         }
     }
 
