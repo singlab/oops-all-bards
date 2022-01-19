@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // A class that manages the features of the combat demo.
 public class DemoManager : MonoBehaviour
@@ -115,6 +116,8 @@ public class DemoManager : MonoBehaviour
     {
         EventManager.Instance.SubscribeToEvent(EventType.CheckQueue, CheckQueue);
         EventManager.Instance.SubscribeToEvent(EventType.AwaitPlayerInput, AwaitPlayerInput);
+        EventManager.Instance.SubscribeToEvent(EventType.CombatLoss, CombatLoss);
+        EventManager.Instance.SubscribeToEvent(EventType.CombatWin, CombatWin);
     }
 
     public void CheckQueue()
@@ -135,5 +138,15 @@ public class DemoManager : MonoBehaviour
     private void AwaitPlayerInput()
     {
         Debug.Log("Awaiting player input...");
+    }
+
+    public void CombatWin()
+    {
+        SceneManager.LoadScene("CombatWin");
+    }
+
+    public void CombatLoss()
+    {
+        SceneManager.LoadScene("CombatLoss");
     }
 }
