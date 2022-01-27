@@ -171,7 +171,7 @@ public class CombatManager : MonoBehaviour
     // A function used to clear the queueable container UI of child gameobjects.
     public void ClearQueueUI()
     {
-        for(int i = 0; i < queueableContainer.transform.GetChild(0).transform.GetChildCount(); i++)
+        for(int i = 0; i < queueableContainer.transform.GetChild(0).transform.childCount; i++)
         {
             GameObject go = queueableContainer.transform.GetChild(0).transform.GetChild(i).gameObject;
             Destroy(go);
@@ -208,7 +208,7 @@ public class CombatManager : MonoBehaviour
     public void RemoveTargetButton(string name)
     {
         targetMenu.SetActive(true);
-        for (int i = 0; i < targetMenu.transform.GetChild(0).transform.GetChild(0).transform.GetChildCount(); i++)
+        for (int i = 0; i < targetMenu.transform.GetChild(0).transform.GetChild(0).transform.childCount; i++)
         {
             GameObject child = targetMenu.transform.GetChild(0).transform.GetChild(0).transform.GetChild(i).gameObject;
             if (child.GetComponentInChildren<Text>().text == name)
