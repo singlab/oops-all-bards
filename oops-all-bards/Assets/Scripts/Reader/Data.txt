@@ -1,0 +1,3 @@
+{"name":"Alera","school":"N/A","level":100,"abilities":["Placeholder 1","Placeholder 2","Placeholder 3"]}
+{"name":"Runt","school":"N/A","level":1,"abilities":["Placeholder 1","Placeholder 2","Placeholder 3"]}
+{"name":"Mudd","school":"N/A","level":1,"abilities":["Placeholder 1","Placeholder 2","Placeholder 3"]}
