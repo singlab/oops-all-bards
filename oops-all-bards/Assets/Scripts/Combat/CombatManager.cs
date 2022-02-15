@@ -8,8 +8,9 @@ public class CombatManager : MonoBehaviour
 {
 
     private static CombatManager _instance;
-    // A reference to the stage.
-    GameObject stage;
+    // References to player and enemy portraits.
+    GameObject partyPortraits;
+    GameObject enemyPortraits;
     // A reference to the display area.
     GameObject display;
     // A reference to the gameobject queue.
@@ -46,12 +47,14 @@ public class CombatManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        stage = GameObject.Find("Stage");
+        partyPortraits = GameObject.Find("PartyPortraits");
+        enemyPortraits = GameObject.Find("EnemyPortraits");
         display = GameObject.Find("Display");
         queueableContainer = GameObject.Find("CombatQueue");
         targetMenu = GameObject.Find("TargetMenu");
 
-        stage.SetActive(false);
+        partyPortraits.SetActive(false);
+        enemyPortraits.SetActive(false);
         display.SetActive(false);
         queueableContainer.SetActive(false);
         SubscribeToEvents();
@@ -75,8 +78,9 @@ public class CombatManager : MonoBehaviour
         // Disable the init button.
         GameObject.Find("InitButton").SetActive(false);
 
-        // Render the placeholder stage and queueable container.
-        stage.SetActive(true);
+        // Render the portraits and queueable container.
+        partyPortraits.SetActive(true);
+        enemyPortraits.SetActive(true);
         queueableContainer.SetActive(true);
     }
 
@@ -296,6 +300,8 @@ public class CombatManager : MonoBehaviour
         if (parsedCharacter.Item1 != null)
         {
             party.Remove(parsedCharacter.Item1);
+            // Update UI to no longer show character icon.
+            partyPortraits.transform.Find(character.name + "Icon").gameObject.SetActive(false);
             // TODO: Fix this!
             foreach (PlayerTurn t in combatQueue.queue.ToArray())
             {
@@ -308,6 +314,8 @@ public class CombatManager : MonoBehaviour
         if (parsedCharacter.Item2 != null)
         {
             enemies.Remove(parsedCharacter.Item2);
+            // Update UI to no longer show character icon.
+            enemyPortraits.transform.Find(character.name + "Icon").gameObject.SetActive(false);
             // TODO: Fix this!
             foreach (EnemyTurn t in combatQueue.queue.ToArray())
             {
@@ -317,8 +325,6 @@ public class CombatManager : MonoBehaviour
                 }
             }
         }
-        // Update UI to no longer show character icon.
-        stage.transform.Find(character.name + "Icon").gameObject.SetActive(false);
         // Update targetmenu to no longer show character as valid target.
         RemoveTargetButton(character.name);
         // Check for win/loss.
@@ -360,5 +366,5 @@ public class CombatManager : MonoBehaviour
             }
         }
         return output;
-    }
+    } 
 }
