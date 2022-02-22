@@ -21,6 +21,8 @@ public class CombatManager : MonoBehaviour
     public GameObject goQueueable;
     // A reference to the target button prefab.
     public GameObject targetButton;
+    // A reference to the portrait UI prefab.
+    public GameObject portraitUI;
     // A reference to the combat queue.
     public CombatQueue combatQueue;
     // A reference to the player party.
@@ -78,10 +80,21 @@ public class CombatManager : MonoBehaviour
         // Disable the init button.
         GameObject.Find("InitButton").SetActive(false);
 
-        // Render the portraits and queueable container.
+        // Render the portrait section and queueable container.
         partyPortraits.SetActive(true);
         enemyPortraits.SetActive(true);
         queueableContainer.SetActive(true);
+
+        // Instantiate portrait UI for party and enemies.
+        foreach (BasePlayer p in party)
+        {
+            GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
+        }
+
+        foreach (BaseEnemy e in enemies)
+        {
+            GameObject toInstantiate = Instantiate(portraitUI, enemyPortraits.transform);
+        }
     }
 
     // A function used to render a particular character's combat input menu.
