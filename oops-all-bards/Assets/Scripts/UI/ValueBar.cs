@@ -15,8 +15,7 @@ public class ValueBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        textComponent = gameObject.GetComponentInChildren<TMP_Text>();
-        fillComponent = gameObject.transform.GetChild(0).GetComponentInChildren<Image>();
+
     }
 
     // Update is called once per frame
@@ -28,6 +27,8 @@ public class ValueBar : MonoBehaviour
     // Update value bar with new value to display
     public void UpdateValueBar(int newValue)
     {
+        textComponent = gameObject.GetComponentInChildren<TMP_Text>();
+        fillComponent = gameObject.transform.GetChild(0).GetComponentInChildren<Image>();
         textComponent.text = newValue.ToString() + " / " + maxValue;
         fillComponent.GetComponent<RectTransform>().localScale = new Vector3((newValue/maxValue), 1, 1);
     }

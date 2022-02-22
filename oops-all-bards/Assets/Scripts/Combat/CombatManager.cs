@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class CombatManager : MonoBehaviour
 {
@@ -86,14 +87,35 @@ public class CombatManager : MonoBehaviour
         queueableContainer.SetActive(true);
 
         // Instantiate portrait UI for party and enemies.
+        // Need: name, current health/flourish, max health/flourish, portrait
         foreach (BasePlayer p in party)
         {
             GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
+            // Set name text
+            toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = p.name;
+            // Set health and flourish values and update them
+            ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
+            healthBar.maxValue = p.health;
+            healthBar.UpdateValueBar(p.health);
+            // TODO: Implement flourish plz
+            ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
+            flourishBar.maxValue = p.health;
+            flourishBar.UpdateValueBar(p.health);
         }
 
         foreach (BaseEnemy e in enemies)
         {
             GameObject toInstantiate = Instantiate(portraitUI, enemyPortraits.transform);
+            // Set name text
+            toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = e.name;
+            // Set health and flourish values and update them
+            ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
+            healthBar.maxValue = e.health;
+            healthBar.UpdateValueBar(e.health);
+            // TODO: Implement flourish plz
+            ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
+            flourishBar.maxValue = e.health;
+            flourishBar.UpdateValueBar(e.health);
         }
     }
 
