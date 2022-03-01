@@ -147,9 +147,9 @@ GameObject:
   - component: {fileID: 2253022724794021661}
   - component: {fileID: 1800610608312151521}
   - component: {fileID: 6487141408602678015}
-  - component: {fileID: 7676113607764059281}
+  - component: {fileID: -2119214746340249737}
   m_Layer: 5
-  m_Name: ActionButton
+  m_Name: TargetButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -258,8 +258,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7676113607764059281}
-        m_TargetAssemblyTypeName: ActionButton, Assembly-CSharp
+      - m_Target: {fileID: -2119214746340249737}
+        m_TargetAssemblyTypeName: TargetButton, Assembly-CSharp
         m_MethodName: Execute
         m_Mode: 1
         m_Arguments:
@@ -270,7 +270,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7676113607764059281
+--- !u!114 &-2119214746340249737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -279,6 +279,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8148579067475696573}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd15ea002a5b17540adffbbf513222a6, type: 3}
+  m_Script: {fileID: 11500000, guid: dc373cca8d1ed2e44a1c824a50e9e838, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: 
