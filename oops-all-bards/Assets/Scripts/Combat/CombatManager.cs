@@ -12,20 +12,20 @@ public class CombatManager : MonoBehaviour
     // References to player and enemy portraits.
     GameObject partyPortraits;
     GameObject enemyPortraits;
-    // A reference to the display area.
-    GameObject display;
     // A reference to the gameobject queue.
     GameObject queueableContainer;
-    // A reference to the target menu.
-    GameObject targetMenu;
     // A reference to the queueable gameobject prefab.
     public GameObject goQueueable;
-    // A reference to the target button prefab.
-    public GameObject targetButton;
     // A reference to the portrait UI prefab.
     public GameObject portraitUI;
     // A reference to the combat queue.
     public CombatQueue combatQueue;
+    // A reference to the combat action menu.
+    GameObject combatMenu;
+    // A reference to the combat action menu button prefab.
+    public GameObject actionButton;
+    // A reference to the target button prefab.
+    public GameObject targetButton;
     // A reference to the player party.
     public List<BasePlayer> party = new List<BasePlayer>();
     // A reference to the enemies.
@@ -33,7 +33,7 @@ public class CombatManager : MonoBehaviour
     // A counter for the number of rounds combat has lasted for.
     public int rounds = 1;
     // A reference to a target name, if any.
-    string target = null;
+    public string target = null;
     public static CombatManager Instance => CombatManager._instance;
 
     void Awake()
@@ -52,14 +52,13 @@ public class CombatManager : MonoBehaviour
     {
         partyPortraits = GameObject.Find("PartyPortraits");
         enemyPortraits = GameObject.Find("EnemyPortraits");
-        display = GameObject.Find("Display");
         queueableContainer = GameObject.Find("CombatQueue");
-        targetMenu = GameObject.Find("TargetMenu");
+        combatMenu = GameObject.Find("CombatMenu");
 
         partyPortraits.SetActive(false);
         enemyPortraits.SetActive(false);
-        display.SetActive(false);
         queueableContainer.SetActive(false);
+        combatMenu.SetActive(false);
         SubscribeToEvents();
     }
 
@@ -81,10 +80,11 @@ public class CombatManager : MonoBehaviour
         // Disable the init button.
         GameObject.Find("InitButton").SetActive(false);
 
-        // Render the portrait section and queueable container.
+        // Render the portrait section, queueable container, and combat menu.
         partyPortraits.SetActive(true);
         enemyPortraits.SetActive(true);
         queueableContainer.SetActive(true);
+        combatMenu.SetActive(true);
 
         // Instantiate portrait UI for party and enemies.
         // Need: name, current health/flourish, max health/flourish, portrait
@@ -119,35 +119,24 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    // A function used to render a particular character's combat input menu.
+    // A function used to render a particular character's combat menu.
     public void RenderInputMenu(BasePlayer actingCharacter)
     {
         // Render the UI for the input.
         Debug.Log("Rendering input menu for " + actingCharacter.name + " now.");
-        display.SetActive(true);
-        GameObject activeMenu = display.transform.Find(actingCharacter.name + "Info").gameObject;
-        activeMenu.SetActive(true);
-        foreach (Transform child in display.transform)
+        
+        // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
+        for (int i = 0; i < actingCharacter.playerClass.abilities.Count; i++)
         {
-            if (child.gameObject.name != activeMenu.name)
-            {
-                child.gameObject.SetActive(false);
-            }
-        }
-        // Fill in the name, health, and ability names of the acting character.
-        GameObject nameplate = activeMenu.transform.GetChild(0).GetChild(0).Find("Name").gameObject;
-        nameplate.GetComponent<Text>().text = actingCharacter.name;
-        GameObject health = activeMenu.transform.GetChild(0).GetChild(0).Find("Health").gameObject;
-        health.GetComponent<Text>().text = actingCharacter.health.ToString();
-        // TODO: This is pretty hacky, should probably go by number of abilities available to player and then make button prefabs/place them in menu.
-        for (int i = 1; i < 4; i++)
-        {
-            // Update the button text.
-            GameObject abilityButton = activeMenu.transform.GetChild(0).GetChild(0).Find("Ability" + i).gameObject;
-            BaseAbility currentAbility = actingCharacter.playerClass.abilities[i-1];
-            abilityButton.GetComponentInChildren<Text>().text = currentAbility.name;
-            // Add on click functions to the buttons to create a PlayerAction queueable.
-            abilityButton.GetComponent<Button>().onClick.AddListener(() => 
+            BaseAbility currentAbility = actingCharacter.playerClass.abilities[i];
+            // Create prefab and update text of button.
+            GameObject toInstantiate = Instantiate(actionButton, combatMenu.transform);
+            toInstantiate.GetComponentInChildren<TMP_Text>().text = currentAbility.name;
+            // Assign the ability and acting character to the action button script.
+            toInstantiate.GetComponent<ActionButton>().ability = currentAbility;
+            toInstantiate.GetComponent<ActionButton>().actingCharacter = actingCharacter;
+            // // Add on click functions to the buttons to create a PlayerAction queueable.
+            toInstantiate.GetComponent<Button>().onClick.AddListener(() => 
                 {StartCoroutine(SelectTarget(currentAbility, actingCharacter));});
         }
     }
@@ -167,33 +156,11 @@ public class CombatManager : MonoBehaviour
         foreach (BasePlayer p in party)
         {
             PushAndCreateCombatQueueable(new PlayerTurn(p));
-            // TODO: This needs to go elsewhere, preferably somewhere that has access to party and enemy lists.
-            // Populate the target menu with buttons for each player character/enemy.
-            if (rounds == 1)
-            {
-                GameObject toInstantiate = Instantiate(targetButton, targetMenu.transform.GetChild(0).transform.GetChild(0).transform);
-                toInstantiate.GetComponentInChildren<Text>().text = p.name;
-                toInstantiate.GetComponent<Button>().onClick.AddListener(() => {
-                    target = p.name;
-                });
-            }
         }
         foreach (BaseEnemy e in enemies)
         {
             PushAndCreateCombatQueueable(new EnemyTurn(e));
-            // TODO: This needs to go elsewhere, preferably somewhere that has access to party and enemy lists.
-            // Populate the target menu with buttons for each player character/enemy.
-            if (rounds == 1)
-            {
-                GameObject toInstantiate = Instantiate(targetButton, targetMenu.transform.GetChild(0).transform.GetChild(0).transform);
-                toInstantiate.GetComponentInChildren<Text>().text = e.name;
-                toInstantiate.GetComponent<Button>().onClick.AddListener(() => {
-                    target = e.name;
-                });
-            }
         }
-        // Hide the targetMenu.
-        targetMenu.SetActive(false);
         // Flag the DemoManager to begin checking queue.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
@@ -219,12 +186,16 @@ public class CombatManager : MonoBehaviour
 
     // A coroutine used to open the target menu after clicking on an ability button. Waits until target
     // is selected, closes target menu, and then creates a PlayerAction.
-    IEnumerator SelectTarget(BaseAbility ability, BasePlayer actingCharacter)
+    public IEnumerator SelectTarget(BaseAbility ability, BasePlayer actingCharacter)
     {
         ITargetable targetable = null;
-        targetMenu.SetActive(true);
         target = null;
-        while (target == null) { yield return null; }
+        
+        while (target == null)
+        {
+            yield return null;
+        }
+
         foreach (BasePlayer p in party)
         {
             if (target == p.name)
@@ -232,6 +203,7 @@ public class CombatManager : MonoBehaviour
                 targetable = p;
             }
         }
+
         foreach (BaseEnemy e in enemies)
         {
             if (target == e.name)
@@ -239,23 +211,36 @@ public class CombatManager : MonoBehaviour
                 targetable = e;
             }
         }
+
         AddPlayerAction(ability, actingCharacter, targetable);
-        targetMenu.SetActive(false);
     }
 
-    // A function used to remove a target button from the target menu.
-    public void RemoveTargetButton(string name)
+    // A function used to destroy all buttons that are children of the combat menu.
+    public void ClearCombatMenu()
     {
-        targetMenu.SetActive(true);
-        for (int i = 0; i < targetMenu.transform.GetChild(0).transform.GetChild(0).transform.childCount; i++)
+        for (int i = 0; i < combatMenu.transform.childCount; i++)
         {
-            GameObject child = targetMenu.transform.GetChild(0).transform.GetChild(0).transform.GetChild(i).gameObject;
-            if (child.GetComponentInChildren<Text>().text == name)
-            {
-                Destroy(child);
-            }
+            GameObject toDestroy = combatMenu.transform.GetChild(i).gameObject;
+            Destroy(toDestroy);
         }
-        targetMenu.SetActive(false);
+    }
+
+    // A function used to render target buttons.
+    public void RenderTargetButtons()
+    {
+        foreach (BasePlayer p in party)
+        {
+            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+            toInstantiate.GetComponentInChildren<TMP_Text>().text = p.name;
+            toInstantiate.GetComponent<TargetButton>().target = p.name;
+        }
+
+        foreach (BaseEnemy e in enemies)
+        {
+            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+            toInstantiate.GetComponentInChildren<TMP_Text>().text = e.name;
+            toInstantiate.GetComponent<TargetButton>().target = e.name;
+        }
     }
 
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
@@ -291,16 +276,50 @@ public class CombatManager : MonoBehaviour
             action.target.shield += action.ability.damage;
             Debug.Log(action.actingCharacter.name + " is shielding " + action.target.name + " for " + action.ability.damage + " damage." );
         }
-        // TODO: Update the UI to reflect new values.
+        // Update the UI to reflect new values.
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.target.name);
+        relevantValueBars.Item1.UpdateValueBar(action.target.health);
+        // TODO: Implement flourish plz.
+        relevantValueBars.Item2.UpdateValueBar(action.target.health);
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
 
+    // A function that finds and returns a tuple of ValueBar objects (health, flourish) 
+    // corresponding to the name of the target of an action.
+    Tuple<ValueBar, ValueBar> FindValueBars(string name)
+    {
+        Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
+        for (int i = 0; i < partyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = partyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+
+        for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = enemyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+        return relevantBars;
+    }
+
     // A function used to calculate and push enemy actions to the queue.
     public void TakeEnemyAction()
     {
-        display.SetActive(false);
         Debug.Log("Calculating enemy action...");
         BaseEnemy actingCharacter = (BaseEnemy)EventManager.Instance.EventData;
         
@@ -335,8 +354,16 @@ public class CombatManager : MonoBehaviour
         if (parsedCharacter.Item1 != null)
         {
             party.Remove(parsedCharacter.Item1);
-            // Update UI to no longer show character icon.
-            partyPortraits.transform.Find(character.name + "Icon").gameObject.SetActive(false);
+            // Update UI to no longer show character portrait.
+            for (int i = 0; i < partyPortraits.transform.childCount; i++)
+            {
+                Transform currentChild = partyPortraits.transform.GetChild(i);
+                Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+                if (desiredChild.GetComponent<TMP_Text>().text == character.name)
+                {
+                    Destroy(currentChild.gameObject);
+                }
+            }
             // TODO: Fix this!
             foreach (PlayerTurn t in combatQueue.queue.ToArray())
             {
@@ -349,8 +376,16 @@ public class CombatManager : MonoBehaviour
         if (parsedCharacter.Item2 != null)
         {
             enemies.Remove(parsedCharacter.Item2);
-            // Update UI to no longer show character icon.
-            enemyPortraits.transform.Find(character.name + "Icon").gameObject.SetActive(false);
+            // Update UI to no longer show character portrait.
+            for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+            {
+                Transform currentChild = enemyPortraits.transform.GetChild(i);
+                Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+                if (desiredChild.GetComponent<TMP_Text>().text == character.name)
+                {
+                    Destroy(currentChild.gameObject);
+                }
+            }
             // TODO: Fix this!
             foreach (EnemyTurn t in combatQueue.queue.ToArray())
             {
@@ -360,8 +395,6 @@ public class CombatManager : MonoBehaviour
                 }
             }
         }
-        // Update targetmenu to no longer show character as valid target.
-        RemoveTargetButton(character.name);
         // Check for win/loss.
         CheckForWinLoss();
     }

@@ -9,7 +9,7 @@ public enum EventType
     AwaitPlayerInput, // pass BasePlayer object
     EnemyAI, // pass BaseEnemy object
     CombatWin,
-    CombatLoss    
+    CombatLoss, 
 };
 
 /// <summary>
