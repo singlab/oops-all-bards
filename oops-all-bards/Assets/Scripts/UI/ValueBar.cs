@@ -27,9 +27,10 @@ public class ValueBar : MonoBehaviour
     // Update value bar with new value to display
     public void UpdateValueBar(int newValue)
     {
+        float ratio = (float)newValue / (float)maxValue;
         textComponent = gameObject.GetComponentInChildren<TMP_Text>();
-        fillComponent = gameObject.transform.GetChild(0).GetComponentInChildren<Image>();
+        fillComponent = gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<Image>();
         textComponent.text = newValue.ToString() + " / " + maxValue;
-        fillComponent.GetComponent<RectTransform>().localScale = new Vector3((newValue/maxValue), 1, 1);
+        fillComponent.GetComponent<RectTransform>().localScale = new Vector3(ratio, 1, 1);
     }
 }
