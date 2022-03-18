@@ -11,7 +11,11 @@ behaving_entity GameAgent {
 
         // wait for an unrecognized AllyWME to appear? what is adding AllyWMEs to memory in the first place?
         with ( success_test { newAllyWME = (AllyWME onTree==false) } ) wait;
+
+        ParallelBehaviorWME spawnPointWME;
+        with ( success_test { spawnPointWME = (ParallelBehaviorWME signature=="AllyAgentManager(AllyWME)") } ) wait;
         spawngoal createAllyAgent(newAllyWME);
+        
         mental_act {
             newAllyWME.setOnTree(true);
         }
