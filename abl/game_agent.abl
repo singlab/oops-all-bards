@@ -8,10 +8,12 @@ behaving_entity GameAgent {
 
     sequential behavior lookForAllyAgent() {
         AllyWME newAllyWME;
+        ParallelBehaviorWME spawnPointWME;
 
         // wait for an unrecognized AllyWME to appear? what is adding AllyWMEs to memory in the first place?
         with ( success_test { newAllyWME = (AllyWME onTree==false) } ) wait;
-        spawngoal createAllyAgent(newAllyWME);
+        with ( success_test { spawnPointWME = (ParallelBehaviorWME signature=="ManageAllyAgent(AllyWME)") } ) wait;
+        spawngoal createAllyAgent(newAllyWME) at spawnPointWME;
         mental_act {
             newAllyWME.setOnTree(true);
         }
@@ -38,6 +40,8 @@ behaving_entity GameAgent {
         // Can we have this root agent just look for all the different types of agents we hope to define?
         // ... and also have the ability to delete them as needed?
         subgoal lookForAllyAgent();
+        subgoal manageAllyAgent(AllyWME allyWME);
+        
         subgoal lookForDivineAgent();
         subgoal lookForEnemyAgent();
         subgoal lookForAudienceAgent();
