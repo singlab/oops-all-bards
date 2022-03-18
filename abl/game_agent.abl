@@ -1,0 +1,45 @@
+// Package -- is this name chosen by author, or must this be an existing package name?
+package agent.oab;
+import java.lang.*;
+import java.util.*;
+
+// Is this agent kind of like a meta agent that is... managing the game/other agents?
+behaving_entity GameAgent {
+
+    sequential behavior lookForAllyAgent() {
+        AllyWME newAllyWME;
+
+        // wait for an unrecognized AllyWME to appear? what is adding AllyWMEs to memory in the first place?
+        with ( success_test { newAllyWME = (AllyWME onTree==false) } ) wait;
+        spawngoal createAllyAgent(newAllyWME);
+        mental_act {
+            newAllyWME.setOnTree(true);
+        }
+    }
+
+    sequential behavior createAllyAgent(AllyWME ally) {
+        // how to create abl agent inside of another agents tree? is this supposed to be done?
+    }
+
+    sequential behavior lookForDivineAgent() {
+        DivineWME newDivineWME;
+
+        with ( success_test { newDivineWME = (DivineWME onTree==false) } ) wait;
+        spawngoal createDivineAgent(newDivineWME);
+        mental_act {
+            newDivineWME.setOnTree(true);
+        }
+    }
+
+    // ... and so on.
+
+    // This is a collection behavior s.t. all children act in parallel and never result in failure. Do they need to be persistent?
+    initial_tree {
+        // Can we have this root agent just look for all the different types of agents we hope to define?
+        // ... and also have the ability to delete them as needed?
+        subgoal lookForAllyAgent();
+        subgoal lookForDivineAgent();
+        subgoal lookForEnemyAgent();
+        subgoal lookForAudienceAgent();
+    }
+}
