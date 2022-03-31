@@ -6,7 +6,7 @@ using UnityEngine;
 public class AllyWME
 {
     // General statistics
-    public string name { get; set; }
+    public int id { get; set; }
     public float locationX { get; set; }
     public float locationY { get; set; }
     public float locationZ { get; set; }
@@ -30,9 +30,12 @@ public class AllyWME
     // all the information we need? 
     
     // The BasePlayer class for each ally has most of the information we need.
-    // There should similarly be some sort of PartyInfo class that has current info on:
+    // The PartyManager class has current info on:
         // 1. Members of the party
         // 2. Whether or not the party is in combat
 
-    // There should also be some sort of global relationship/status/trait tracker across all characters. 
+    // For the rest, maybe BasePlayer should be modified so that it contains info on:
+        // 1. Affinities from this character to other characters -- a List<Tuple<int[characterID],int[affinityValue]>>
+        // 2. Statuses for this character
+        // 3. Traits for this character   
 }
