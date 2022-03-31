@@ -1,0 +1,41 @@
+package abl.generated;
+// the package corresponds to where generated Java files are placed.
+
+import abl.wmes.*;
+import abl.actions.*;
+import abl.sensors.*;
+
+behaving_entity GameAgent {
+
+    sequential behavior lookForAllyAgent() {
+        AllyWME newAllyWME;
+        ParallelBehaviorWME spawnPointWME;
+
+        // wait for an unrecognized AllyWME to appear? what is adding AllyWMEs to memory in the first place?
+        with ( success_test { newAllyWME = (AllyWME onTree==false) } ) wait;
+        // this is ok -- merge the success tests and be explicit about spawn POINTS being different from behaviors (manageAllyAgentSpawnPoint)
+        with ( success_test { spawnPointWME = (ParallelBehaviorWME signature=="ManageAllyAgent()") } ) wait;
+        spawngoal createAllyAgent(newAllyWME) at spawnPointWME;
+        mental_act {
+            newAllyWME.setOnTree(true);
+        }
+    }
+
+    sequential behavior createAllyAgent(AllyWME ally) {
+        // ... boilerplate
+    }
+
+    sequential behavior manageAllyAgent() {
+        // ... boilerplate
+    }
+
+    // This is a collection behavior s.t. all children act in parallel and never result in failure
+    initial_tree {
+    	with (priority 3) mental_act {
+			System.out.println("Starting game agent...");
+    	}
+    	
+        subgoal lookForAllyAgent();
+        subgoal manageAllyAgent();
+    }
+}

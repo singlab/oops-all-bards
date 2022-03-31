@@ -1,0 +1,182 @@
+package abl.generated;
+// the package corresponds to where generated Java files are placed.
+
+import abl.wmes.*;
+import abl.actions.*;
+import abl.sensors.*;
+// Imports are used the same way as in Java. Its necessary to import Sensor, Action, and WME classes.
+/** 
+ * A simple agent that moves towards the player and occassionally fires bullets.
+ *
+ * @author Josh McCoy 1-23-2019
+ * @author Ben Weber 3-7-11
+ */ 
+behaving_entity ChaserAgent {
+// This defines a name for the agent 
+
+	/** 
+	 * Define the physicals actions that the agent can perform. The definition includes an action prototype and
+	 * and an action class name. The class name must be a Java class which has been imported. 
+	 *
+	 * The prototype parameters correspond to the types expected by the execute(object[]) method 
+	 * in the action's Java class.
+	 */
+	register act moveUp(int) with MoveUp;
+	register act moveDown(int) with MoveDown; 
+	register act moveLeft(int) with MoveLeft;
+	register act moveRight(int) with MoveRight;
+	register act stop(int) with Stop;
+	register act fire(int, int, int, int) with Fire;
+
+	/**
+	 * Define the sensors that add game state to working memory. Each sensor defines the name of the WME class
+	 * that it is responsible for managing and the Java sensor class that implements the functionality. 
+	 */
+    register wme PlayerWME with PlayerSensor;
+    register wme BotWME with BotSensor;
+
+	/**
+	 * Defines a variable scope to the agent, which can be used and modified in behaviors. 
+	 *
+	 * It is also possible to use constants from a Java interface (e.g.):
+     * constants game.Constants;   
+	 */ 
+	int botSpeed = 2;	
+
+	/**
+	 * After an initial delay, continuously fire bullets. 
+	 */
+	sequential behavior manageFiring() {
+		subgoal Wait(2000);					// this suspends the execution of the behavior
+		with (persistent) subgoal fire();
+	}
+
+    /**
+     * Fires a bullet at the player character using the bot position at the source and the player position as the target
+     *
+     * Each fire action is followed by a cooldown period. 
+     */
+	sequential behavior fire() {
+		precondition {
+			(PlayerWME locationX::playerX locationY::playerY)	// locationX invokes PlayerMWE.getLocationX() 
+			(BotWME locationX::botX locationY::botY)   // :: is used to bind properties to behavior scoped variables
+		}
+
+		act fire(botX, botY, playerX, playerY);	
+		subgoal Wait(500);
+	}
+
+	/**
+	 * Continuously move towards the player character.
+	 */
+	sequential behavior manageMovement() {
+		with (persistent) subgoal move();
+	}
+
+	/**
+	 * Moves the bot up if the player is above the bot.
+	 * 
+	 * Note: The agent prefers vertical over horizonal movement, because the move up and move down behaviors have 
+	 * a higher specificity than the other move behaviors. Therefore, if the agent needs to be moved up or down,
+	 * they are chosen first. 
+	 */ 
+	sequential behavior move() {
+		precondition {
+			(PlayerWME locationY::playerY)
+			(BotWME locationY::botY id::id) 
+			(botY > (playerY + botSpeed))
+		}
+		specificity 3;
+ 
+		act moveUp(id);
+	}
+ 	
+	/**
+	 * Moves the bot down if the player is below the bot.
+	 */
+	sequential behavior move() {
+		precondition {
+			(PlayerWME locationY::playerY)
+			(BotWME locationY::botY id::id) 
+			(botY < (playerY - botSpeed))
+		}
+		specificity 3;
+
+		act moveDown(id);
+	}
+ 	 
+	/**
+	 * Moves the bot left if the player to the left of the bot.
+	 */
+	sequential behavior move() {
+		precondition {
+			(PlayerWME locationX::playerX)
+			(BotWME locationX::botX id::id) 
+			(botX > (playerX + botSpeed))
+		}
+		specificity 2;
+
+		act moveLeft(id);
+	}
+
+	/**
+	 * Moves the bot right if the player to the right of the bot.
+	 */
+	sequential behavior move() {
+		precondition { 
+			(PlayerWME locationX::playerX)
+			(BotWME locationX::botX id::id) 
+			(botX < (playerX - botSpeed))
+		}
+		specificity 2;
+
+		act moveRight(id);
+	}
+	
+	/**
+	 * Stops the bot.
+	 *
+	 * Of the move behaviors, this is always evaluated last due to having the lowest specificity. 
+	 * Since it is evaluated last, it is only reached if none of the other behaviors can be activited,
+	 * which means the player and bot are overlapping. This is why there are no preconditions. 
+	 */
+	sequential behavior move() {
+		precondition {
+			(BotWME id::id)
+		}
+		specificity 1;
+		act stop(id);
+	}
+
+    /**
+     * Utility behavior for suspending the execution of a behavior.
+     *
+     * This behavior consist of two steps. First, the mental act compute the finishing time
+     * based on the input delay. Second, the success tests waits until the condition check
+     * evaluates to true.
+     */
+	sequential behavior Wait(int milliseconds) {
+		long finish;
+	    mental_act { 
+	    	finish = System.currentTimeMillis() + milliseconds; 
+	    }
+	    
+	    with ( success_test { (System.currentTimeMillis() > finish) } ) wait;
+	}
+ 
+    /** 
+     * Root of the active behavior tree.
+     *
+     * Note: this is a parallel behavior.
+     * Note: the ABL compiler expects this to be the last behavior defined in the agent. 
+     * Note: prioirities are used to ensure all goals are pursued, since the move() goal can thrash in this simple example
+     */
+    initial_tree {
+    	with (priority 3) mental_act {
+			System.out.println("Starting bot Agent");
+    	}
+     	
+    	with (priority 2) subgoal manageFiring();
+    	with (priority 1) subgoal manageMovement();
+    }
+}
