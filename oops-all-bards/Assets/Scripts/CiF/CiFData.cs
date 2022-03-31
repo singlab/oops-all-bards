@@ -45,4 +45,16 @@ public class CiFData
     {
         this.affinities.Remove(affinity);
     }
+
+    public int GetAffinityByID(int id)
+    {
+        foreach (Affinity a in affinities)
+        {
+            if (a.characterID == id)
+            {
+                return a.value;
+            }
+        }
+        return null;
+    }
 }

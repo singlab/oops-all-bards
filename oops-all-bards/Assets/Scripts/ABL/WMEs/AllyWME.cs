@@ -48,5 +48,23 @@ public class AllyWME
             abilityCosts[i] = player.playerClass.abilities[i].cost;
             abilityTypes[i] = player.playerClass.abilities[i].combatType.ToString();
         }
+        // Handle CiF data
+        this.partyIDs = new int[PartyManager.Instance.currentParty.Count];
+        this.partyAffinities = new int[PartyManager.Instance.currentParty.Count];
+        this.statusIDs = new int[player.cifData.statuses.Count];
+        this.traitIDs = new int[player.cifData.traits.Count];
+        for (int i = 0; i < PartyManager.Instance.currentParty.Count; i++)
+        {
+            partyIDs[i] = PartyManager.Instance.currentParty[i].id;
+            partyAffinities[i] = PartyManager.Instance.currentParty[i].cifData.GetAffinityByID(partyIDs[i]);
+        }
+        for (int i = 0; i < player.cifData.statuses.Count; i++)
+        {
+            statusIDs[i] = player.cifData.statuses[i];
+        }
+        for (int i = 0; i < player.cifData.traits.Count; i++)
+        {
+            traitIDs[i] = player.cifData.traits[i];
+        }
     }   
 }
