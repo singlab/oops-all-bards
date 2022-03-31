@@ -7,14 +7,14 @@ public class AllyWME
 {
     // General statistics
     public int id { get; set; }
-    public float locationX { get; set; }
-    public float locationY { get; set; }
-    public float locationZ { get; set; }
+    // public float locationX { get; set; }
+    // public float locationY { get; set; }
+    // public float locationZ { get; set; }
     public bool inCombat { get; set; }
 
     // Combat statistics
     public int health { get; set; }
-    public int flourish { get; set; }
+    // public int flourish { get; set; }
     public int shield { get; set; }
     public int[] abilityIDs { get; set; }
     public int[] abilityCosts { get; set; }
@@ -26,16 +26,27 @@ public class AllyWME
     public int[] statusIDs { get; set; }
     public int[] traitIDs { get; set; }
 
-    // We need a constructor of some sort. What are the best things to pass to this constructor to get
-    // all the information we need? 
-    
-    // The BasePlayer class for each ally has most of the information we need.
-    // The PartyManager class has current info on:
-        // 1. Members of the party
-        // 2. Whether or not the party is in combat
-
-    // For the rest, maybe BasePlayer should be modified so that it contains info on:
-        // 1. Affinities from this character to other characters -- a List<Tuple<int[characterID],int[affinityValue]>>
-        // 2. Statuses for this character
-        // 3. Traits for this character   
+    public AllyWME(BasePlayer player)
+    {
+        this.id = player.id;
+        // TODO: When we have 3D movement of player/allies, this will become important.
+        // this.locationX = player.locationX;
+        // this.locationY = player.locationY;
+        // this.locationZ = player.locationZ;
+        this.inCombat = PartyManager.Instance.inCombat;
+        this.health = player.health;
+        // TODO: Implement flourish plz
+        // this.flourish = player.flourish;
+        this.shield = player.shield;
+        // Handle ability data
+        this.abilityIDs = new int[player.playerClass.abilities.Count];
+        this.abilityCosts = new int[player.playerClass.abilities.Count];
+        this.abilityTypes = new string[player.playerClass.abilities.Count];
+        for (int i = 0; i < player.playerClass.abilities.Count; i++)
+        {
+            abilityIDs[i] = player.playerClass.abilities[i].id;
+            abilityCosts[i] = player.playerClass.abilities[i].cost;
+            abilityTypes[i] = player.playerClass.abilities[i].combatType.ToString();
+        }
+    }   
 }

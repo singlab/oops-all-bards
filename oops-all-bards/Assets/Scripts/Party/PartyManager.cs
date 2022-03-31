@@ -6,8 +6,8 @@ public class PartyManager : MonoBehaviour
 {
     private static PartyManager _instance;
     public static PartyManager Instance => PartyManager._instance;
-    public static List<BasePlayer> currentParty = new List<BasePlayer>();
-    public static bool inCombat = false;
+    public List<BasePlayer> currentParty = new List<BasePlayer>();
+    public bool inCombat = false;
 
     void Awake()
     {
@@ -20,17 +20,17 @@ public class PartyManager : MonoBehaviour
         }
     }
 
-    public static void AddCharacterToParty(BasePlayer character)
+    public void AddCharacterToParty(BasePlayer character)
     {
         currentParty.Add(character);
     }
 
-    public static void RemoveCharacterFromParty(BasePlayer character)
+    public void RemoveCharacterFromParty(BasePlayer character)
     {
         currentParty.Remove(character);
     }
 
-    public static void ToggleInCombat(bool value)
+    public void ToggleInCombat(bool value)
     {
         inCombat = value;
     }

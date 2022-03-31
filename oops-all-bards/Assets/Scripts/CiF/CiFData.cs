@@ -9,11 +9,11 @@ public class CiFData
     public List<Status> statuses { get; set; }
     public List<Trait> traits { get; set; }
 
-    public CiFData(List<Affinity> affinities, List<Status> statuses, List<Trait> traits)
+    public CiFData()
     {
-        this.affinities = affinities;
-        this.statuses = statuses;
-        this.traits = traits;
+        this.affinities = new List<Affinity>();
+        this.statuses = new List<Status>();
+        this.traits = new List<Trait>();
     }
 
     public void AddStatus(Status status)
@@ -34,5 +34,15 @@ public class CiFData
     public void RemoveTrait(Trait trait)
     {
         this.traits.Remove(trait);
+    }
+
+    public void AddAffinity(Affinity affinity)
+    {
+        this.affinities.Add(affinity);
+    }
+
+    public void RemoveAffinity(Affinity affinity)
+    {
+        this.affinities.Remove(affinity);
     }
 }
