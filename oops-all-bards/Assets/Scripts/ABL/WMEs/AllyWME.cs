@@ -60,11 +60,11 @@ public class AllyWME
         }
         for (int i = 0; i < player.cifData.statuses.Count; i++)
         {
-            statusIDs[i] = player.cifData.statuses[i];
+            statusIDs[i] = player.cifData.statuses[i].id;
         }
         for (int i = 0; i < player.cifData.traits.Count; i++)
         {
-            traitIDs[i] = player.cifData.traits[i];
+            traitIDs[i] = player.cifData.traits[i].id;
         }
     }   
 }

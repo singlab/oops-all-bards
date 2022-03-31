@@ -55,6 +55,6 @@ public class CiFData
                 return a.value;
             }
         }
-        return null;
+        return 1000;
     }
 }
