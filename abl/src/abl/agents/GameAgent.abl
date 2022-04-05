@@ -7,7 +7,7 @@ import abl.sensors.*;
 
 behaving_entity GameAgent {
 
-    sequential behavior lookForAllyAgent() {
+    parallel behavior lookForAllyAgent() {
         AllyWME newAllyWME;
         ParallelBehaviorWME spawnPointWME;
 
@@ -21,12 +21,34 @@ behaving_entity GameAgent {
         }
     }
 
-    sequential behavior createAllyAgent(AllyWME ally) {
-        // ... boilerplate
+    // Does this actually go here? Is this what we're looking for?
+    parallel behavior createAllyAgent(AllyWME ally) {
+        mental_act {
+            BehavingEntity.getBehavingEntity().addWME(ally);
+        }
     }
 
-    sequential behavior manageAllyAgent() {
-        // ... boilerplate
+    parallel behavior manageAllyAgent() {
+        subgoal waitForTurn();
+        subgoal lookForQuip();
+        subgoal lookToHelp();
+        subgoal lookToHinder(); 
+    }
+
+    parallel behavior waitForTurn() {
+        AllyWME ally;
+
+        with ( success_test { ally = (AllyWME inCombat==true) } ) wait;
+        // Can this be done? Specifically, can we wait for any AllyWME to be marked as in combat, and then can we
+        // test on that SAME AllyWME like below to see if it's that ally's turn?
+        with ( success_test { ally.ownsTurn==true } ) wait;
+
+        subgoal pickCombatAction(ally);
+    }
+
+    parallel behavior pickCombatAction(AllyWME ally) {
+        // helping friends should be highest priority
+        // hindering enemies should be second highest priority
     }
 
     // This is a collection behavior s.t. all children act in parallel and never result in failure
