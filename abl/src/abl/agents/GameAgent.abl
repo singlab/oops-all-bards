@@ -7,48 +7,46 @@ import abl.sensors.*;
 
 behaving_entity GameAgent {
 
-    parallel behavior lookForAllyAgent() {
-        AllyWME newAllyWME;
-        ParallelBehaviorWME spawnPointWME;
+    // register wme AllyWME with AllySensor;
 
-        // wait for an unrecognized AllyWME to appear? what is adding AllyWMEs to memory in the first place?
-        with ( success_test { newAllyWME = (AllyWME onTree==false) } ) wait;
-        // this is ok -- merge the success tests and be explicit about spawn POINTS being different from behaviors (manageAllyAgentSpawnPoint)
-        with ( success_test { spawnPointWME = (ParallelBehaviorWME signature=="ManageAllyAgent()") } ) wait;
-        spawngoal createAllyAgent(newAllyWME) at spawnPointWME;
-        mental_act {
+    sequential behavior lookForAllyAgent() {
+        AllyWME newAllyWME;
+        ParallelBehaviorWME spawnLocation;
+
+        with ( success_test { newAllyWME = (AllyWME OnTree==false) spawnLocation = (ParallelBehaviorWME signature=="AllyAgentRoot()") } ) wait;
+        spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
+        mental_act { // atomic?
             newAllyWME.setOnTree(true);
         }
     }
 
-    // Does this actually go here? Is this what we're looking for?
-    parallel behavior createAllyAgent(AllyWME ally) {
-        mental_act {
-            BehavingEntity.getBehavingEntity().addWME(ally);
-        }
+    parallel behavior allyAgentRoot() {
+        // with (persistent) subgoal wait;
     }
 
-    parallel behavior manageAllyAgent() {
-        subgoal waitForTurn();
-        subgoal lookForQuip();
-        subgoal lookToHelp();
-        subgoal lookToHinder(); 
+    parallel behavior manageAllyAgent(AllyWME allyAgent) {
+        with (persistent) subgoal manageCombat(allyAgent);
+        with (persistent) subgoal manageNoncombat(allyAgent);
+        with (persistent) subgoal lookForQuip(allyAgent); 
     }
 
-    parallel behavior waitForTurn() {
-        AllyWME ally;
-
-        with ( success_test { ally = (AllyWME inCombat==true) } ) wait;
-        // Can this be done? Specifically, can we wait for any AllyWME to be marked as in combat, and then can we
-        // test on that SAME AllyWME like below to see if it's that ally's turn?
-        with ( success_test { ally.ownsTurn==true } ) wait;
-
-        subgoal pickCombatAction(ally);
+    parallel behavior manageCombat(AllyWME allyAgent) {
+        with ( success_test { ( allyAgent.inCombat==true ) } ) wait;
+        
+        subgoal lookToAssist(allyAgent);
+        subgoal waitForTurn(allyAgent);
     }
 
-    parallel behavior pickCombatAction(AllyWME ally) {
-        // helping friends should be highest priority
-        // hindering enemies should be second highest priority
+    parallel behavior waitForTurn(AllyWME allyAgent) {
+        with ( success_test { (allyAgent.ownsTurn==true) } ) wait;
+
+        subgoal takeTurn(allyAgent);
+    }
+
+    parallel behavior lookToAssist(AllyWME allyAgent) {
+        TurnWME turnWME;
+
+        with ( success_test { turnWME = (TurnWME turnOwner!=allyAgent.id) } ) wait;
     }
 
     // This is a collection behavior s.t. all children act in parallel and never result in failure
@@ -58,6 +56,5 @@ behaving_entity GameAgent {
     	}
     	
         subgoal lookForAllyAgent();
-        subgoal manageAllyAgent();
     }
 }

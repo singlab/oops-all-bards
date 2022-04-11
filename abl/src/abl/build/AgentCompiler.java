@@ -21,11 +21,14 @@ public class AgentCompiler {
 	 */
 	public static void main(String[] args) {
 
-		if (debugMode) {
-			Abl.main(new String[] { "-g2", "-d", "src", "src/abl/agents/GameAgent.abl" });
-		}
-		else {
-			Abl.main(new String[] { "-d", "src", "src/abl/agents/GameAgent.abl" });
-		}
+		Abl.main(new String[] {"C:\\Users\\kdavi\\oops-all-bards\\abl\\src\\abl\\agents\\GameAgent.abl" });
+
+		// if (debugMode) {
+		// 	System.out.println("In debug mode...");
+		// 	Abl.main(new String[] { "-g2", "-d", "src", "src\\abl\\agents\\GameAgent.abl" });
+		// }
+		// else {
+		// 	Abl.main(new String[] { "-d", "src", "src\\abl\\agents\\GameAgent.abl" });
+		// }
 	}
 }
