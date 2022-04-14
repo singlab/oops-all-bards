@@ -303,10 +303,17 @@ public class GameAgent extends BehavingEntity {
 
    private static void registerBehaviors_0(BehaviorLibrary behaviorLibrary) {
       behaviorLibrary.registerBehavior(new __BehaviorDesc(0, __$behaviorFactory0_rfield, null, null, "lookForAllyAgent()", new String[] {"lookForAllyAgent()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(1, __$behaviorFactory0_rfield, null, null, "createAllyAgent(AllyWME)", new String[] {"createAllyAgent(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(2, __$behaviorFactory0_rfield, null, null, "manageAllyAgent()", new String[] {"manageAllyAgent()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(3, __$behaviorFactory0_rfield, null, null, "GameAgent_RootCollectionBehavior()", new String[] {"GameAgent_RootCollectionBehavior()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(4, __$behaviorFactory0_rfield, null, null, "__$defaultMemoryExecuteBehavior()", new String[] {"__$defaultMemoryExecuteBehavior()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(1, __$behaviorFactory0_rfield, null, null, "allyAgentRoot()", new String[] {"allyAgentRoot()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(2, __$behaviorFactory0_rfield, null, null, "manageAllyAgent(AllyWME)", new String[] {"manageAllyAgent(AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(3, __$behaviorFactory0_rfield, null, null, "manageCombat(AllyWME)", new String[] {"manageCombat(AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(4, __$behaviorFactory0_rfield, null, null, "waitForTurn(AllyWME)", new String[] {"waitForTurn(AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(5, __$behaviorFactory0_rfield, null, null, "waitForTurn-4->AnonymousStep10()", new String[] {"waitForTurn-4->AnonymousStep10()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(6, __$behaviorFactory0_rfield, null, null, "lookToAssist(AllyWME)", new String[] {"lookToAssist(AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(7, __$behaviorFactory0_rfield, null, null, "lookToAssist-6->AnonymousStep14()", new String[] {"lookToAssist-6->AnonymousStep14()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(8, __$behaviorFactory0_rfield, null, null, "takeTurn(AllyWME)", new String[] {"takeTurn(AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(9, __$behaviorFactory0_rfield, null, null, "assistAlly(AllyWME, AllyWME)", new String[] {"assistAlly(AllyWME, AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(10, __$behaviorFactory0_rfield, null, null, "GameAgent_RootCollectionBehavior()", new String[] {"GameAgent_RootCollectionBehavior()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(11, __$behaviorFactory0_rfield, null, null, "__$defaultMemoryExecuteBehavior()", new String[] {"__$defaultMemoryExecuteBehavior()"}, null, (short)0), __$analysis0_rfield);
    }
 
    private static void registerBehaviors_1(BehaviorLibrary behaviorLibrary) {
@@ -318,13 +325,13 @@ public class GameAgent extends BehavingEntity {
    }
 
    public GameAgent() {
-      individualBehaviorLibrary = new BehaviorLibrary(10);
+      individualBehaviorLibrary = new BehaviorLibrary(24);
       jointBehaviorLibrary = new BehaviorLibrary(0);
       debugLevel = 2;
       debuggerGUI = new Debugger(this);
       registerBehaviors_0(individualBehaviorLibrary);
       registerBehaviors_1(jointBehaviorLibrary);
-      ABT = (CollectionBehavior)GameAgent_BehaviorFactories.behaviorFactory0(3, null, null, null, "GameAgent_RootCollectionBehavior()", this, (__BehaviorDesc)((List)individualBehaviorLibrary.lookupBehavior("GameAgent_RootCollectionBehavior()")).get(0));
+      ABT = (CollectionBehavior)GameAgent_BehaviorFactories.behaviorFactory0(10, null, null, null, "GameAgent_RootCollectionBehavior()", this, (__BehaviorDesc)((List)individualBehaviorLibrary.lookupBehavior("GameAgent_RootCollectionBehavior()")).get(0));
       startWMEReflection(ABT);
       registerEntity("GameAgent", this);
    }

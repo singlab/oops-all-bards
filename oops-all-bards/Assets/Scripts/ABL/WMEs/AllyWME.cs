@@ -19,6 +19,7 @@ public class AllyWME
     public int[] abilityIDs { get; set; }
     public int[] abilityCosts { get; set; }
     public string[] abilityTypes { get; set; }
+    public bool ownsTurn { get; set; }
 
     // CiF statistics
     public int[] partyIDs { get; set; }
@@ -48,6 +49,7 @@ public class AllyWME
             abilityCosts[i] = player.playerClass.abilities[i].cost;
             abilityTypes[i] = player.playerClass.abilities[i].combatType.ToString();
         }
+        this.ownsTurn = false;
         // Handle CiF data
         this.partyIDs = new int[PartyManager.Instance.currentParty.Count];
         this.partyAffinities = new int[PartyManager.Instance.currentParty.Count];

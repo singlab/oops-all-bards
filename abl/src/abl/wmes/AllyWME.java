@@ -27,6 +27,8 @@ public class AllyWME extends WME {
 	private int[] abilityCosts;
 	/** The ally character's combat ability types in array form */
 	private String[] abilityTypes;
+	/** Whether this ally owns the current turn */
+	private boolean ownsTurn;
 	/** The character IDs of the current party members */
 	private int[] partyIDs;
 	/** The affinity values this ally has for other party members */
@@ -40,7 +42,7 @@ public class AllyWME extends WME {
 	 * Instantiates a working memory element for tracking an ally.
 	 */
 	public AllyWME(int id, boolean inCombat, float locationX, float locationY, float locationZ, int health, 
-			int flourish, int shield, int[] abilityIDs, int[] abilityCosts, String[] abilityTypes, 
+			int flourish, int shield, int[] abilityIDs, int[] abilityCosts, String[] abilityTypes, boolean ownsTurn, 
 			int[] partyIDs, int[] partyAffinities, int[] statusIDs, int[] traitIDs) {
 		this.onTree = false;
 		this.id = id;
@@ -54,6 +56,7 @@ public class AllyWME extends WME {
 		this.abilityIDs = abilityIDs;
 		this.abilityCosts = abilityCosts;
 		this.abilityTypes = abilityTypes;
+		this.ownsTurn = ownsTurn;
 		this.partyIDs = partyIDs;
 		this.partyAffinities = partyAffinities;
 		this.statusIDs = statusIDs;
@@ -83,6 +86,8 @@ public class AllyWME extends WME {
 	public int[] getAbilityCosts() { return abilityCosts; }
 	
 	public String[] getAbilityTypes() { return abilityTypes; }
+
+	public boolean getOwnsTurn() { return ownsTurn; }
 	
 	public int[] getPartyIDs() { return partyIDs; }
 	

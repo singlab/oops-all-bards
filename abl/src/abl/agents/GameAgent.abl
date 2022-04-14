@@ -15,19 +15,21 @@ behaving_entity GameAgent {
 
         with ( success_test { newAllyWME = (AllyWME OnTree==false) spawnLocation = (ParallelBehaviorWME signature=="AllyAgentRoot()") } ) wait;
         spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
-        mental_act { // atomic?
+        mental_act { //atomic? keyword not recognized
             newAllyWME.setOnTree(true);
         }
     }
 
-    parallel behavior allyAgentRoot() {
-        // with (persistent) subgoal wait;
+    collection behavior allyAgentRoot() {
+        mental_act {
+            System.out.println("At allyAgentRoot");
+        }
     }
 
     parallel behavior manageAllyAgent(AllyWME allyAgent) {
         with (persistent) subgoal manageCombat(allyAgent);
-        with (persistent) subgoal manageNoncombat(allyAgent);
-        with (persistent) subgoal lookForQuip(allyAgent); 
+        // with (persistent) subgoal manageNoncombat(allyAgent);
+        // with (persistent) subgoal lookForQuip(allyAgent); 
     }
 
     parallel behavior manageCombat(AllyWME allyAgent) {
@@ -38,15 +40,41 @@ behaving_entity GameAgent {
     }
 
     parallel behavior waitForTurn(AllyWME allyAgent) {
+        with (priority 3) mental_act {
+			System.out.println("I am waiting to take my turn.");
+    	}
+
         with ( success_test { (allyAgent.ownsTurn==true) } ) wait;
 
-        subgoal takeTurn(allyAgent);
+        sequential {
+            subgoal takeTurn(allyAgent);
+        }
     }
 
     parallel behavior lookToAssist(AllyWME allyAgent) {
-        TurnWME turnWME;
+        AllyWME otherAlly;
 
-        with ( success_test { turnWME = (TurnWME turnOwner!=allyAgent.id) } ) wait;
+        with (priority 3) mental_act {
+			System.out.println("I am looking to assist.");
+    	}
+
+        with ( success_test { otherAlly = (AllyWME ownsTurn==true) (allyAgent.ownsTurn==false) } ) wait;
+
+        sequential {
+            subgoal assistAlly(allyAgent, otherAlly);
+        }
+    }
+
+    sequential behavior takeTurn(AllyWME allyAgent) {
+        mental_act {
+            System.out.println("I am taking my turn.");
+        }
+    }
+
+    sequential behavior assistAlly(AllyWME allyAgent, AllyWME otherAlly) {
+        mental_act {
+            System.out.println("I am going to assist.");
+        }
     }
 
     // This is a collection behavior s.t. all children act in parallel and never result in failure
@@ -55,6 +83,6 @@ behaving_entity GameAgent {
 			System.out.println("Starting game agent...");
     	}
     	
-        subgoal lookForAllyAgent();
+        with (persistent) subgoal lookForAllyAgent();
     }
 }
