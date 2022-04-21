@@ -1,6 +1,7 @@
 package server;
 
 import java.lang.reflect.Field;
+import server.Message;
 
 
 import java.io.*;
@@ -51,25 +52,7 @@ public class TCPServer {
 			return jo;
 		}
 	}
-	
-	static class Message {
-		public int code;
-		public String msg;
-		public String data;
-	
-		public Message(int code, String msg, String data) {
-			this.code = code;
-			this.msg = msg;
-			this.data = data;
-		}
-		private JSONObject toJSON() {
-			JSONObject jo = new JSONObject();
-			jo.put("code", code);
-			jo.put("msg", msg);
-			jo.put("data", data);
-			return jo;
-		}
-	}
+
 	
 	public void startAgent() {
 		GameAgent agent = new GameAgent();
@@ -109,10 +92,15 @@ public class TCPServer {
                 writer.println(jo);
                 String line = "";
                 while ((line = in.readLine()) != null) {
+                	System.out.println("Receiving message...");
                 	JSONObject obj = (JSONObject) JSONValue.parse(line);
-                	System.out.println(obj.get("code"));
-                	System.out.println(obj.get("msg"));
-                	System.out.println(obj.get("data"));     
+                	Message msg = new Message(obj);
+                	System.out.println(msg.code);
+                	System.out.println(msg.msg);
+                	System.out.println(msg.data);
+//                	System.out.println(obj.get("code"));
+//                	System.out.println(obj.get("msg"));
+//                	System.out.println(obj.get("data"));     
                 	// TODO: Figure out how ABL passes in strings so 
                 	// We can work with strings rather than just primitives.
                 	this.data = (long) obj.get("code");

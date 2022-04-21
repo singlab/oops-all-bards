@@ -1,6 +1,7 @@
 package abl.wmes;
 
 import wm.WME;
+import org.json.simple.JSONObject;
 
 public class AllyWME extends WME {
 	/** Whether or not this WME is on an active behavior tree */
@@ -61,6 +62,26 @@ public class AllyWME extends WME {
 		this.partyAffinities = partyAffinities;
 		this.statusIDs = statusIDs;
 		this.traitIDs = traitIDs;
+	}
+	
+	public AllyWME(JSONObject data) {
+		this.onTree = (boolean) data.get("onTree");
+		this.id = (int) data.get("id");
+		this.inCombat = (boolean) data.get("inCombat");
+		this.locationX = (float) data.get("locationX");
+		this.locationY = (float) data.get("locationY");
+		this.locationZ = (float) data.get("locationZ");
+		this.health = (int) data.get("health");
+		this.flourish = (int) data.get("flourish");
+		this.shield = (int) data.get("shield");
+		this.abilityIDs = (int[]) data.get("abilityIDs");
+		this.abilityCosts = (int[]) data.get("abilityCosts");
+		this.abilityTypes = (String[]) data.get("abilityTypes");
+		this.ownsTurn = (boolean) data.get("ownsTurn");
+		this.partyIDs = (int[]) data.get("partyIDs");
+		this.partyAffinities = (int[]) data.get("getpartyAffinities");
+		this.statusIDs = (int[]) data.get("statusIDs");
+		this.traitIDs = (int[]) data.get("traitIDs");
 	}
 	
 	public boolean getOnTree() { return onTree; }

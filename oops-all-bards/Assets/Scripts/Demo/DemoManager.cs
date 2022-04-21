@@ -20,6 +20,8 @@ public class DemoManager : MonoBehaviour
         GatherParty();
         // Have CombatManager init combat with preselected party/enemies above.
         CombatManager.Instance.InitCombatQueue(party, enemies);
+        ABLMessage message = TCPTestClient.Instance.CreateTestABLMessage(party[1]);
+        TCPTestClient.Instance.SendMessage(message);
     }
 
     // Update is called once per frame

@@ -11,11 +11,28 @@ public class TCPTestClient : MonoBehaviour {
 	#region private members 	
 	private TcpClient socketConnection; 	
 	private Thread clientReceiveThread; 	
-	#endregion  	
+	#endregion
+
+	private static TCPTestClient _instance;
+	public static TCPTestClient Instance => TCPTestClient._instance;  	
+	
+	void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        } else if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
+		ConnectToTcpServer();
+    }
+
 	// Use this for initialization 	
 	void Start () {
-		ConnectToTcpServer();
-	}  	
+		
+	}
+
 	// Update is called once per frame	
 	/// <summary> 	
 	/// Setup socket connection. 	
@@ -29,7 +46,8 @@ public class TCPTestClient : MonoBehaviour {
 		catch (Exception e) { 			
 			Debug.Log("On client connect exception " + e); 		
 		} 	
-	}  	
+	}
+
 	/// <summary> 	
 	/// Runs in background clientReceiveThread; Listens for incomming data. 	
 	/// </summary>     
@@ -53,7 +71,6 @@ public class TCPTestClient : MonoBehaviour {
 						Debug.Log(response.code);
 						Debug.Log(response.msg);
 						Debug.Log(response.data);
-						SendMessage(response);
 					} 				
 				} 			
 			}         
@@ -61,23 +78,23 @@ public class TCPTestClient : MonoBehaviour {
 		catch (SocketException socketException) {             
 			Debug.Log("Socket exception: " + socketException);         
 		}     
-	}	
+	}
+
 	/// <summary> 	
-	/// Send message to server using socket connection. 	
+	/// Send a stringified JSON object to server using socket connection. 	
 	/// </summary> 	
-	// TODO: Change out the ALBResposne to something more generic.
-	private void SendMessage(ABLResponse response) { 
+	public void SendMessage(ABLMessage message) { 
 		// TODO: Send WME to ABL server.
 		// TODO: SEND OVER THE BOTWME TO ABL SERVER.        
-		if (socketConnection == null) {             
+		if (socketConnection == null) {       
+			Debug.Log("Returning because socket connection is null");      
 			return;         
 		}  	
 		try { 			
 			// Get a stream object for writing. 			
 			NetworkStream stream = socketConnection.GetStream(); 			
-			if (stream.CanWrite) {                 
-								
-				string json = JsonUtility.ToJson(response);
+			if (stream.CanWrite) {
+				string json = JsonUtility.ToJson(message);                 
 				// Convert string message to byte array.                 
 				//	The reason for the newline is because of how Java's readLine
 				//	works. It needs a newline to consider the stream complete.
@@ -92,8 +109,18 @@ public class TCPTestClient : MonoBehaviour {
 		}     
 	}
 
-	// public void CreateTestAllyWME() 
-	// {
-
-	// } 
+	public ABLMessage CreateTestABLMessage(BasePlayer ally) 
+	{
+		// Create the AllyWME object from the BasePlayer object.
+		AllyWME allyWME = new AllyWME(ally);
+		// Transform to json.
+		string data = JsonUtility.ToJson(allyWME);
+		// Prepare the message for ABL.
+		ABLMessage message = new ABLMessage();
+		message.code = 1;
+		message.msg = "Sending AllyWME";
+		message.data = data;
+		// Return message object.
+		return message;
+	} 
 }
