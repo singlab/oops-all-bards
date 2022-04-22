@@ -23,10 +23,12 @@ public class Message {
 		this.msg = (String) jo.get("msg");
 		JSONParser parser = new JSONParser();
 		try {
+			System.out.println("Trying to parse data.");
 			this.data = (JSONObject) parser.parse((String) jo.get("data"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Error parsing data field.");
 		}
 	}
 	

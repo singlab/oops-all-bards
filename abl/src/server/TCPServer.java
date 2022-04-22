@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import abl.generated.GameAgent;
+import abl.wmes.AllyWME;
 /**
  * This program demonstrates a simple TCP/IP socket server.
  *
@@ -95,12 +96,8 @@ public class TCPServer {
                 	System.out.println("Receiving message...");
                 	JSONObject obj = (JSONObject) JSONValue.parse(line);
                 	Message msg = new Message(obj);
-                	System.out.println(msg.code);
-                	System.out.println(msg.msg);
-                	System.out.println(msg.data);
-//                	System.out.println(obj.get("code"));
-//                	System.out.println(obj.get("msg"));
-//                	System.out.println(obj.get("data"));     
+                	AllyWME wme = (AllyWME) msg.parseData();
+                	System.out.println(wme.getID());
                 	// TODO: Figure out how ABL passes in strings so 
                 	// We can work with strings rather than just primitives.
                 	this.data = (long) obj.get("code");

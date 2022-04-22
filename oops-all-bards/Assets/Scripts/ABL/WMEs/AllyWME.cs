@@ -6,26 +6,26 @@ using UnityEngine;
 public class AllyWME
 {
     // General statistics
-    public int id { get; set; }
-    // public float locationX { get; set; }
-    // public float locationY { get; set; }
-    // public float locationZ { get; set; }
-    public bool inCombat { get; set; }
+    [SerializeField] public int id;
+    // [SerializeField] public float locationX;
+    // [SerializeField] public float locationY;
+    // [SerializeField] public float locationZ;
+    [SerializeField] public bool inCombat;
 
     // Combat statistics
-    public int health { get; set; }
-    // public int flourish { get; set; }
-    public int shield { get; set; }
-    public int[] abilityIDs { get; set; }
-    public int[] abilityCosts { get; set; }
-    public string[] abilityTypes { get; set; }
-    public bool ownsTurn { get; set; }
+    [SerializeField] public int health;
+    // [SerializeField] public int flourish;
+    [SerializeField] public int shield;
+    [SerializeField] public int[] abilityIDs;
+    [SerializeField] public int[] abilityCosts;
+    [SerializeField] public string[] abilityTypes;
+    [SerializeField] public bool ownsTurn;
 
     // CiF statistics
-    public int[] partyIDs { get; set; }
-    public int[] partyAffinities { get; set; }
-    public int[] statusIDs { get; set; }
-    public int[] traitIDs { get; set; }
+    [SerializeField] public int[] partyIDs;
+    [SerializeField] public int[] partyAffinities;
+    [SerializeField] public int[] statusIDs;
+    [SerializeField] public int[] traitIDs;
 
     public AllyWME(BasePlayer player)
     {

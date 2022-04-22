@@ -120,6 +120,7 @@ public class TCPTestClient : MonoBehaviour {
 		message.code = 1;
 		message.msg = "Sending AllyWME";
 		message.data = data;
+		Debug.Log(data);
 		// Return message object.
 		return message;
 	} 
