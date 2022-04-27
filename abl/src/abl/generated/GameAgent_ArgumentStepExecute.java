@@ -15,49 +15,49 @@ import abl.sensors.*;
 public class GameAgent_ArgumentStepExecute {
    static public Object[] argumentExecute0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
-         case 1: {
-            // lookForAllyAgent_1Step2
+         case 2: {
+            // lookForAllyAgent_1Step3
             final Object[] args = new Object[2];
             args[0] = ((ParallelBehaviorWME)__$behaviorFrame[1]);
             args[1] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 4: {
+         case 5: {
             // manageAllyAgent_1Step1
             final Object[] args = new Object[1];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 6: {
+         case 7: {
             // manageCombat_1Step2
             final Object[] args = new Object[1];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 7: {
+         case 8: {
             // manageCombat_1Step3
             final Object[] args = new Object[1];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 10: {
+         case 11: {
             // waitForTurn_1Step3
             final Object[] args = __$behaviorFrame;
             return args;
          }
-         case 11: {
-            // waitForTurn-4->AnonymousStep10_1Step1
+         case 12: {
+            // waitForTurn-4->AnonymousStep11_1Step1
             final Object[] args = new Object[1];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 14: {
+         case 15: {
             // lookToAssist_1Step3
             final Object[] args = __$behaviorFrame;
             return args;
          }
-         case 15: {
-            // lookToAssist-6->AnonymousStep14_1Step1
+         case 16: {
+            // lookToAssist-6->AnonymousStep15_1Step1
             final Object[] args = new Object[2];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             args[1] = ((AllyWME)__$behaviorFrame[1]);

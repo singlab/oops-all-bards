@@ -41,11 +41,11 @@ public class Message {
 	}
 	
 	WME parseData() {
-		WME wme = null;
 		// 1 -- AllyWME
 		if (this.code == 1) {
-			wme = new AllyWME(this.data);
+			AllyWME wme = new AllyWME(this.data);
+			return wme;
 		}
-		return wme;
+		return null;
 	}
 }

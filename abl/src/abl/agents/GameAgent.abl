@@ -12,10 +12,15 @@ behaving_entity GameAgent {
     sequential behavior lookForAllyAgent() {
         AllyWME newAllyWME;
         ParallelBehaviorWME spawnLocation;
+        
+        mental_act {
+        	System.out.println("Looking for ally agent...");
+        }
 
-        with ( success_test { newAllyWME = (AllyWME OnTree==false) spawnLocation = (ParallelBehaviorWME signature=="AllyAgentRoot()") } ) wait;
+        with ( success_test { newAllyWME = (AllyWME OnTree==false) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
         spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
-        mental_act { //atomic? keyword not recognized
+        mental_act {
+        	System.out.println("Found new AllyWME");
             newAllyWME.setOnTree(true);
         }
     }
@@ -33,7 +38,7 @@ behaving_entity GameAgent {
     }
 
     parallel behavior manageCombat(AllyWME allyAgent) {
-        with ( success_test { ( allyAgent.inCombat==true ) } ) wait;
+        with ( success_test { ( allyAgent.getInCombat()==true ) } ) wait;
         
         subgoal lookToAssist(allyAgent);
         subgoal waitForTurn(allyAgent);
@@ -44,7 +49,7 @@ behaving_entity GameAgent {
 			System.out.println("I am waiting to take my turn.");
     	}
 
-        with ( success_test { (allyAgent.ownsTurn==true) } ) wait;
+        with ( success_test { (allyAgent.getOwnsTurn()==true) } ) wait;
 
         sequential {
             subgoal takeTurn(allyAgent);
@@ -58,7 +63,7 @@ behaving_entity GameAgent {
 			System.out.println("I am looking to assist.");
     	}
 
-        with ( success_test { otherAlly = (AllyWME ownsTurn==true) (allyAgent.ownsTurn==false) } ) wait;
+        with ( success_test { otherAlly = (AllyWME ownsTurn==true) (allyAgent.getOwnsTurn()==false) } ) wait;
 
         sequential {
             subgoal assistAlly(allyAgent, otherAlly);
@@ -83,6 +88,8 @@ behaving_entity GameAgent {
 			System.out.println("Starting game agent...");
     	}
     	
-        with (persistent) subgoal lookForAllyAgent();
+
+    	subgoal lookForAllyAgent();
+    	with (persistent) subgoal allyAgentRoot();
     }
 }

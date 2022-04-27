@@ -35,15 +35,15 @@ public class DemoManager : MonoBehaviour
     {
         // Init player and ally.
         BaseClass playerClass = CreatePlayerClass(BaseClass.ClassTypes.SKALD);
-        BasePlayer player = new BasePlayer("Player", 0, 20, 0, playerClass, playerClass.stats, 0, 0, null, null);
-        BasePlayer ally = new BasePlayer("Ally", 1, 20, 0, playerClass, playerClass.stats, 0, 0, null, null);
+        BasePlayer player = new BasePlayer("Player", 0, 20, 10, 0, playerClass, playerClass.stats, 0, 0, null, null);
+        BasePlayer ally = new BasePlayer("Ally", 1, 20, 10, 0, playerClass, playerClass.stats, 0, 0, null, null);
         party.Add(player);
         party.Add(ally);
 
         // Init enemies.
-        BaseEnemy enemy = new BaseEnemy("Enemy1", 10, 0, playerClass);
+        BaseEnemy enemy = new BaseEnemy("Enemy1", 10, 5, 0, playerClass);
         enemies.Add(enemy);
-        enemy = new BaseEnemy("Enemy2", 10, 0, playerClass);
+        enemy = new BaseEnemy("Enemy2", 10, 5, 0, playerClass);
         enemies.Add(enemy);
     }
 

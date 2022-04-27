@@ -1,6 +1,8 @@
 package abl.wmes;
 
 import wm.WME;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class AllyWME extends WME {
@@ -65,23 +67,53 @@ public class AllyWME extends WME {
 	}
 	
 	public AllyWME(JSONObject data) {
-		this.onTree = (boolean) data.get("onTree");
-		this.id = (int) data.get("id");
+		// Handle simple data structures.
+		this.onTree = false;
+		this.id = (int)(long) data.get("id");
 		this.inCombat = (boolean) data.get("inCombat");
-		this.locationX = (float) data.get("locationX");
-		this.locationY = (float) data.get("locationY");
-		this.locationZ = (float) data.get("locationZ");
-		this.health = (int) data.get("health");
-		this.flourish = (int) data.get("flourish");
-		this.shield = (int) data.get("shield");
-		this.abilityIDs = (int[]) data.get("abilityIDs");
-		this.abilityCosts = (int[]) data.get("abilityCosts");
-		this.abilityTypes = (String[]) data.get("abilityTypes");
+//		this.locationX = (float) data.get("locationX");
+//		this.locationY = (float) data.get("locationY");
+//		this.locationZ = (float) data.get("locationZ");
+		this.health = (int)(long) data.get("health");
+		this.flourish = (int)(long) data.get("flourish");
+		this.shield = (int)(long) data.get("shield");
 		this.ownsTurn = (boolean) data.get("ownsTurn");
-		this.partyIDs = (int[]) data.get("partyIDs");
-		this.partyAffinities = (int[]) data.get("getpartyAffinities");
-		this.statusIDs = (int[]) data.get("statusIDs");
-		this.traitIDs = (int[]) data.get("traitIDs");
+		// Handle arrays.
+		JSONArray jsonArray = (JSONArray) data.get("abilityIDs");
+		this.abilityIDs = new int[jsonArray.size()];
+		for (int i = 0; i < jsonArray.size(); i++) {
+		    this.abilityIDs[i] = (int)(long) jsonArray.get(i);
+		}
+		jsonArray = (JSONArray) data.get("abilityCosts");
+		this.abilityCosts = new int[jsonArray.size()];
+		for (int i = 0; i < jsonArray.size(); i++) {
+		    this.abilityCosts[i] = (int)(long) jsonArray.get(i);
+		}
+		jsonArray = (JSONArray) data.get("abilityTypes");
+		this.abilityTypes = new String[jsonArray.size()];
+		for (int i = 0; i < jsonArray.size(); i++) {
+		    this.abilityTypes[i] = (String) jsonArray.get(i);
+		}
+		jsonArray = (JSONArray) data.get("partyIDs");
+		this.partyIDs = new int[jsonArray.size()];
+		for (int i = 0; i < jsonArray.size(); i++) {
+		    this.partyIDs[i] = (int)(long) jsonArray.get(i);
+		}
+		jsonArray = (JSONArray) data.get("partyAffinities");
+		this.partyAffinities = new int[jsonArray.size()];
+		for (int i = 0; i < jsonArray.size(); i++) {
+		    this.partyAffinities[i] = (int)(long) jsonArray.get(i);
+		}
+		jsonArray = (JSONArray) data.get("statusIDs");
+		this.statusIDs = new int[jsonArray.size()];
+		for (int i = 0; i < jsonArray.size(); i++) {
+		    this.statusIDs[i] = (int)(long) jsonArray.get(i);
+		}
+		jsonArray = (JSONArray) data.get("traitIDs");
+		this.traitIDs = new int[jsonArray.size()];
+		for (int i = 0; i < jsonArray.size(); i++) {
+		    this.traitIDs[i] = (int)(long) jsonArray.get(i);
+		}
 	}
 	
 	public boolean getOnTree() { return onTree; }

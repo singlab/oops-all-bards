@@ -15,8 +15,8 @@ import abl.sensors.*;
 public class GameAgent_SuccessTests {
    static public boolean successTest0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
-         case 0: {
-            // lookForAllyAgent_1Step1
+         case 1: {
+            // lookForAllyAgent_1Step2
                List wmeList0;
                ListIterator wmeIter0;
                wmeList0 = BehavingEntity.getBehavingEntity().lookupWME("AllyWME");
@@ -31,13 +31,13 @@ public class GameAgent_SuccessTests {
                   {
                         List wmeList1;
                         ListIterator wmeIter1;
-                        wmeList1 = BehavingEntity.getBehavingEntity().lookupReflectionWMEBySignature("ParallelBehaviorWME", "AllyAgentRoot()");
+                        wmeList1 = BehavingEntity.getBehavingEntity().lookupReflectionWMEBySignature("ParallelBehaviorWME", "allyAgentRoot()");
                         wmeIter1 = wmeList1.listIterator();
                         while(wmeIter1.hasNext()) {
                            ParallelBehaviorWME wme__1 = (ParallelBehaviorWME)wmeIter1.next();
                            __$behaviorFrame[1] = wme__1;
                            if (
-                              (wme__1.getSignature().equals("AllyAgentRoot()"))
+                              (wme__1.getSignature().equals("allyAgentRoot()"))
                            )
 
                            {
@@ -54,10 +54,10 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 5: {
+         case 6: {
             // manageCombat_1Step1
                if (
-                  ((AllyWME)__$behaviorFrame[0]).inCombat == true
+                  ((AllyWME)__$behaviorFrame[0]).getInCombat() == true
                )
 
                {
@@ -67,10 +67,10 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 9: {
+         case 10: {
             // waitForTurn_1Step2
                if (
-                  ((AllyWME)__$behaviorFrame[0]).ownsTurn == true
+                  ((AllyWME)__$behaviorFrame[0]).getOwnsTurn() == true
                )
 
                {
@@ -80,7 +80,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 13: {
+         case 14: {
             // lookToAssist_1Step2
                List wmeList0;
                ListIterator wmeIter0;
@@ -95,7 +95,7 @@ public class GameAgent_SuccessTests {
 
                   {
                         if (
-                           ((AllyWME)__$behaviorFrame[0]).ownsTurn == false
+                           ((AllyWME)__$behaviorFrame[0]).getOwnsTurn() == false
                         )
 
                         {

@@ -15,37 +15,43 @@ import abl.sensors.*;
 public class GameAgent_MentalStepExecute {
    static public void mentalExecute0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity, MentalStep __$thisStep) {
       switch (__$stepID) {
-         case 2: {
-            // lookForAllyAgent_1Step3
-            ((AllyWME)__$behaviorFrame[0]).setOnTree(true);
+         case 0: {
+            // lookForAllyAgent_1Step1
+            System.out.println("Looking for ally agent...");
             break;
          }
          case 3: {
+            // lookForAllyAgent_1Step4
+            System.out.println("Found new AllyWME");
+            ((AllyWME)__$behaviorFrame[0]).setOnTree(true);
+            break;
+         }
+         case 4: {
             // allyAgentRoot_1Step1
             System.out.println("At allyAgentRoot");
             break;
          }
-         case 8: {
+         case 9: {
             // waitForTurn_1Step1
             System.out.println("I am waiting to take my turn.");
             break;
          }
-         case 12: {
+         case 13: {
             // lookToAssist_1Step1
             System.out.println("I am looking to assist.");
             break;
          }
-         case 16: {
+         case 17: {
             // takeTurn_1Step1
             System.out.println("I am taking my turn.");
             break;
          }
-         case 17: {
+         case 18: {
             // assistAlly_1Step1
             System.out.println("I am going to assist.");
             break;
          }
-         case 18: {
+         case 19: {
             // GameAgent_RootCollectionBehaviorStep1
             System.out.println("Starting game agent...");
             break;

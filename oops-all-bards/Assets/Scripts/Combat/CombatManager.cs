@@ -97,10 +97,9 @@ public class CombatManager : MonoBehaviour
             ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
             healthBar.maxValue = p.health;
             healthBar.UpdateValueBar(p.health);
-            // TODO: Implement flourish plz
             ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = p.health;
-            flourishBar.UpdateValueBar(p.health);
+            flourishBar.maxValue = p.flourish;
+            flourishBar.UpdateValueBar(p.flourish);
         }
 
         foreach (BaseEnemy e in enemies)
@@ -112,10 +111,9 @@ public class CombatManager : MonoBehaviour
             ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
             healthBar.maxValue = e.health;
             healthBar.UpdateValueBar(e.health);
-            // TODO: Implement flourish plz
             ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = e.health;
-            flourishBar.UpdateValueBar(e.health);
+            flourishBar.maxValue = e.flourish;
+            flourishBar.UpdateValueBar(e.flourish);
         }
     }
 
@@ -258,8 +256,11 @@ public class CombatManager : MonoBehaviour
     // A function used to resolve/apply effects of a PlayerAction queueable.
     public void ResolvePlayerAction(PlayerAction action)
     {
-        // TODO: Add flourish points/action economy. Remove the cost of ability in all cases.
-        // action.actingCharacter.flourish -= action.ability.cost;
+        // Handle flourish cost and update UI to reflect new value.
+        action.actingCharacter.flourish -= action.ability.cost;
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.actingCharacter.name);
+        relevantValueBars.Item2.UpdateValueBar(action.actingCharacter.flourish);
+
         if (action.ability.combatType == BaseAbility.CombatAbilityTypes.ATTACK)
         {
             action.target.health -= action.ability.damage;
@@ -276,18 +277,16 @@ public class CombatManager : MonoBehaviour
             action.target.shield += action.ability.damage;
             Debug.Log(action.actingCharacter.name + " is shielding " + action.target.name + " for " + action.ability.damage + " damage." );
         }
-        // Update the UI to reflect new values.
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.target.name);
+        // Handle damage/heal and update UI to reflect new value.
+        relevantValueBars = FindValueBars(action.target.name);
         relevantValueBars.Item1.UpdateValueBar(action.target.health);
-        // TODO: Implement flourish plz.
-        relevantValueBars.Item2.UpdateValueBar(action.target.health);
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
 
     // A function that finds and returns a tuple of ValueBar objects (health, flourish) 
-    // corresponding to the name of the target of an action.
+    // corresponding to a string name of a character.
     Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
@@ -328,9 +327,11 @@ public class CombatManager : MonoBehaviour
         BasePlayer target = party[UnityEngine.Random.Range(0, party.Count)];
         BaseAbility ability = actingCharacter.enemyClass.abilities[0];
 
-        // Apply effects of ability and log the outcome.
+        // Apply effects of ability, log the outcome, update value bar of target.
         target.health -= ability.damage;
         Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
+        relevantValueBars.Item1.UpdateValueBar(target.health);
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 

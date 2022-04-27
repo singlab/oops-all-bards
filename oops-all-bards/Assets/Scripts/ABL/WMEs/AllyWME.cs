@@ -14,7 +14,7 @@ public class AllyWME
 
     // Combat statistics
     [SerializeField] public int health;
-    // [SerializeField] public int flourish;
+    [SerializeField] public int flourish;
     [SerializeField] public int shield;
     [SerializeField] public int[] abilityIDs;
     [SerializeField] public int[] abilityCosts;
@@ -36,8 +36,7 @@ public class AllyWME
         // this.locationZ = player.locationZ;
         this.inCombat = PartyManager.Instance.inCombat;
         this.health = player.health;
-        // TODO: Implement flourish plz
-        // this.flourish = player.flourish;
+        this.flourish = player.flourish;
         this.shield = player.shield;
         // Handle ability data
         this.abilityIDs = new int[player.playerClass.abilities.Count];
