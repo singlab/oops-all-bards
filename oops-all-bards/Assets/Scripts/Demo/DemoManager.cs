@@ -20,7 +20,7 @@ public class DemoManager : MonoBehaviour
         GatherParty();
         // Have CombatManager init combat with preselected party/enemies above.
         CombatManager.Instance.InitCombatQueue(party, enemies);
-        ABLMessage message = TCPTestClient.Instance.CreateTestABLMessage(party[1]);
+        ABLMessage message = TCPTestClient.Instance.CreateABLMessage(party[1]);
         TCPTestClient.Instance.SendMessage(message);
     }
 
@@ -145,10 +145,12 @@ public class DemoManager : MonoBehaviour
     public void CombatWin()
     {
         SceneManager.LoadScene("CombatWin");
+        PartyManager.Instance.ToggleInCombat(false);
     }
 
     public void CombatLoss()
     {
         SceneManager.LoadScene("CombatLoss");
+        PartyManager.Instance.ToggleInCombat(false);
     }
 }

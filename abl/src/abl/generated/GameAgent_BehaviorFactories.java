@@ -24,9 +24,10 @@ public class GameAgent_BehaviorFactories {
          }
          case 1: {
             // allyAgentRoot_1
+               final Object[] __$behaviorFrame = new Object[1];
 
             final __StepDesc[] __$steps = {new __StepDesc(4, GameAgent.__$stepFactory0_rfield)};
-            return new CollectionBehaviorDebug(__$parentGoal, null, null, null, null, false, __$signature, (short)0, 1, null, __$steps, 1, __$behaviorDesc);
+            return new ParallelBehaviorDebug(__$parentGoal, null, null, null, null, false, __$signature, (short)0, 1, __$behaviorFrame, __$steps, 1, __$behaviorDesc);
          }
          case 2: {
             // manageAllyAgent_1

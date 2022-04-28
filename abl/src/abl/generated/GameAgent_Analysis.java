@@ -74,8 +74,8 @@ public class GameAgent_Analysis {
          case 10: {
             // GameAgent_RootCollectionBehavior
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("lookForAllyAgent()"); // stepID 20
-            _$analysisStepIDs.add("allyAgentRoot()"); // stepID 21
+            _$analysisStepIDs.add("allyAgentRoot()"); // stepID 20
+            _$analysisStepIDs.add("lookForAllyAgent()"); // stepID 21
             return _$analysisStepIDs;
          }
          case 11: {

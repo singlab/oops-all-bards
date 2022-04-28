@@ -26,11 +26,6 @@ public class GameAgent_MentalStepExecute {
             ((AllyWME)__$behaviorFrame[0]).setOnTree(true);
             break;
          }
-         case 4: {
-            // allyAgentRoot_1Step1
-            System.out.println("At allyAgentRoot");
-            break;
-         }
          case 9: {
             // waitForTurn_1Step1
             System.out.println("I am waiting to take my turn.");

@@ -32,6 +32,8 @@ public class TCPServer {
 		return server;
 	}
 	
+	private static Socket socket;
+	
 	public static GameAgent agent;
 	
 	public void startAgent() {
@@ -57,16 +59,12 @@ public class TCPServer {
 
             System.out.println("Server is listening on port " + port);
             while (true) {
-                Socket socket = serverSocket.accept();
+                socket = serverSocket.accept();
  
                 System.out.println("New client connected");
  
                 InputStream input = socket.getInputStream();
                 BufferedReader in = new BufferedReader(new InputStreamReader(input));
-  
-                OutputStream output = socket.getOutputStream();
-                PrintWriter writer = new PrintWriter(output, true);
-                // writer.println(jo);
                 String line = "";
                 while ((line = in.readLine()) != null) {
                 	System.out.println("Receiving message...");
@@ -91,9 +89,20 @@ public class TCPServer {
     	Message toHandle = new Message(jo);
     	if (toHandle.code == 1) {
     		AllyWME wme = (AllyWME) toHandle.parseData();
-    		System.out.println(wme.getOnTree());
     		agent.addWME(wme);
-    		System.out.println(agent.containsThisWME(wme));
     	}
+    }
+    
+    public void sendOutgoingMessage(JSONObject jo) {
+    	OutputStream output = null;
+		try {
+			output = socket.getOutputStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Error sending message: output stream");
+		}
+        PrintWriter writer = new PrintWriter(output, true);
+        writer.println(jo);
     }
 }

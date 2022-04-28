@@ -7,7 +7,7 @@ import abl.sensors.*;
 
 behaving_entity GameAgent {
 
-    // register wme AllyWME with AllySensor;
+	register act protect(int, int) with Protect;
 
     sequential behavior lookForAllyAgent() {
         AllyWME newAllyWME;
@@ -16,7 +16,7 @@ behaving_entity GameAgent {
         mental_act {
         	System.out.println("Looking for ally agent...");
         }
-
+		
         with ( success_test { newAllyWME = (AllyWME OnTree==false) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
         spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
         mental_act {
@@ -25,10 +25,10 @@ behaving_entity GameAgent {
         }
     }
 
-    collection behavior allyAgentRoot() {
-        mental_act {
-            System.out.println("At allyAgentRoot");
-        }
+    parallel behavior allyAgentRoot() {
+    	AllyWME newAllyWME;
+    	
+ 		with ( success_test { newAllyWME = (AllyWME OnTree==true) } ) wait;
     }
 
     parallel behavior manageAllyAgent(AllyWME allyAgent) {
@@ -87,9 +87,8 @@ behaving_entity GameAgent {
     	with (priority 3) mental_act {
 			System.out.println("Starting game agent...");
     	}
-    	
-
-    	subgoal lookForAllyAgent();
-    	with (persistent) subgoal allyAgentRoot();
+		
+		with (persistent) subgoal allyAgentRoot();
+		with (persistent) subgoal lookForAllyAgent();
     }
 }

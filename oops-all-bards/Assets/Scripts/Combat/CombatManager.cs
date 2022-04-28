@@ -72,6 +72,7 @@ public class CombatManager : MonoBehaviour
     private void SubscribeToEvents()
     {
         EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, TakeEnemyAction);
+        EventManager.Instance.SubscribeToEvent(EventType.AllyAI, TakeAllyAction);
     }
 
     // A function used to render all UI elements for the demo.
@@ -145,6 +146,9 @@ public class CombatManager : MonoBehaviour
         // Set private references to party and enemies.
         this.party = party;
         this.enemies = enemies;
+        // Set PartyManager variables.
+        PartyManager.Instance.currentParty = party;
+        PartyManager.Instance.ToggleInCombat(true);
         // Clean up for new combat scenario.
         combatQueue = new CombatQueue();
         combatQueue.Clear();
@@ -153,7 +157,13 @@ public class CombatManager : MonoBehaviour
         PushAndCreateCombatQueueable(new CombatStart());
         foreach (BasePlayer p in party)
         {
-            PushAndCreateCombatQueueable(new PlayerTurn(p));
+            if (p.id == 0)
+            {
+                PushAndCreateCombatQueueable(new PlayerTurn(p));
+            } else
+            {
+                PushAndCreateCombatQueueable(new AllyTurn(p));
+            }
         }
         foreach (BaseEnemy e in enemies)
         {
@@ -328,10 +338,49 @@ public class CombatManager : MonoBehaviour
         BaseAbility ability = actingCharacter.enemyClass.abilities[0];
 
         // Apply effects of ability, log the outcome, update value bar of target.
+        if (target.shield > 0)
+        {
+            if (target.shield >= ability.damage)
+            {
+                target.shield -= ability.damage;
+                Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "'s shield!");
+            } else 
+            {
+                int overflow = ability.damage - target.shield;
+                target.shield = 0;
+                target.health -= overflow;
+                Debug.Log(actingCharacter.name + " destroys " + target.name + "'s shield, and deals " + overflow + " damage to " + target.name + "!");
+            }
+        } else 
+        {
+            target.health -= ability.damage;
+            Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+        }
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
+        relevantValueBars.Item1.UpdateValueBar(target.health);
+        CheckCombatantsHealth(target);
+
+        // Tell DemoManager to check the queue and continue to next turn.
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
+    }
+
+    // A function used to calculate and push ally actions to the queue.
+    public void TakeAllyAction()
+    {
+        Debug.Log("Calculating ally action...");
+        BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
+        
+        // TODO: This AI is very simple. Should change to be more interesting.
+        // Choose random enemy and use Attack ability.
+        BaseEnemy target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
+        BaseAbility ability = actingCharacter.playerClass.abilities[0];
+
+        // Apply effects of ability, log the outcome, update value bar of target.
         target.health -= ability.damage;
         Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
         relevantValueBars.Item1.UpdateValueBar(target.health);
+        CheckCombatantsHealth(target);
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
@@ -350,6 +399,7 @@ public class CombatManager : MonoBehaviour
     // A function used to remove a downed character from combat.
     public void RemoveCharacterFromCombat(ITargetable character)
     {
+        ICombatQueueable[] array = combatQueue.queue.ToArray();
         Tuple<BasePlayer, BaseEnemy> parsedCharacter = ParseTargetable(character);
         // Remove instance of character from appropriate list and ensure no turns in the queue belong to the downed character.
         if (parsedCharacter.Item1 != null)
@@ -365,10 +415,15 @@ public class CombatManager : MonoBehaviour
                     Destroy(currentChild.gameObject);
                 }
             }
-            // TODO: Fix this!
-            foreach (PlayerTurn t in combatQueue.queue.ToArray())
+            if (parsedCharacter.Item1.id == 0)
             {
-                if (t.actingCharacter == parsedCharacter.Item1)
+                foreach (PlayerTurn t in array)
+                {
+                    combatQueue.Remove(t);
+                }
+            } else
+            {
+                foreach (AllyTurn t in array)
                 {
                     combatQueue.Remove(t);
                 }
@@ -376,6 +431,7 @@ public class CombatManager : MonoBehaviour
         }
         if (parsedCharacter.Item2 != null)
         {
+            Debug.Log("Attempting to remove " + parsedCharacter.Item2.name);
             enemies.Remove(parsedCharacter.Item2);
             // Update UI to no longer show character portrait.
             for (int i = 0; i < enemyPortraits.transform.childCount; i++)
@@ -388,11 +444,15 @@ public class CombatManager : MonoBehaviour
                 }
             }
             // TODO: Fix this!
-            foreach (EnemyTurn t in combatQueue.queue.ToArray())
+            foreach (ICombatQueueable q in array)
             {
-                if (t.actingCharacter == parsedCharacter.Item2)
+                if (q.GetType() == typeof(EnemyTurn))
                 {
-                    combatQueue.Remove(t);
+                    EnemyTurn t = (EnemyTurn)q;
+                    if (t.actingCharacter == parsedCharacter.Item2)
+                    {
+                        combatQueue.Remove(q);
+                    }
                 }
             }
         }

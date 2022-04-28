@@ -9,9 +9,10 @@ public class PlayerTurn : MonoBehaviour, ICombatQueueable
     public void Execute()
     {
         // Flag to begin waiting for player input.
+        Debug.Log("It is currently " + actingCharacter.name + "'s turn.");
+        actingCharacter.ownsTurn = true;
         EventManager.Instance.InvokeEvent(EventType.AwaitPlayerInput, actingCharacter);
         CombatManager.Instance.RenderInputMenu(actingCharacter);
-        Debug.Log("It is currently " + actingCharacter.name + "'s turn.");
         done = true;
     }
 

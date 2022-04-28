@@ -54,6 +54,28 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
+         case 4: {
+            // allyAgentRoot_1Step1
+               List wmeList0;
+               ListIterator wmeIter0;
+               wmeList0 = BehavingEntity.getBehavingEntity().lookupWME("AllyWME");
+               wmeIter0 = wmeList0.listIterator();
+               while(wmeIter0.hasNext()) {
+                  AllyWME wme__0 = (AllyWME)wmeIter0.next();
+                  __$behaviorFrame[0] = wme__0;
+                  if (
+                     ( wme__0.getOnTree() == true )
+                  )
+
+                  {
+                     return true;
+                  }
+
+               }
+
+
+            return false;
+         }
          case 6: {
             // manageCombat_1Step1
                if (

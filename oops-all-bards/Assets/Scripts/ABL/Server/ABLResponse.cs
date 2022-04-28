@@ -10,6 +10,5 @@ public class ABLResponse
     // The message returned by the Java server.
     public string msg;
     // The data represented as a string returned by the Java server.
-    // This could be for example a JSON representation of an ABLAction.
     public string data;
 }

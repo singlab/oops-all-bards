@@ -109,7 +109,7 @@ public class TCPTestClient : MonoBehaviour {
 		}     
 	}
 
-	public ABLMessage CreateTestABLMessage(BasePlayer ally) 
+	public ABLMessage CreateABLMessage(BasePlayer ally) 
 	{
 		// Create the AllyWME object from the BasePlayer object.
 		AllyWME allyWME = new AllyWME(ally);
@@ -118,7 +118,7 @@ public class TCPTestClient : MonoBehaviour {
 		// Prepare the message for ABL.
 		ABLMessage message = new ABLMessage();
 		message.code = 1;
-		message.msg = "Sending AllyWME";
+		message.msg = "AllyWME";
 		message.data = data;
 		Debug.Log(data);
 		// Return message object.

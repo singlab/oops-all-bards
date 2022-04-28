@@ -34,4 +34,16 @@ public class PartyManager : MonoBehaviour
     {
         inCombat = value;
     }
+
+    public BasePlayer FindPartyMemberById(int id)
+    {
+        foreach (BasePlayer p in currentParty) 
+        {
+            if (p.id == id)
+            {
+                return p;
+            }
+        }
+        return null;
+    }
 }

@@ -46,7 +46,7 @@ public class GameAgent_StepFactories {
          }
          case 4: {
             // allyAgentRoot_1Step1
-            return new MentalStepDebug(4, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "allyAgentRoot_1Step1");
+            return new WaitStepDebug(4, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
          }
          case 5: {
             // manageAllyAgent_1Step1
@@ -110,11 +110,11 @@ public class GameAgent_StepFactories {
          }
          case 20: {
             // GameAgent_RootCollectionBehaviorStep2
-            return new GoalStepDebug(20, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "lookForAllyAgent()", null, (short)0);
+            return new GoalStepDebug(20, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "allyAgentRoot()", null, (short)0);
          }
          case 21: {
             // GameAgent_RootCollectionBehaviorStep3
-            return new GoalStepDebug(21, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "allyAgentRoot()", null, (short)0);
+            return new GoalStepDebug(21, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "lookForAllyAgent()", null, (short)0);
          }
       default:
          throw new AblRuntimeError("Unexpected stepID " + __$stepID);

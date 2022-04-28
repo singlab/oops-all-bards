@@ -32,7 +32,7 @@ public class Message {
 		}
 	}
 	
-	JSONObject toJSON() {
+	public JSONObject toJSON() {
 		JSONObject jo = new JSONObject();
 		jo.put("code", code);
 		jo.put("msg", msg);

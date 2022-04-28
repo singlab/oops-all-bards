@@ -17,6 +17,7 @@ public class BasePlayer : ITargetable
     public List<BaseItem> equipment { get; set; } = new List<BaseItem>();
 	public List<BaseItem> inventory { get; set; } = new List<BaseItem>();
     public CiFData cifData { get; set; }
+    public bool ownsTurn { get; set; }
 
     public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory)
     {
@@ -32,5 +33,6 @@ public class BasePlayer : ITargetable
         this.equipment = equipment;
         this.inventory = inventory;
         this.cifData = new CiFData();
+        this.ownsTurn = false;
     }
 }
