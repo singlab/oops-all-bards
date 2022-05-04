@@ -369,11 +369,18 @@ public class CombatManager : MonoBehaviour
     {
         Debug.Log("Calculating ally action...");
         BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
+        BaseEnemy target;
+        BaseAbility ability;
         
         // TODO: This AI is very simple. Should change to be more interesting.
         // Choose random enemy and use Attack ability.
-        BaseEnemy target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
-        BaseAbility ability = actingCharacter.playerClass.abilities[0];
+        if (enemies.Count > 0) {
+            target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
+            ability = actingCharacter.playerClass.abilities[0];
+        } else {
+            CheckForWinLoss();
+            return;
+        }
 
         // Apply effects of ability, log the outcome, update value bar of target.
         target.health -= ability.damage;
@@ -417,15 +424,21 @@ public class CombatManager : MonoBehaviour
             }
             if (parsedCharacter.Item1.id == 0)
             {
-                foreach (PlayerTurn t in array)
+                foreach (ICombatQueueable q in array)
                 {
-                    combatQueue.Remove(t);
+                    if (q.GetType() == typeof(PlayerTurn))
+                    {
+                        combatQueue.Remove(q);
+                    }
                 }
             } else
             {
-                foreach (AllyTurn t in array)
+                foreach (ICombatQueueable q in array)
                 {
-                    combatQueue.Remove(t);
+                    if (q.GetType() == typeof(AllyTurn))
+                    {
+                        combatQueue.Remove(q);
+                    }
                 }
             }
         }

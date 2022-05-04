@@ -12,8 +12,10 @@ import abl.learning.*;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
+import abl.util;
 
 public class GameAgent extends BehavingEntity {
+   WMEDictionary dict = new WMEDictionary();
    public final static Rule[] __$allRuleArray = {};
    public final static Rulegroup[] __$allRulegroupArray = {};
    private final static Object[] __$tempObjArray = new Object[1];

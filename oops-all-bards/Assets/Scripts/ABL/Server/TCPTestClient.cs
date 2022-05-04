@@ -123,5 +123,14 @@ public class TCPTestClient : MonoBehaviour {
 		Debug.Log(data);
 		// Return message object.
 		return message;
+	}
+
+	public void RefreshWMEs()
+	{
+		foreach (BasePlayer partyMember in PartyManager.Instance.currentParty)
+		{
+			ABLMessage msg = CreateABLMessage(partyMember);
+			SendMessage(msg);
+		}
 	} 
 }

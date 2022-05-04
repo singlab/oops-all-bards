@@ -12,6 +12,7 @@ import abl.learning.*;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
+import abl.util;
 public class GameAgent_SuccessTests {
    static public boolean successTest0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
@@ -26,6 +27,8 @@ public class GameAgent_SuccessTests {
                   __$behaviorFrame[0] = wme__0;
                   if (
                      ( wme__0.getOnTree() == false )
+                     &&
+                     ( wme__0.getID() != 0 )
                   )
 
                   {

@@ -12,6 +12,7 @@ import abl.learning.*;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
+import abl.util;
 public class GameAgent_MentalStepExecute {
    static public void mentalExecute0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity, MentalStep __$thisStep) {
       switch (__$stepID) {
@@ -24,6 +25,7 @@ public class GameAgent_MentalStepExecute {
             // lookForAllyAgent_1Step4
             System.out.println("Found new AllyWME");
             ((AllyWME)__$behaviorFrame[0]).setOnTree(true);
+            ((GameAgent)__$thisEntity).dict.addCharacter(((AllyWME)__$behaviorFrame[0]).getID() , ((AllyWME)__$behaviorFrame[0]));
             break;
          }
          case 9: {

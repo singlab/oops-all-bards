@@ -12,6 +12,7 @@ import abl.learning.*;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
+import abl.util;
 public class GameAgent_Preconditions {
    static public boolean precondition0(int __$behaviorID, Object[] __$args, Map __$variableTable, final BehavingEntity __$thisEntity) {
       switch (__$behaviorID) {

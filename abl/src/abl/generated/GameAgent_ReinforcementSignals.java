@@ -12,6 +12,7 @@ import abl.learning.*;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
+import abl.util;
 public class GameAgent_ReinforcementSignals {
    static public double reinforcementSignal0(int __$behaviorID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$behaviorID) {

@@ -4,10 +4,14 @@ package abl.generated;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
+import abl.util;
 
 behaving_entity GameAgent {
 
 	register act protect(int, int) with Protect;
+	
+	// Declare utility class that holds most up-to-date copies of WME for given char by ID
+	WMEDictionary dict = new WMEDictionary();
 
     sequential behavior lookForAllyAgent() {
         AllyWME newAllyWME;
@@ -17,11 +21,12 @@ behaving_entity GameAgent {
         	System.out.println("Looking for ally agent...");
         }
 		
-        with ( success_test { newAllyWME = (AllyWME OnTree==false) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
+        with ( success_test { newAllyWME = (AllyWME OnTree==false ID!=0) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
         spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
         mental_act {
         	System.out.println("Found new AllyWME");
             newAllyWME.setOnTree(true);
+            dict.addCharacter(newAllyWME.getID(), newAllyWME);
         }
     }
 

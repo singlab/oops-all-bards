@@ -20,8 +20,6 @@ public class DemoManager : MonoBehaviour
         GatherParty();
         // Have CombatManager init combat with preselected party/enemies above.
         CombatManager.Instance.InitCombatQueue(party, enemies);
-        ABLMessage message = TCPTestClient.Instance.CreateABLMessage(party[1]);
-        TCPTestClient.Instance.SendMessage(message);
     }
 
     // Update is called once per frame
@@ -124,6 +122,8 @@ public class DemoManager : MonoBehaviour
 
     public void CheckQueue()
     {
+        // Refresh WMEs every time we check the queue.
+        TCPTestClient.Instance.RefreshWMEs();
         if (!CombatManager.Instance.combatQueue.IsEmpty())
         {
             ICombatQueueable cq = CombatManager.Instance.combatQueue.Pop();
