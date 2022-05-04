@@ -94,6 +94,7 @@ public class TCPServer {
     }
     
     public void sendOutgoingMessage(JSONObject jo) {
+    	System.out.println("Sending outgoing message...");
     	OutputStream output = null;
 		try {
 			output = socket.getOutputStream();

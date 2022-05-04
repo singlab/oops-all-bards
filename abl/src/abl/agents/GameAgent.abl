@@ -4,7 +4,7 @@ package abl.generated;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
-import abl.util;
+import abl.util.*;
 
 behaving_entity GameAgent {
 
@@ -22,18 +22,27 @@ behaving_entity GameAgent {
         }
 		
         with ( success_test { newAllyWME = (AllyWME OnTree==false ID!=0) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
-        spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
+        
         mental_act {
-        	System.out.println("Found new AllyWME");
-            newAllyWME.setOnTree(true);
+        	System.out.println("AllyWME has been added to memory. Setting on tree.");
+        	newAllyWME.setOnTree(true);
+        }
+        
+        if { (!dict.containsKey(newAllyWME.getID())) } {
+        	mental_act {
+	            System.out.println("New ally being added to ally manager.");
+	        }
+        	spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
+	    }
+	    
+	    mental_act {
+	    	System.out.println("Updating ally wme in dictionary.");
             dict.addCharacter(newAllyWME.getID(), newAllyWME);
         }
     }
 
-    parallel behavior allyAgentRoot() {
-    	AllyWME newAllyWME;
-    	
- 		with ( success_test { newAllyWME = (AllyWME OnTree==true) } ) wait;
+    parallel behavior allyAgentRoot() {  	
+ 		with ( success_test { (!dict.isEmpty()) } ) wait;
     }
 
     parallel behavior manageAllyAgent(AllyWME allyAgent) {
@@ -44,35 +53,32 @@ behaving_entity GameAgent {
 
     parallel behavior manageCombat(AllyWME allyAgent) {
         with ( success_test { ( allyAgent.getInCombat()==true ) } ) wait;
+        mental_act {
+        	System.out.println("Ally is in combat.");
+        }
         
         subgoal lookToAssist(allyAgent);
         subgoal waitForTurn(allyAgent);
     }
 
-    parallel behavior waitForTurn(AllyWME allyAgent) {
-        with (priority 3) mental_act {
+    sequential behavior waitForTurn(AllyWME allyAgent) {
+        mental_act {
 			System.out.println("I am waiting to take my turn.");
     	}
 
         with ( success_test { (allyAgent.getOwnsTurn()==true) } ) wait;
-
-        sequential {
-            subgoal takeTurn(allyAgent);
-        }
+		subgoal takeTurn(allyAgent);
     }
 
-    parallel behavior lookToAssist(AllyWME allyAgent) {
+    sequential behavior lookToAssist(AllyWME allyAgent) {
         AllyWME otherAlly;
 
-        with (priority 3) mental_act {
+        mental_act {
 			System.out.println("I am looking to assist.");
     	}
 
         with ( success_test { otherAlly = (AllyWME ownsTurn==true) (allyAgent.getOwnsTurn()==false) } ) wait;
-
-        sequential {
-            subgoal assistAlly(allyAgent, otherAlly);
-        }
+		subgoal assistAlly(allyAgent, otherAlly);
     }
 
     sequential behavior takeTurn(AllyWME allyAgent) {
@@ -82,9 +88,15 @@ behaving_entity GameAgent {
     }
 
     sequential behavior assistAlly(AllyWME allyAgent, AllyWME otherAlly) {
+    	int actingCharacter;
+    	int targetCharacter;
+    	
         mental_act {
-            System.out.println("I am going to assist.");
+        	actingCharacter = allyAgent.getID();
+        	targetCharacter = otherAlly.getID();
+            System.out.println("I am assisting.");
         }
+        act protect(actingCharacter, targetCharacter);
     }
 
     // This is a collection behavior s.t. all children act in parallel and never result in failure

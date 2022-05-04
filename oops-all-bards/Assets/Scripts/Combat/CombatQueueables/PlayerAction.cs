@@ -12,8 +12,8 @@ public class PlayerAction : MonoBehaviour, ICombatQueueable
     {
         Debug.Log("Executing " + actingCharacter.name + "'s " + ability.name + " action on " + target.name + ".");
         CombatManager.Instance.ResolvePlayerAction(this);
-        done = true;
         actingCharacter.ownsTurn = false;
+        done = true;
     }
 
     public PlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)

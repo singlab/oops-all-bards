@@ -48,7 +48,7 @@ public class AllyWME
             abilityCosts[i] = player.playerClass.abilities[i].cost;
             abilityTypes[i] = player.playerClass.abilities[i].combatType.ToString();
         }
-        this.ownsTurn = false;
+        this.ownsTurn = player.ownsTurn;
         // Handle CiF data
         this.partyIDs = new int[PartyManager.Instance.currentParty.Count];
         this.partyAffinities = new int[PartyManager.Instance.currentParty.Count];

@@ -36,6 +36,8 @@ public class ActionManager : MonoBehaviour
     public void ParseData(ABLResponse response) 
     {
         ActionData data = JsonUtility.FromJson<ActionData>(response.data);
+        Debug.Log(data.actingCharacter);
+        Debug.Log(data.targetCharacter);
         if (response.code == 1)
         {
             ManageCombatAction(response, data);

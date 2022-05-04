@@ -12,7 +12,7 @@ import abl.learning.*;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
-import abl.util;
+import abl.util.*;
 public class GameAgent_SuccessTests {
    static public boolean successTest0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
@@ -57,29 +57,20 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 4: {
+         case 7: {
             // allyAgentRoot_1Step1
-               List wmeList0;
-               ListIterator wmeIter0;
-               wmeList0 = BehavingEntity.getBehavingEntity().lookupWME("AllyWME");
-               wmeIter0 = wmeList0.listIterator();
-               while(wmeIter0.hasNext()) {
-                  AllyWME wme__0 = (AllyWME)wmeIter0.next();
-                  __$behaviorFrame[0] = wme__0;
-                  if (
-                     ( wme__0.getOnTree() == true )
-                  )
+               if (
+                  ! ((GameAgent)__$thisEntity).dict.isEmpty()
+               )
 
-                  {
-                     return true;
-                  }
-
+               {
+                  return true;
                }
 
 
             return false;
          }
-         case 6: {
+         case 9: {
             // manageCombat_1Step1
                if (
                   ((AllyWME)__$behaviorFrame[0]).getInCombat() == true
@@ -92,7 +83,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 10: {
+         case 14: {
             // waitForTurn_1Step2
                if (
                   ((AllyWME)__$behaviorFrame[0]).getOwnsTurn() == true
@@ -105,7 +96,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 14: {
+         case 17: {
             // lookToAssist_1Step2
                List wmeList0;
                ListIterator wmeIter0;

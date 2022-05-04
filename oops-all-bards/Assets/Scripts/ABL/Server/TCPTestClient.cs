@@ -67,10 +67,12 @@ public class TCPTestClient : MonoBehaviour {
 
 						// TODO: ADD MROE DOCS
 						string result = System.Text.Encoding.UTF8.GetString(incomingData);
+						Debug.Log(result);
 						ABLResponse response = JsonUtility.FromJson<ABLResponse>(result);
 						Debug.Log(response.code);
 						Debug.Log(response.msg);
 						Debug.Log(response.data);
+						ActionManager.Instance.ParseData(response);
 					} 				
 				} 			
 			}         

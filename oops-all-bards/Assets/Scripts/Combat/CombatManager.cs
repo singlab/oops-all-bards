@@ -360,6 +360,7 @@ public class CombatManager : MonoBehaviour
         relevantValueBars.Item1.UpdateValueBar(target.health);
         CheckCombatantsHealth(target);
 
+        actingCharacter.ownsTurn = false;
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
     }
@@ -389,6 +390,7 @@ public class CombatManager : MonoBehaviour
         relevantValueBars.Item1.UpdateValueBar(target.health);
         CheckCombatantsHealth(target);
 
+        actingCharacter.ownsTurn = false;
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
     }

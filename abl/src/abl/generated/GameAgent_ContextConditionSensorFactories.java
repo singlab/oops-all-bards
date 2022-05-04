@@ -12,7 +12,7 @@ import abl.learning.*;
 import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
-import abl.util;
+import abl.util.*;
 public class GameAgent_ContextConditionSensorFactories {
    static public SensorActivation[] contextConditionSensorFactory0(int __$behaviorID) {
       switch (__$behaviorID) {

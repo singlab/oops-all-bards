@@ -9,6 +9,8 @@ public class AllyTurn : MonoBehaviour, ICombatQueueable
     public void Execute()
     {
         Debug.Log("It is currently " + actingCharacter.name + "'s turn.");
+        actingCharacter.ownsTurn = true;
+        TCPTestClient.Instance.RefreshWMEs();
         EventManager.Instance.InvokeEvent(EventType.AllyAI, actingCharacter);
     }
 

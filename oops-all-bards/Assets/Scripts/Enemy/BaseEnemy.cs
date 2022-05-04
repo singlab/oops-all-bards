@@ -10,6 +10,7 @@ public class BaseEnemy : ITargetable
     public override int flourish { get; set; }
     public override int shield { get; set; }
     public BaseClass enemyClass { get; set; }
+    public bool ownsTurn { get; set; }
 
     public BaseEnemy(string name, int health, int flourish, int shield, BaseClass enemyClass)
     {

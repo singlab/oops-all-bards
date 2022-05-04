@@ -20,17 +20,22 @@ public class WMEDictionary {
 	
 	public void addCharacter(int key, AllyWME value) {
 		this.map.putIfAbsent(key, value);
+		this.map.replace(key, value);
 	}
 	
 	public void deleteCharacter(int key) {
 		this.map.remove(key);
 	}
 	
-	public void updateCharacter(int key, AllyWME value) {
-		this.map.replace(key, value);
-	}
-	
 	public AllyWME getCharacter(int key) {
 		return this.map.get(key);
+	}
+	
+	public boolean containsKey(int key) {
+		return this.map.containsKey(key);
+	}
+	
+	public boolean isEmpty() {
+		return this.map.isEmpty();
 	}
 }
