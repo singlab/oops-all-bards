@@ -67,11 +67,7 @@ public class TCPTestClient : MonoBehaviour {
 
 						// TODO: ADD MROE DOCS
 						string result = System.Text.Encoding.UTF8.GetString(incomingData);
-						Debug.Log(result);
 						ABLResponse response = JsonUtility.FromJson<ABLResponse>(result);
-						Debug.Log(response.code);
-						Debug.Log(response.msg);
-						Debug.Log(response.data);
 						ActionManager.Instance.ParseData(response);
 					} 				
 				} 			
@@ -102,8 +98,7 @@ public class TCPTestClient : MonoBehaviour {
 				//	works. It needs a newline to consider the stream complete.
 				byte[] msgAsByteArray = Encoding.ASCII.GetBytes(json+'\n'); 				
 				// Write byte array to socketConnection stream.                 
-				stream.Write(msgAsByteArray, 0, msgAsByteArray.Length);                 
-				Debug.Log("Client sent their message - should be received by server");             
+				stream.Write(msgAsByteArray, 0, msgAsByteArray.Length);                            
 			}         
 		} 		
 		catch (SocketException socketException) {             
@@ -122,7 +117,6 @@ public class TCPTestClient : MonoBehaviour {
 		message.code = 1;
 		message.msg = "AllyWME";
 		message.data = data;
-		Debug.Log(data);
 		// Return message object.
 		return message;
 	}

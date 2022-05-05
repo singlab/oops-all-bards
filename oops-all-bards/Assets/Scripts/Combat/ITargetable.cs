@@ -9,4 +9,6 @@ public class ITargetable
     public virtual int health { get; set; }
     public virtual int flourish { get; set; }
     public virtual int shield { get; set; }
+
+    public virtual List<CombatStatus> combatStatuses { get; set; } = new List<CombatStatus>();
 }

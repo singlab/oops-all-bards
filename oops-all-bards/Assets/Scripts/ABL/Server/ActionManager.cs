@@ -35,39 +35,29 @@ public class ActionManager : MonoBehaviour
     //        2 -- Noncombat
     public void ParseData(ABLResponse response) 
     {
-        ActionData data = JsonUtility.FromJson<ActionData>(response.data);
-        Debug.Log(data.actingCharacter);
-        Debug.Log(data.targetCharacter);
         if (response.code == 1)
         {
-            ManageCombatAction(response, data);
+            ManageCombatAction(response);
         } else
         {
-            ManageNoncombatAction(response, data);
+            ManageNoncombatAction(response);
         }
     }
 
-    public ICombatQueueable ManageCombatAction(ABLResponse response, ActionData data)
+    public void ManageCombatAction(ABLResponse response)
     {
         if (response.msg == "Protect")
         {
-            BasePlayer actingCharacter = PartyManager.Instance.FindPartyMemberById(data.actingCharacter);
-            ITargetable target = PartyManager.Instance.FindPartyMemberById(data.targetCharacter);
+            BasePlayer actingCharacter = PartyManager.Instance.FindPartyMemberById(response.data.actingCharacter);
+            ITargetable target = PartyManager.Instance.FindPartyMemberById(response.data.targetCharacter);
             AllyAction action = new AllyAction(actingCharacter, target, AllyAction.ActionTypes.PROTECT);
-            return action;
+            // Add this action to the queue with priority.
+            CombatManager.Instance.combatQueue.PriorityPush(action);
         }
-        return null;
     }
 
-    public void ManageNoncombatAction(ABLResponse response, ActionData data) 
+    public void ManageNoncombatAction(ABLResponse response) 
     {
         Debug.Log("Received a noncombat action.");
     } 
-}
-
-// A class used to hold the characters IDs sent as part of the data field of an ABLResponse.
-public class ActionData 
-{
-    public int actingCharacter;
-    public int targetCharacter;
 }

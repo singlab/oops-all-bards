@@ -14,8 +14,10 @@ public class AllyAction : MonoBehaviour, ICombatQueueable
     public ActionTypes actionType { get; set; }
     public void Execute()
     {
-        Debug.Log("Executing " + actingCharacter.name + "'s " + actionType.ToString() + " action on " + target.name + ".");
+        ResolveAction();
         done = true;
+        // Tell DemoManager to check the queue and continue to next turn.
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
 
     public AllyAction(BasePlayer actingCharacter, ITargetable target, ActionTypes actionType)
@@ -23,5 +25,31 @@ public class AllyAction : MonoBehaviour, ICombatQueueable
         this.actingCharacter = actingCharacter;
         this.target = target;
         this.actionType = actionType;
+    }
+
+    private void ResolveAction()
+    {
+        // TODO: Rethink how we handle the different action types. There will be too many ifs.
+        if (this.actionType == ActionTypes.PROTECT)
+        {
+            BasePlayer targetCharacter = ParseTargetable(target);
+            Debug.Log("Through the power of friendship, " + actingCharacter.name + " is protecting " + target.name + "!");
+            actingCharacter.combatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.PROTECTING));
+            targetCharacter.combatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.PROTECTED));
+            Debug.Log(actingCharacter.name + " has " + actingCharacter.combatStatuses.Count + " combat statuses.");
+            Debug.Log(targetCharacter.name + " has " + targetCharacter.combatStatuses.Count + " combat statuses.");
+        }
+    }
+
+    private BasePlayer ParseTargetable(ITargetable target)
+    {
+        foreach (BasePlayer p in CombatManager.Instance.party)
+        {
+            if (p.name == target.name)
+            {
+                return p;
+            }
+        }
+        return null;
     }
 }

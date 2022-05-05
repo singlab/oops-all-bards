@@ -336,29 +336,7 @@ public class CombatManager : MonoBehaviour
         // Choose random party member and use Attack ability.
         BasePlayer target = party[UnityEngine.Random.Range(0, party.Count)];
         BaseAbility ability = actingCharacter.enemyClass.abilities[0];
-
-        // Apply effects of ability, log the outcome, update value bar of target.
-        if (target.shield > 0)
-        {
-            if (target.shield >= ability.damage)
-            {
-                target.shield -= ability.damage;
-                Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "'s shield!");
-            } else 
-            {
-                int overflow = ability.damage - target.shield;
-                target.shield = 0;
-                target.health -= overflow;
-                Debug.Log(actingCharacter.name + " destroys " + target.name + "'s shield, and deals " + overflow + " damage to " + target.name + "!");
-            }
-        } else 
-        {
-            target.health -= ability.damage;
-            Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
-        }
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
-        relevantValueBars.Item1.UpdateValueBar(target.health);
-        CheckCombatantsHealth(target);
+        ApplyEffects(actingCharacter, target, ability);
 
         actingCharacter.ownsTurn = false;
         // Tell DemoManager to check the queue and continue to next turn.
@@ -510,5 +488,61 @@ public class CombatManager : MonoBehaviour
             }
         }
         return output;
-    } 
+    }
+
+    public void ApplyEffects(BaseEnemy actingCharacter, BasePlayer target, BaseAbility ability)
+    {
+        // TODO: Check for statuses. This is egregious.
+        if (target.combatStatuses.Count != 0)
+        {
+            foreach (CombatStatus s in target.combatStatuses)
+            {
+                if (s.type == CombatStatus.StatusTypes.PROTECTED)
+                {
+                    Debug.Log(target.name + " has a PROTECTED status effect");
+                    foreach (BasePlayer p in party)
+                    {
+                        if (p.combatStatuses.Count != 0)
+                        {
+                            foreach (CombatStatus st in p.combatStatuses)
+                            {
+                                if (st.type == CombatStatus.StatusTypes.PROTECTING)
+                                {
+                                    Debug.Log(p.name + " has a PROTECTING status effect");
+                                    BasePlayer newTarget = p;
+                                    Debug.Log(actingCharacter.name + " tried attacking " + target.name + ", but " + newTarget.name + " protected them!");
+                                    target = newTarget;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // TODO: At some point we have to remove the status effects.
+
+        // Apply effects of ability, log the outcome, update value bar of target.
+        if (target.shield > 0)
+        {
+            if (target.shield >= ability.damage)
+            {
+                target.shield -= ability.damage;
+                Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "'s shield!");
+            } else 
+            {
+                int overflow = ability.damage - target.shield;
+                target.shield = 0;
+                target.health -= overflow;
+                Debug.Log(actingCharacter.name + " destroys " + target.name + "'s shield, and deals " + overflow + " damage to " + target.name + "!");
+            }
+        } else 
+        {
+            target.health -= ability.damage;
+            Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+        }
+
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
+        relevantValueBars.Item1.UpdateValueBar(target.health);
+        CheckCombatantsHealth(target);
+    }  
 }

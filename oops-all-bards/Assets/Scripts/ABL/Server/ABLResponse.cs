@@ -10,5 +10,13 @@ public class ABLResponse
     // The message returned by the Java server.
     public string msg;
     // The data represented as a string returned by the Java server.
-    public string data;
+    public ActionData data;
+}
+
+// A class used to hold the characters IDs sent as part of the data field of an ABLResponse.
+[System.Serializable]
+public class ActionData 
+{
+    public int actingCharacter;
+    public int targetCharacter;
 }
