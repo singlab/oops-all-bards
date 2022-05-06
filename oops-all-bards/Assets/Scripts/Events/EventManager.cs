@@ -8,6 +8,7 @@ public enum EventType
     CheckQueue,
     AwaitPlayerInput, // pass BasePlayer object
     EnemyAI, // pass BaseEnemy object
+    AllyAI, // pass BasePlayer object
     CombatWin,
     CombatLoss, 
 };

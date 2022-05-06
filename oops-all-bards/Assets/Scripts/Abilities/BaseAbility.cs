@@ -6,6 +6,7 @@ using UnityEngine;
 public class BaseAbility
 {
     public string name { get; set; }
+	public int id { get; set; }
 	public string description { get; set; }
 	public AbilityTypes type { get; set; }
 	public CombatAbilityTypes combatType { get; set; }
@@ -28,9 +29,10 @@ public class BaseAbility
 		HEAL
 	}
 
-	public BaseAbility(string name, string desc, AbilityTypes type, CombatAbilityTypes combatType, int damage, int cost, int currentRank, int maxRank)
+	public BaseAbility(string name, int id, string desc, AbilityTypes type, CombatAbilityTypes combatType, int damage, int cost, int currentRank, int maxRank)
 	{
 		this.name = name;
+		this.id = id;
 		this.description = desc;
 		this.type = type;
 		this.combatType = combatType;

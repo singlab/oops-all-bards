@@ -33,15 +33,15 @@ public class DemoManager : MonoBehaviour
     {
         // Init player and ally.
         BaseClass playerClass = CreatePlayerClass(BaseClass.ClassTypes.SKALD);
-        BasePlayer player = new BasePlayer("Player", 20, 0, playerClass, playerClass.stats, 0, 0, null, null);
-        BasePlayer ally = new BasePlayer("Ally", 20, 0, playerClass, playerClass.stats, 0, 0, null, null);
+        BasePlayer player = new BasePlayer("Player", 0, 20, 10, 0, playerClass, playerClass.stats, 0, 0, null, null);
+        BasePlayer ally = new BasePlayer("Ally", 1, 20, 10, 0, playerClass, playerClass.stats, 0, 0, null, null);
         party.Add(player);
         party.Add(ally);
 
         // Init enemies.
-        BaseEnemy enemy = new BaseEnemy("Enemy1", 10, 0, playerClass);
+        BaseEnemy enemy = new BaseEnemy("Enemy1", 10, 5, 0, playerClass);
         enemies.Add(enemy);
-        enemy = new BaseEnemy("Enemy2", 10, 0, playerClass);
+        enemy = new BaseEnemy("Enemy2", 10, 5, 0, playerClass);
         enemies.Add(enemy);
     }
 
@@ -83,11 +83,11 @@ public class DemoManager : MonoBehaviour
         List<BaseAbility> abilities = new List<BaseAbility>();
         if (type == BaseClass.ClassTypes.SKALD)
         {
-            BaseAbility ability = new BaseAbility("Attack", "A basic attack.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.ATTACK, 3, 0, 1, 5);
+            BaseAbility ability = new BaseAbility("Attack", 0, "A basic attack.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.ATTACK, 3, 0, 1, 5);
             abilities.Add(ability);
-            ability = new BaseAbility("Defend", "Take defensive precautions.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.DEFEND, 3, 0, 1, 5);
+            ability = new BaseAbility("Defend", 1, "Take defensive precautions.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.DEFEND, 3, 0, 1, 5);
             abilities.Add(ability);
-            ability = new BaseAbility("Shrug It Off", "Heal wounds.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.HEAL, 3, 3, 1, 5);
+            ability = new BaseAbility("Shrug It Off", 2, "Heal wounds.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.HEAL, 3, 3, 1, 5);
             abilities.Add(ability);
         }
 
@@ -122,6 +122,8 @@ public class DemoManager : MonoBehaviour
 
     public void CheckQueue()
     {
+        // Refresh WMEs every time we check the queue.
+        TCPTestClient.Instance.RefreshWMEs();
         if (!CombatManager.Instance.combatQueue.IsEmpty())
         {
             ICombatQueueable cq = CombatManager.Instance.combatQueue.Pop();
@@ -143,10 +145,12 @@ public class DemoManager : MonoBehaviour
     public void CombatWin()
     {
         SceneManager.LoadScene("CombatWin");
+        PartyManager.Instance.ToggleInCombat(false);
     }
 
     public void CombatLoss()
     {
         SceneManager.LoadScene("CombatLoss");
+        PartyManager.Instance.ToggleInCombat(false);
     }
 }

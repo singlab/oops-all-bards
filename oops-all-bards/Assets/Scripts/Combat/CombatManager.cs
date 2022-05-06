@@ -72,6 +72,7 @@ public class CombatManager : MonoBehaviour
     private void SubscribeToEvents()
     {
         EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, TakeEnemyAction);
+        EventManager.Instance.SubscribeToEvent(EventType.AllyAI, TakeAllyAction);
     }
 
     // A function used to render all UI elements for the demo.
@@ -97,10 +98,9 @@ public class CombatManager : MonoBehaviour
             ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
             healthBar.maxValue = p.health;
             healthBar.UpdateValueBar(p.health);
-            // TODO: Implement flourish plz
             ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = p.health;
-            flourishBar.UpdateValueBar(p.health);
+            flourishBar.maxValue = p.flourish;
+            flourishBar.UpdateValueBar(p.flourish);
         }
 
         foreach (BaseEnemy e in enemies)
@@ -112,10 +112,9 @@ public class CombatManager : MonoBehaviour
             ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
             healthBar.maxValue = e.health;
             healthBar.UpdateValueBar(e.health);
-            // TODO: Implement flourish plz
             ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = e.health;
-            flourishBar.UpdateValueBar(e.health);
+            flourishBar.maxValue = e.flourish;
+            flourishBar.UpdateValueBar(e.flourish);
         }
     }
 
@@ -147,6 +146,9 @@ public class CombatManager : MonoBehaviour
         // Set private references to party and enemies.
         this.party = party;
         this.enemies = enemies;
+        // Set PartyManager variables.
+        PartyManager.Instance.currentParty = party;
+        PartyManager.Instance.ToggleInCombat(true);
         // Clean up for new combat scenario.
         combatQueue = new CombatQueue();
         combatQueue.Clear();
@@ -155,7 +157,13 @@ public class CombatManager : MonoBehaviour
         PushAndCreateCombatQueueable(new CombatStart());
         foreach (BasePlayer p in party)
         {
-            PushAndCreateCombatQueueable(new PlayerTurn(p));
+            if (p.id == 0)
+            {
+                PushAndCreateCombatQueueable(new PlayerTurn(p));
+            } else
+            {
+                PushAndCreateCombatQueueable(new AllyTurn(p));
+            }
         }
         foreach (BaseEnemy e in enemies)
         {
@@ -258,8 +266,11 @@ public class CombatManager : MonoBehaviour
     // A function used to resolve/apply effects of a PlayerAction queueable.
     public void ResolvePlayerAction(PlayerAction action)
     {
-        // TODO: Add flourish points/action economy. Remove the cost of ability in all cases.
-        // action.actingCharacter.flourish -= action.ability.cost;
+        // Handle flourish cost and update UI to reflect new value.
+        action.actingCharacter.flourish -= action.ability.cost;
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.actingCharacter.name);
+        relevantValueBars.Item2.UpdateValueBar(action.actingCharacter.flourish);
+
         if (action.ability.combatType == BaseAbility.CombatAbilityTypes.ATTACK)
         {
             action.target.health -= action.ability.damage;
@@ -276,18 +287,16 @@ public class CombatManager : MonoBehaviour
             action.target.shield += action.ability.damage;
             Debug.Log(action.actingCharacter.name + " is shielding " + action.target.name + " for " + action.ability.damage + " damage." );
         }
-        // Update the UI to reflect new values.
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.target.name);
+        // Handle damage/heal and update UI to reflect new value.
+        relevantValueBars = FindValueBars(action.target.name);
         relevantValueBars.Item1.UpdateValueBar(action.target.health);
-        // TODO: Implement flourish plz.
-        relevantValueBars.Item2.UpdateValueBar(action.target.health);
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
 
     // A function that finds and returns a tuple of ValueBar objects (health, flourish) 
-    // corresponding to the name of the target of an action.
+    // corresponding to a string name of a character.
     Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
@@ -327,11 +336,39 @@ public class CombatManager : MonoBehaviour
         // Choose random party member and use Attack ability.
         BasePlayer target = party[UnityEngine.Random.Range(0, party.Count)];
         BaseAbility ability = actingCharacter.enemyClass.abilities[0];
+        ApplyEffects(actingCharacter, target, ability);
 
-        // Apply effects of ability and log the outcome.
+        actingCharacter.ownsTurn = false;
+        // Tell DemoManager to check the queue and continue to next turn.
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
+    }
+
+    // A function used to calculate and push ally actions to the queue.
+    public void TakeAllyAction()
+    {
+        Debug.Log("Calculating ally action...");
+        BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
+        BaseEnemy target;
+        BaseAbility ability;
+        
+        // TODO: This AI is very simple. Should change to be more interesting.
+        // Choose random enemy and use Attack ability.
+        if (enemies.Count > 0) {
+            target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
+            ability = actingCharacter.playerClass.abilities[0];
+        } else {
+            CheckForWinLoss();
+            return;
+        }
+
+        // Apply effects of ability, log the outcome, update value bar of target.
         target.health -= ability.damage;
         Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
+        relevantValueBars.Item1.UpdateValueBar(target.health);
+        CheckCombatantsHealth(target);
 
+        actingCharacter.ownsTurn = false;
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
     }
@@ -349,6 +386,7 @@ public class CombatManager : MonoBehaviour
     // A function used to remove a downed character from combat.
     public void RemoveCharacterFromCombat(ITargetable character)
     {
+        ICombatQueueable[] array = combatQueue.queue.ToArray();
         Tuple<BasePlayer, BaseEnemy> parsedCharacter = ParseTargetable(character);
         // Remove instance of character from appropriate list and ensure no turns in the queue belong to the downed character.
         if (parsedCharacter.Item1 != null)
@@ -364,17 +402,29 @@ public class CombatManager : MonoBehaviour
                     Destroy(currentChild.gameObject);
                 }
             }
-            // TODO: Fix this!
-            foreach (PlayerTurn t in combatQueue.queue.ToArray())
+            if (parsedCharacter.Item1.id == 0)
             {
-                if (t.actingCharacter == parsedCharacter.Item1)
+                foreach (ICombatQueueable q in array)
                 {
-                    combatQueue.Remove(t);
+                    if (q.GetType() == typeof(PlayerTurn))
+                    {
+                        combatQueue.Remove(q);
+                    }
+                }
+            } else
+            {
+                foreach (ICombatQueueable q in array)
+                {
+                    if (q.GetType() == typeof(AllyTurn))
+                    {
+                        combatQueue.Remove(q);
+                    }
                 }
             }
         }
         if (parsedCharacter.Item2 != null)
         {
+            Debug.Log("Attempting to remove " + parsedCharacter.Item2.name);
             enemies.Remove(parsedCharacter.Item2);
             // Update UI to no longer show character portrait.
             for (int i = 0; i < enemyPortraits.transform.childCount; i++)
@@ -387,11 +437,15 @@ public class CombatManager : MonoBehaviour
                 }
             }
             // TODO: Fix this!
-            foreach (EnemyTurn t in combatQueue.queue.ToArray())
+            foreach (ICombatQueueable q in array)
             {
-                if (t.actingCharacter == parsedCharacter.Item2)
+                if (q.GetType() == typeof(EnemyTurn))
                 {
-                    combatQueue.Remove(t);
+                    EnemyTurn t = (EnemyTurn)q;
+                    if (t.actingCharacter == parsedCharacter.Item2)
+                    {
+                        combatQueue.Remove(q);
+                    }
                 }
             }
         }
@@ -434,5 +488,61 @@ public class CombatManager : MonoBehaviour
             }
         }
         return output;
-    } 
+    }
+
+    public void ApplyEffects(BaseEnemy actingCharacter, BasePlayer target, BaseAbility ability)
+    {
+        // TODO: Check for statuses. This is egregious.
+        if (target.combatStatuses.Count != 0)
+        {
+            foreach (CombatStatus s in target.combatStatuses)
+            {
+                if (s.type == CombatStatus.StatusTypes.PROTECTED)
+                {
+                    Debug.Log(target.name + " has a PROTECTED status effect");
+                    foreach (BasePlayer p in party)
+                    {
+                        if (p.combatStatuses.Count != 0)
+                        {
+                            foreach (CombatStatus st in p.combatStatuses)
+                            {
+                                if (st.type == CombatStatus.StatusTypes.PROTECTING)
+                                {
+                                    Debug.Log(p.name + " has a PROTECTING status effect");
+                                    BasePlayer newTarget = p;
+                                    Debug.Log(actingCharacter.name + " tried attacking " + target.name + ", but " + newTarget.name + " protected them!");
+                                    target = newTarget;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // TODO: At some point we have to remove the status effects.
+
+        // Apply effects of ability, log the outcome, update value bar of target.
+        if (target.shield > 0)
+        {
+            if (target.shield >= ability.damage)
+            {
+                target.shield -= ability.damage;
+                Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "'s shield!");
+            } else 
+            {
+                int overflow = ability.damage - target.shield;
+                target.shield = 0;
+                target.health -= overflow;
+                Debug.Log(actingCharacter.name + " destroys " + target.name + "'s shield, and deals " + overflow + " damage to " + target.name + "!");
+            }
+        } else 
+        {
+            target.health -= ability.damage;
+            Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+        }
+
+        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
+        relevantValueBars.Item1.UpdateValueBar(target.health);
+        CheckCombatantsHealth(target);
+    }  
 }

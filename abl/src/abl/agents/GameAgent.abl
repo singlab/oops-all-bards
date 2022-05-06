@@ -1,0 +1,111 @@
+package abl.generated;
+// the package corresponds to where generated Java files are placed.
+
+import abl.wmes.*;
+import abl.actions.*;
+import abl.sensors.*;
+import abl.util.*;
+
+behaving_entity GameAgent {
+
+	register act protect(int, int) with Protect;
+	
+	// Declare utility class that holds most up-to-date copies of WME for given char by ID
+	WMEDictionary dict = new WMEDictionary();
+
+    sequential behavior lookForAllyAgent() {
+        AllyWME newAllyWME;
+        ParallelBehaviorWME spawnLocation;
+        
+        mental_act {
+        	System.out.println("Looking for ally agent...");
+        }
+		
+        with ( success_test { newAllyWME = (AllyWME OnTree==false ID!=0) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
+        
+        mental_act {
+        	System.out.println("AllyWME has been added to memory. Setting on tree.");
+        	newAllyWME.setOnTree(true);
+        }
+        
+        if { (!dict.containsKey(newAllyWME.getID())) } {
+        	mental_act {
+	            System.out.println("New ally being added to ally manager.");
+	        }
+        	spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
+	    }
+	    
+	    mental_act {
+	    	System.out.println("Updating ally wme in dictionary.");
+            dict.addCharacter(newAllyWME.getID(), newAllyWME);
+        }
+    }
+
+    parallel behavior allyAgentRoot() {  	
+ 		with ( success_test { (!dict.isEmpty()) } ) wait;
+    }
+
+    parallel behavior manageAllyAgent(AllyWME allyAgent) {
+        with (persistent) subgoal manageCombat(allyAgent);
+        // with (persistent) subgoal manageNoncombat(allyAgent);
+        // with (persistent) subgoal lookForQuip(allyAgent); 
+    }
+
+    parallel behavior manageCombat(AllyWME allyAgent) {
+        with ( success_test { ( allyAgent.getInCombat()==true ) } ) wait;
+        mental_act {
+        	System.out.println("Ally is in combat.");
+        }
+        
+        subgoal lookToAssist(allyAgent);
+        subgoal waitForTurn(allyAgent);
+    }
+
+    sequential behavior waitForTurn(AllyWME allyAgent) {
+        mental_act {
+			System.out.println("I am waiting to take my turn.");
+    	}
+
+        with ( success_test { (allyAgent.getOwnsTurn()==true) } ) wait;
+		subgoal takeTurn(allyAgent);
+    }
+
+    sequential behavior lookToAssist(AllyWME allyAgent) {
+        AllyWME otherAlly;
+
+        mental_act {
+			System.out.println("I am looking to assist.");
+    	}
+
+        with ( success_test { otherAlly = (AllyWME ownsTurn==true) (allyAgent.getOwnsTurn()==false) } ) wait;
+		subgoal assistAlly(allyAgent, otherAlly);
+    }
+
+    sequential behavior takeTurn(AllyWME allyAgent) {
+        mental_act {
+            System.out.println("I am taking my turn.");
+        }
+    }
+
+    sequential behavior assistAlly(AllyWME allyAgent, AllyWME otherAlly) {
+    	int actingCharacter;
+    	int targetCharacter;
+    	
+        mental_act {
+        	actingCharacter = allyAgent.getID();
+        	targetCharacter = otherAlly.getID();
+            System.out.println("I am assisting.");
+        }
+        act protect(actingCharacter, targetCharacter);
+    }
+
+    // This is a collection behavior s.t. all children act in parallel and never result in failure
+    initial_tree {
+    	with (priority 3) mental_act {
+			System.out.println("Starting game agent...");
+    	}
+		
+		with (persistent) subgoal allyAgentRoot();
+		with (persistent) subgoal lookForAllyAgent();
+    }
+}

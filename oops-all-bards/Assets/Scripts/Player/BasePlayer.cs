@@ -6,7 +6,9 @@ using UnityEngine;
 public class BasePlayer : ITargetable
 {
     public override string name { get; set; }
+    public int id { get; set; }
     public override int health { get; set; }
+    public override int flourish { get; set; }
     public override int shield { get; set; }
     public BaseClass playerClass { get; set; }
     public List<BaseStat> playerStats { get; set; } = new List<BaseStat>();
@@ -14,11 +16,16 @@ public class BasePlayer : ITargetable
 	public int gold { get; set; }
     public List<BaseItem> equipment { get; set; } = new List<BaseItem>();
 	public List<BaseItem> inventory { get; set; } = new List<BaseItem>();
+    public CiFData cifData { get; set; }
+    public bool ownsTurn { get; set; }
+    public List<CombatStatus> combatStatuses { get; set; } = new List<CombatStatus>();
 
-    public BasePlayer(string name, int health, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory)
+    public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory)
     {
         this.name = name;
+        this.id = id;
         this.health = health;
+        this.flourish = flourish;
         this.shield = shield;
         this.playerClass = playerClass;
         this.playerStats = playerStats;
@@ -26,5 +33,7 @@ public class BasePlayer : ITargetable
         this.gold = gold;
         this.equipment = equipment;
         this.inventory = inventory;
+        this.cifData = new CiFData();
+        this.ownsTurn = false;
     }
 }
