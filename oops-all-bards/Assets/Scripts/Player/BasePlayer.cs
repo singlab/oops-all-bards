@@ -18,7 +18,7 @@ public class BasePlayer : ITargetable
 	public List<BaseItem> inventory { get; set; } = new List<BaseItem>();
     public CiFData cifData { get; set; }
     public bool ownsTurn { get; set; }
-    public List<CombatStatus> combatStatuses { get; set; } = new List<CombatStatus>();
+    public override List<CombatStatus> combatStatuses { get; set; } = new List<CombatStatus>();
 
     public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory)
     {
