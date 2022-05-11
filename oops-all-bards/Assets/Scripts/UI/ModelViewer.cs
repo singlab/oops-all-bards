@@ -6,6 +6,7 @@ public class ModelViewer : MonoBehaviour
 {
 
     private int index = 0;
+    private int max = 4;
     private GameObject modelToRender;
     public List<GameObject> models = new List<GameObject>();
 
@@ -25,6 +26,10 @@ public class ModelViewer : MonoBehaviour
     public void IncrementIndex()
     {
         this.index++;
+        if (index > max)
+        {
+            index = 0;
+        }
         UpdateModelViewer();
     }
 
@@ -32,6 +37,10 @@ public class ModelViewer : MonoBehaviour
     public void DecrementIndex()
     {
         this.index--;
+        if (index < 0)
+        {
+            index = max;
+        }
         UpdateModelViewer();
     }
 
