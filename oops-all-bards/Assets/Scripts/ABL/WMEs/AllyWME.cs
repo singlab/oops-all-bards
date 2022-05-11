@@ -39,14 +39,14 @@ public class AllyWME
         this.flourish = player.flourish;
         this.shield = player.shield;
         // Handle ability data
-        this.abilityIDs = new int[player.playerClass.abilities.Count];
-        this.abilityCosts = new int[player.playerClass.abilities.Count];
-        this.abilityTypes = new string[player.playerClass.abilities.Count];
-        for (int i = 0; i < player.playerClass.abilities.Count; i++)
+        this.abilityIDs = new int[player.playerClass.Abilities.Count];
+        this.abilityCosts = new int[player.playerClass.Abilities.Count];
+        this.abilityTypes = new string[player.playerClass.Abilities.Count];
+        for (int i = 0; i < player.playerClass.Abilities.Count; i++)
         {
-            abilityIDs[i] = player.playerClass.abilities[i].id;
-            abilityCosts[i] = player.playerClass.abilities[i].cost;
-            abilityTypes[i] = player.playerClass.abilities[i].combatType.ToString();
+            abilityIDs[i] = player.playerClass.Abilities[i].ID;
+            abilityCosts[i] = player.playerClass.Abilities[i].Cost;
+            abilityTypes[i] = player.playerClass.Abilities[i].CombatType.ToString();
         }
         this.ownsTurn = player.ownsTurn;
         // Handle CiF data

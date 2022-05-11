@@ -125,12 +125,12 @@ public class CombatManager : MonoBehaviour
         Debug.Log("Rendering input menu for " + actingCharacter.name + " now.");
         
         // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
-        for (int i = 0; i < actingCharacter.playerClass.abilities.Count; i++)
+        for (int i = 0; i < actingCharacter.playerClass.Abilities.Count; i++)
         {
-            BaseAbility currentAbility = actingCharacter.playerClass.abilities[i];
+            BaseAbility currentAbility = actingCharacter.playerClass.Abilities[i];
             // Create prefab and update text of button.
             GameObject toInstantiate = Instantiate(actionButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = currentAbility.name;
+            toInstantiate.GetComponentInChildren<TMP_Text>().text = currentAbility.Name;
             // Assign the ability and acting character to the action button script.
             toInstantiate.GetComponent<ActionButton>().ability = currentAbility;
             toInstantiate.GetComponent<ActionButton>().actingCharacter = actingCharacter;
@@ -267,25 +267,25 @@ public class CombatManager : MonoBehaviour
     public void ResolvePlayerAction(PlayerAction action)
     {
         // Handle flourish cost and update UI to reflect new value.
-        action.actingCharacter.flourish -= action.ability.cost;
+        action.actingCharacter.flourish -= action.ability.Cost;
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.actingCharacter.name);
         relevantValueBars.Item2.UpdateValueBar(action.actingCharacter.flourish);
 
-        if (action.ability.combatType == BaseAbility.CombatAbilityTypes.ATTACK)
+        if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.ATTACK)
         {
-            action.target.health -= action.ability.damage;
-            Debug.Log(action.actingCharacter.name + " deals " + action.ability.damage + " damage to " + action.target.name + ".");
+            action.target.health -= action.ability.Damage;
+            Debug.Log(action.actingCharacter.name + " deals " + action.ability.Damage + " damage to " + action.target.name + ".");
             CheckCombatantsHealth(action.target);
         }
-        if (action.ability.combatType == BaseAbility.CombatAbilityTypes.HEAL)
+        if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL)
         {
-            action.target.health += action.ability.damage;
-            Debug.Log(action.actingCharacter.name + " heals " + action.target.name + " for " + action.ability.damage + " health!" );
+            action.target.health += action.ability.Damage;
+            Debug.Log(action.actingCharacter.name + " heals " + action.target.name + " for " + action.ability.Damage + " health!" );
         }
-        if (action.ability.combatType == BaseAbility.CombatAbilityTypes.DEFEND)
+        if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
         {
-            action.target.shield += action.ability.damage;
-            Debug.Log(action.actingCharacter.name + " is shielding " + action.target.name + " for " + action.ability.damage + " damage." );
+            action.target.shield += action.ability.Damage;
+            Debug.Log(action.actingCharacter.name + " is shielding " + action.target.name + " for " + action.ability.Damage + " damage." );
         }
         // Handle damage/heal and update UI to reflect new value.
         relevantValueBars = FindValueBars(action.target.name);
@@ -335,7 +335,7 @@ public class CombatManager : MonoBehaviour
         // TODO: This AI is very simple. Should change to be more interesting.
         // Choose random party member and use Attack ability.
         BasePlayer target = party[UnityEngine.Random.Range(0, party.Count)];
-        BaseAbility ability = actingCharacter.enemyClass.abilities[0];
+        BaseAbility ability = actingCharacter.enemyClass.Abilities[0];
         ApplyEffects(actingCharacter, target, ability);
 
         actingCharacter.ownsTurn = false;
@@ -355,15 +355,15 @@ public class CombatManager : MonoBehaviour
         // Choose random enemy and use Attack ability.
         if (enemies.Count > 0) {
             target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
-            ability = actingCharacter.playerClass.abilities[0];
+            ability = actingCharacter.playerClass.Abilities[0];
         } else {
             CheckForWinLoss();
             return;
         }
 
         // Apply effects of ability, log the outcome, update value bar of target.
-        target.health -= ability.damage;
-        Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+        target.health -= ability.Damage;
+        Debug.Log(actingCharacter.name + " deals " + ability.Damage + " damage to " + target.name + "!");
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);
         relevantValueBars.Item1.UpdateValueBar(target.health);
         CheckCombatantsHealth(target);
@@ -524,21 +524,21 @@ public class CombatManager : MonoBehaviour
         // Apply effects of ability, log the outcome, update value bar of target.
         if (target.shield > 0)
         {
-            if (target.shield >= ability.damage)
+            if (target.shield >= ability.Damage)
             {
-                target.shield -= ability.damage;
-                Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "'s shield!");
+                target.shield -= ability.Damage;
+                Debug.Log(actingCharacter.name + " deals " + ability.Damage + " damage to " + target.name + "'s shield!");
             } else 
             {
-                int overflow = ability.damage - target.shield;
+                int overflow = ability.Damage - target.shield;
                 target.shield = 0;
                 target.health -= overflow;
                 Debug.Log(actingCharacter.name + " destroys " + target.name + "'s shield, and deals " + overflow + " damage to " + target.name + "!");
             }
         } else 
         {
-            target.health -= ability.damage;
-            Debug.Log(actingCharacter.name + " deals " + ability.damage + " damage to " + target.name + "!");
+            target.health -= ability.Damage;
+            Debug.Log(actingCharacter.name + " deals " + ability.Damage + " damage to " + target.name + "!");
         }
 
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.name);

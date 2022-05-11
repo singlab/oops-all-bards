@@ -7,11 +7,11 @@ using System;
 public class BaseClass 
 {
 
-	public string name { get; set; }
-	public string description { get; set; }
-	public ClassTypes type { get; set; }
-	public List<BaseStat> stats { get; set; } = new List<BaseStat>();
-	public List<BaseAbility> abilities { get; set; } = new List<BaseAbility>();
+	[SerializeField] private string name;
+	[SerializeField] private string description;
+	[SerializeField] private ClassTypes type;
+	[SerializeField] private List<BaseStat> stats = new List<BaseStat>();
+	[SerializeField] private List<BaseAbility> abilities = new List<BaseAbility>();
 
 	public enum ClassTypes
 	{
@@ -29,10 +29,40 @@ public class BaseClass
 		this.stats = stats;
 		this.abilities = abilities;
 	}
+
+	public string Name 
+	{
+		get { return this.name; }
+		set { this.name = value; }
+	}
+
+	public string Description 
+	{
+		get { return this.description; }
+		set { this.description = value; }
+	}
+
+	public ClassTypes Type 
+	{
+		get { return this.type; }
+		set { this.type = value; }
+	}
+
+	public List<BaseStat> Stats
+	{
+		get { return this.stats; }
+		set { this.stats = value; }
+	}
+
+	public List<BaseAbility> Abilities
+	{
+		get { return this.abilities; }
+		set { this.abilities = value; }
+	}
 }
 
 [System.Serializable]
 public class BaseClasses
 {
-	public List<BaseClass> baseClasses = new List<BaseClass>();
+	[SerializeField] public List<BaseClass> baseClasses = new List<BaseClass>();
 }
