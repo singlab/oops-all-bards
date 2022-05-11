@@ -15,7 +15,7 @@ public class BaseStat
     {
         FLOURISH,
         ORATORY,
-        RHETORIC,
+        RHAPSODY,
         TEMPO,
         ELAN
     }
