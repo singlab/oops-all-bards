@@ -1,0 +1,84 @@
+{
+    "baseClasses":
+    [
+        {
+            "name": "Mummer",
+            "description": "An artist with a flair for theatrics; strong in flourish and elan.",
+            "type": "MUMMER",
+            "stats":
+            [
+                {
+                    "name": "Flourish",
+                    "description": "A measure of vigorous style.",
+                    "type": "FLOURISH",
+                    "baseValue": 5,
+                    "modifiedValue": 5
+                },
+                {
+                    "name": "Oratory",
+                    "description": "A measure of refined speech.",
+                    "type": "ORATORY",
+                    "baseValue": 3,
+                    "modifiedValue": 3
+                },
+                {
+                    "name": "Rhapsody",
+                    "description": "A measure of enchanting persuasion.",
+                    "type": "RHAPSODY",
+                    "baseValue": 3,
+                    "modifiedValue": 3
+                },
+                {
+                    "name": "Tempo",
+                    "description": "A measure of quickened pace.",
+                    "type": "TEMPO",
+                    "baseValue": 2,
+                    "modifiedValue": 2
+                },
+                {
+                    "name": "Elan",
+                    "description": "A measure of great gusto.",
+                    "type": "ELAN",
+                    "baseValue": 5,
+                    "modifiedValue": 5
+                }
+            ],
+            "abilities":
+            [
+                {
+                    "name": "Attack",
+                    "id": 0,
+                    "description": "A basic attack.",
+                    "type": "COMBAT",
+                    "combatType": "ATTACK",
+                    "damage": 3,
+                    "cost": 0,
+                    "currentRank": 1,
+                    "maxRank": 5
+                },
+                {
+                    "name": "Defend",
+                    "id": 1,
+                    "description": "Shield yourself from harm.",
+                    "type": "COMBAT",
+                    "combatType": "DEFEND",
+                    "damage": 3,
+                    "cost": 0,
+                    "currentRank": 1,
+                    "maxRank": 5
+                },
+                {
+                    "name": "Exit Stage Left",
+                    "id": 1,
+                    "description": "Disappear stage left and appear miraculously behind the target to deliver a palpable hit!",
+                    "type": "COMBAT",
+                    "combatType": "ATTACK",
+                    "damage": 6,
+                    "cost": 3,
+                    "currentRank": 1,
+                    "maxRank": 5
+                }
+            ]
+        }
+    ]
+}

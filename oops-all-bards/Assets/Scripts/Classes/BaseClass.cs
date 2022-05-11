@@ -30,3 +30,9 @@ public class BaseClass
 		this.abilities = abilities;
 	}
 }
+
+[System.Serializable]
+public class BaseClasses
+{
+	public List<BaseClass> baseClasses = new List<BaseClass>();
+}

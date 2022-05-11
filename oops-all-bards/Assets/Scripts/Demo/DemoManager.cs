@@ -67,7 +67,7 @@ public class DemoManager : MonoBehaviour
             stats.Add(stat);
             stat = new BaseStat("Oratory", "A measure of refined speech.", BaseStat.StatTypes.ORATORY, 3, 0);
             stats.Add(stat);
-            stat = new BaseStat("Rhetoric", "A measure of purposeful persuasion.", BaseStat.StatTypes.RHETORIC, 4, 0);
+            stat = new BaseStat("Rhapsody", "A measure of enchanting persuasion.", BaseStat.StatTypes.RHAPSODY, 4, 0);
             stats.Add(stat);
             stat = new BaseStat("Tempo", "A measure of quickened pace.", BaseStat.StatTypes.TEMPO, 6, 0);
             stats.Add(stat);
