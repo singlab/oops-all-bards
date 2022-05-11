@@ -24,10 +24,10 @@ public class JSONReader : MonoBehaviour
             Debug.Log(baseClasses.baseClasses);
             foreach (BaseClass c in baseClasses.baseClasses)
             {
-                Debug.Log(c.name);
-                Debug.Log(c.description);
-                Debug.Log(c.type);
-                Debug.Log(c.stats);
+                Debug.Log(c.Name);
+                Debug.Log(c.Description);
+                Debug.Log(c.Type);
+                Debug.Log(c.Stats);
             }
         }
     }

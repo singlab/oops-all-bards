@@ -33,8 +33,8 @@ public class DemoManager : MonoBehaviour
     {
         // Init player and ally.
         BaseClass playerClass = CreatePlayerClass(BaseClass.ClassTypes.SKALD);
-        BasePlayer player = new BasePlayer("Player", 0, 20, 10, 0, playerClass, playerClass.stats, 0, 0, null, null);
-        BasePlayer ally = new BasePlayer("Ally", 1, 20, 10, 0, playerClass, playerClass.stats, 0, 0, null, null);
+        BasePlayer player = new BasePlayer("Player", 0, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null);
+        BasePlayer ally = new BasePlayer("Ally", 1, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null);
         party.Add(player);
         party.Add(ally);
 
@@ -100,14 +100,14 @@ public class DemoManager : MonoBehaviour
         Debug.Log(player.name);
         Debug.Log("FAME: " + player.fame);
         Debug.Log("GOLD: " + player.gold);
-        Debug.Log(player.playerClass.name);
+        Debug.Log(player.playerClass.Name);
         foreach (BaseStat stat in player.playerStats)
         {
-            Debug.Log(stat.name + " " + stat.baseValue);
+            Debug.Log(stat.Name + " " + stat.BaseValue);
         }
-        foreach (BaseAbility ability in player.playerClass.abilities)
+        foreach (BaseAbility ability in player.playerClass.Abilities)
         {
-            Debug.Log(ability.name + " " + ability.damage + " " + ability.cost);
+            Debug.Log(ability.Name + " " + ability.Damage + " " + ability.Cost);
         }
     }
 

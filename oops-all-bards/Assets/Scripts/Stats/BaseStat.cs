@@ -5,11 +5,11 @@ using UnityEngine;
 [System.Serializable]
 public class BaseStat
 {
-    public string name { get; set; }
-    public string description { get; set; }
-    public StatTypes type { get; set; }
-    public int baseValue { get; set; }
-    public int modifiedValue { get; set; }
+    [SerializeField] private string name;
+    [SerializeField] private string description;
+    [SerializeField] private StatTypes type;
+    [SerializeField] private int baseValue;
+    [SerializeField] private int modifiedValue;
 
     public enum StatTypes
     {
@@ -27,5 +27,35 @@ public class BaseStat
         this.type = type;
         this.baseValue = baseValue;
         this.modifiedValue = modifiedValue;
+    }
+
+    public string Name
+    {
+        get { return this.name; }
+        set { this.name = value; }
+    }
+
+    public string Description
+    {
+        get { return this.description; }
+        set { this.description = value; }
+    }
+
+    public StatTypes Type
+    {
+        get { return this.type; }
+        set { this.type = value; }
+    }
+
+    public int BaseValue
+    {
+        get { return this.baseValue; }
+        set { this.baseValue = value; }
+    }
+
+    public int ModifiedValue
+    {
+        get { return this.modifiedValue; }
+        set { this.modifiedValue = value; }
     }
 }
