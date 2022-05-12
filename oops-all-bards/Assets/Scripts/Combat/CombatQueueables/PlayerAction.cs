@@ -10,9 +10,9 @@ public class PlayerAction : MonoBehaviour, ICombatQueueable
     public ITargetable target { get; set; }
     public void Execute()
     {
-        Debug.Log("Executing " + actingCharacter.name + "'s " + ability.Name + " action on " + target.name + ".");
+        Debug.Log("Executing " + actingCharacter.Name + "'s " + ability.Name + " action on " + target.Name + ".");
         CombatManager.Instance.ResolvePlayerAction(this);
-        actingCharacter.ownsTurn = false;
+        actingCharacter.OwnsTurn = false;
         done = true;
     }
 

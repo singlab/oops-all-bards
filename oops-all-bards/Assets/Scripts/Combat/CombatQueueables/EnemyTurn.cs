@@ -8,8 +8,8 @@ public class EnemyTurn : MonoBehaviour, ICombatQueueable
     public BaseEnemy actingCharacter { get; set; }
     public void Execute()
     {
-        Debug.Log("It is currently " + actingCharacter.name + "'s turn.");
-        actingCharacter.ownsTurn = true;
+        Debug.Log("It is currently " + actingCharacter.Name + "'s turn.");
+        actingCharacter.OwnsTurn = true;
         EventManager.Instance.InvokeEvent(EventType.EnemyAI, actingCharacter);
     }
 

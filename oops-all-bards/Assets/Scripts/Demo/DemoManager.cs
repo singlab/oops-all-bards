@@ -97,15 +97,15 @@ public class DemoManager : MonoBehaviour
     // A function used to debug the player object.
     private void DebugPlayer(BasePlayer player)
     {
-        Debug.Log(player.name);
-        Debug.Log("FAME: " + player.fame);
-        Debug.Log("GOLD: " + player.gold);
-        Debug.Log(player.playerClass.Name);
-        foreach (BaseStat stat in player.playerStats)
+        Debug.Log(player.Name);
+        Debug.Log("FAME: " + player.Fame);
+        Debug.Log("GOLD: " + player.Gold);
+        Debug.Log(player.PlayerClass.Name);
+        foreach (BaseStat stat in player.PlayerStats)
         {
             Debug.Log(stat.Name + " " + stat.BaseValue);
         }
-        foreach (BaseAbility ability in player.playerClass.Abilities)
+        foreach (BaseAbility ability in player.PlayerClass.Abilities)
         {
             Debug.Log(ability.Name + " " + ability.Damage + " " + ability.Cost);
         }
