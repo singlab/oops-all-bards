@@ -40,7 +40,7 @@ public class CharacterCreationManager : MonoBehaviour
             ToggleGameObject(step3);
         } else
         {
-            ExitCharacterCreationScene();
+            // ExitCharacterCreationScene();
         }
     }
 

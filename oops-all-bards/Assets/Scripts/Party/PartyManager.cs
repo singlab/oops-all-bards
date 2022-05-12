@@ -39,7 +39,7 @@ public class PartyManager : MonoBehaviour
     {
         foreach (BasePlayer p in currentParty) 
         {
-            if (p.id == id)
+            if (p.ID == id)
             {
                 return p;
             }

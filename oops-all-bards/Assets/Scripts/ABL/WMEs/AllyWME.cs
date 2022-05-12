@@ -29,43 +29,43 @@ public class AllyWME
 
     public AllyWME(BasePlayer player)
     {
-        this.id = player.id;
+        this.id = player.ID;
         // TODO: When we have 3D movement of player/allies, this will become important.
         // this.locationX = player.locationX;
         // this.locationY = player.locationY;
         // this.locationZ = player.locationZ;
         this.inCombat = PartyManager.Instance.inCombat;
-        this.health = player.health;
-        this.flourish = player.flourish;
-        this.shield = player.shield;
+        this.health = player.Health;
+        this.flourish = player.Flourish;
+        this.shield = player.Shield;
         // Handle ability data
-        this.abilityIDs = new int[player.playerClass.Abilities.Count];
-        this.abilityCosts = new int[player.playerClass.Abilities.Count];
-        this.abilityTypes = new string[player.playerClass.Abilities.Count];
-        for (int i = 0; i < player.playerClass.Abilities.Count; i++)
+        this.abilityIDs = new int[player.PlayerClass.Abilities.Count];
+        this.abilityCosts = new int[player.PlayerClass.Abilities.Count];
+        this.abilityTypes = new string[player.PlayerClass.Abilities.Count];
+        for (int i = 0; i < player.PlayerClass.Abilities.Count; i++)
         {
-            abilityIDs[i] = player.playerClass.Abilities[i].ID;
-            abilityCosts[i] = player.playerClass.Abilities[i].Cost;
-            abilityTypes[i] = player.playerClass.Abilities[i].CombatType.ToString();
+            abilityIDs[i] = player.PlayerClass.Abilities[i].ID;
+            abilityCosts[i] = player.PlayerClass.Abilities[i].Cost;
+            abilityTypes[i] = player.PlayerClass.Abilities[i].CombatType.ToString();
         }
-        this.ownsTurn = player.ownsTurn;
+        this.ownsTurn = player.OwnsTurn;
         // Handle CiF data
         this.partyIDs = new int[PartyManager.Instance.currentParty.Count];
         this.partyAffinities = new int[PartyManager.Instance.currentParty.Count];
-        this.statusIDs = new int[player.cifData.statuses.Count];
-        this.traitIDs = new int[player.cifData.traits.Count];
+        this.statusIDs = new int[player.CiFData.statuses.Count];
+        this.traitIDs = new int[player.CiFData.traits.Count];
         for (int i = 0; i < PartyManager.Instance.currentParty.Count; i++)
         {
-            partyIDs[i] = PartyManager.Instance.currentParty[i].id;
-            partyAffinities[i] = PartyManager.Instance.currentParty[i].cifData.GetAffinityByID(partyIDs[i]);
+            partyIDs[i] = PartyManager.Instance.currentParty[i].ID;
+            partyAffinities[i] = PartyManager.Instance.currentParty[i].CiFData.GetAffinityByID(partyIDs[i]);
         }
-        for (int i = 0; i < player.cifData.statuses.Count; i++)
+        for (int i = 0; i < player.CiFData.statuses.Count; i++)
         {
-            statusIDs[i] = player.cifData.statuses[i].id;
+            statusIDs[i] = player.CiFData.statuses[i].id;
         }
-        for (int i = 0; i < player.cifData.traits.Count; i++)
+        for (int i = 0; i < player.CiFData.traits.Count; i++)
         {
-            traitIDs[i] = player.cifData.traits[i].id;
+            traitIDs[i] = player.CiFData.traits[i].id;
         }
     }   
 }
