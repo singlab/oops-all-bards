@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class CharacterCreationManager : MonoBehaviour
 {
@@ -57,11 +58,7 @@ public class CharacterCreationManager : MonoBehaviour
         FinalizePlayerData(playerData.PlayerClass);
         DataManager.Instance.PlayerData = playerData;
         DataManager.Instance.SavePlayerData();
-        Debug.Log(playerData.Name);
-        Debug.Log(playerData.PlayerClass.Name);
-        Debug.Log(playerData.Model);
-        Debug.Log(playerData.Health);
-        Debug.Log(playerData.Flourish);
+        SceneManager.LoadScene("TavernDemo");
     }
 
     void SetPlayerModel(GameObject model)
