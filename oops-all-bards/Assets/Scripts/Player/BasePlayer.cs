@@ -5,20 +5,38 @@ using UnityEngine;
 [System.Serializable]
 public class BasePlayer : ITargetable
 {
-    public override string name { get; set; }
-    public int id { get; set; }
-    public override int health { get; set; }
-    public override int flourish { get; set; }
-    public override int shield { get; set; }
-    public BaseClass playerClass { get; set; }
-    public List<BaseStat> playerStats { get; set; } = new List<BaseStat>();
-    public int fame { get; set; }
-	public int gold { get; set; }
-    public List<BaseItem> equipment { get; set; } = new List<BaseItem>();
-	public List<BaseItem> inventory { get; set; } = new List<BaseItem>();
-    public CiFData cifData { get; set; }
-    public bool ownsTurn { get; set; }
-    public override List<CombatStatus> combatStatuses { get; set; } = new List<CombatStatus>();
+    [SerializeField] private string name;
+    [SerializeField] private int id;
+    [SerializeField] private int health;
+    [SerializeField] private int flourish;
+    [SerializeField] private int shield;
+    [SerializeField] private BaseClass playerClass;
+    [SerializeField] private List<BaseStat> playerStats = new List<BaseStat>();
+    [SerializeField] private int fame;
+	[SerializeField] private int gold;
+    [SerializeField] private List<BaseItem> equipment = new List<BaseItem>();
+	[SerializeField] private List<BaseItem> inventory = new List<BaseItem>();
+    [SerializeField] private CiFData cifData;
+    [SerializeField] private bool ownsTurn;
+    [SerializeField] private List<CombatStatus> combatStatuses = new List<CombatStatus>();
+
+    public BasePlayer()
+    {
+        this.name = "Default";
+        this.id = 0;
+        this.health = 0;
+        this.flourish = 0;
+        this.shield = 0;
+        this.playerClass = null;
+        this.playerStats = null;
+        this.fame = 0;
+        this.gold = 0;
+        this.equipment = new List<BaseItem>();
+        this.inventory = new List<BaseItem>();
+        this.cifData = new CiFData();
+        this.ownsTurn = false;
+        this.combatStatuses = new List<CombatStatus>();
+    }
 
     public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory)
     {
@@ -35,5 +53,89 @@ public class BasePlayer : ITargetable
         this.inventory = inventory;
         this.cifData = new CiFData();
         this.ownsTurn = false;
+    }
+
+    public override string Name
+    {
+        get { return this.name; }
+        set { this.name = value; }
+    }
+
+    public int ID
+    {
+        get { return this.id; }
+        set { this.id = value; }
+    }
+
+    public override int Health
+    {
+        get { return this.health; }
+        set { this.health = value; }
+    }
+
+    public override int Flourish
+    {
+        get { return this.flourish; }
+        set { this.flourish = value; }
+    }
+
+    public override int Shield
+    {
+        get { return this.shield; }
+        set { this.shield = value; }
+    }
+
+    public BaseClass PlayerClass
+    {
+        get { return this.playerClass; }
+        set { this.playerClass = value; }
+    }
+
+    public List<BaseStat> PlayerStats
+    {
+        get { return this.playerStats; }
+        set { this.playerStats = value; }
+    }
+
+    public int Fame
+    {
+        get { return this.fame; }
+        set { this.fame = value; }
+    }
+
+    public int Gold
+    {
+        get { return this.gold; }
+        set { this.gold = value; }
+    }
+
+    public List<BaseItem> Equipment
+    {
+        get { return this.equipment; }
+        set { this.equipment = value; }
+    }
+
+    public List<BaseItem> Inventory
+    {
+        get { return this.inventory; }
+        set { this.inventory = value; }
+    }
+
+    public CiFData CiFData
+    {
+        get { return this.cifData; }
+        set { this.cifData = value; }
+    }
+
+    public bool OwnsTurn
+    {
+        get { return this.ownsTurn; }
+        set { this.ownsTurn = value; }
+    }
+
+    public override List<CombatStatus> CombatStatuses
+    {
+        get { return this.combatStatuses; }
+        set { this.combatStatuses = value; }
     }
 }

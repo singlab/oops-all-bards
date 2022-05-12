@@ -5,10 +5,39 @@ using UnityEngine;
 // An interface that allows classes derived from it to be targetable by player/enemy actions.
 public class ITargetable
 {
-    public virtual string name { get; set; }
-    public virtual int health { get; set; }
-    public virtual int flourish { get; set; }
-    public virtual int shield { get; set; }
+    private string name;
+    private int health;
+    private int flourish;
+    private int shield;
+    private List<CombatStatus> combatStatuses = new List<CombatStatus>();
 
-    public virtual List<CombatStatus> combatStatuses { get; set; } = new List<CombatStatus>();
+    public virtual string Name
+    {
+        get { return this.name; }
+        set { this.name = value; }
+    }
+
+    public virtual int Health
+    {
+        get { return this.health; }
+        set { this.health = value; }
+    }
+
+    public virtual int Flourish
+    {
+        get { return this.flourish; }
+        set { this.flourish = value; }
+    }
+
+    public virtual int Shield
+    {
+        get { return this.shield; }
+        set { this.shield = value; }
+    }
+
+    public virtual List<CombatStatus> CombatStatuses
+    {
+        get { return this.combatStatuses; }
+        set { this.combatStatuses = value; }
+    }
 }

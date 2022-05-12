@@ -16,7 +16,7 @@ public class BaseClass
 	public enum ClassTypes
 	{
 		MUMMER,
-		MUSICIAN,
+		INSTRUMENTALIST,
 		SKALD,
 		SIREN
 	}

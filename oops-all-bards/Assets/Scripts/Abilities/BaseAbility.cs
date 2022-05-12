@@ -26,7 +26,8 @@ public class BaseAbility
 		NONE,
 		ATTACK,
 		DEFEND,
-		HEAL
+		HEAL,
+		SUPPORT
 	}
 
 	public BaseAbility(string name, int id, string desc, AbilityTypes type, CombatAbilityTypes combatType, int damage, int cost, int currentRank, int maxRank)
