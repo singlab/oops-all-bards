@@ -6,8 +6,8 @@ public class JSONReader : MonoBehaviour
 {
     public List<TextAsset> files = new List<TextAsset>();
     public BaseClasses baseClasses;
- 
-    void Start()
+    
+    void Awake()
     {
         foreach (TextAsset file in files)
         {

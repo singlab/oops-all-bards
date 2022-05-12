@@ -69,4 +69,9 @@ public class ModelViewer : MonoBehaviour
         }
         toInstantiate.AddComponent<ModelRotate>();   
     }
+
+    public GameObject GetModel()
+    {
+        return modelToRender;
+    }
 }
