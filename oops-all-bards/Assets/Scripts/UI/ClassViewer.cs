@@ -14,8 +14,7 @@ public class ClassViewer : MonoBehaviour
     private int max = 3;
     private BaseClass classToRender;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         UpdateClassViewer();
     }
@@ -68,5 +67,10 @@ public class ClassViewer : MonoBehaviour
         {
             classAbilites[i].GetComponent<TMP_Text>().text = c.Abilities[i].Name;
         }
+    }
+
+    public BaseClass GetClass()
+    {
+        return classToRender;
     }
 }

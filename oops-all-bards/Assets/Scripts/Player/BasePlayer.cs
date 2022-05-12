@@ -19,6 +19,7 @@ public class BasePlayer : ITargetable
     [SerializeField] private CiFData cifData;
     [SerializeField] private bool ownsTurn;
     [SerializeField] private List<CombatStatus> combatStatuses = new List<CombatStatus>();
+    [SerializeField] private GameObject model;
 
     public BasePlayer()
     {
@@ -36,9 +37,10 @@ public class BasePlayer : ITargetable
         this.cifData = new CiFData();
         this.ownsTurn = false;
         this.combatStatuses = new List<CombatStatus>();
+        this.model = null;
     }
 
-    public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory)
+    public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory, GameObject model)
     {
         this.name = name;
         this.id = id;
@@ -53,6 +55,7 @@ public class BasePlayer : ITargetable
         this.inventory = inventory;
         this.cifData = new CiFData();
         this.ownsTurn = false;
+        this.model = model;
     }
 
     public override string Name
@@ -137,5 +140,11 @@ public class BasePlayer : ITargetable
     {
         get { return this.combatStatuses; }
         set { this.combatStatuses = value; }
+    }
+
+    public GameObject Model
+    {
+        get { return this.model; }
+        set { this.model = value; }
     }
 }

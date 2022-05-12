@@ -33,8 +33,8 @@ public class DemoManager : MonoBehaviour
     {
         // Init player and ally.
         BaseClass playerClass = CreatePlayerClass(BaseClass.ClassTypes.SKALD);
-        BasePlayer player = new BasePlayer("Player", 0, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null);
-        BasePlayer ally = new BasePlayer("Ally", 1, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null);
+        BasePlayer player = new BasePlayer("Player", 0, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null, null);
+        BasePlayer ally = new BasePlayer("Ally", 1, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null, null);
         party.Add(player);
         party.Add(ally);
 

@@ -497,6 +497,9 @@ MonoBehaviour:
   step1: {fileID: 344573370}
   step2: {fileID: 654366453}
   step3: {fileID: 1014159620}
+  modelViewer: {fileID: 1161913193}
+  classViewer: {fileID: 1775460144}
+  nameInputField: {fileID: 2005892356}
 --- !u!4 &321230173
 Transform:
   m_ObjectHideFlags: 0

@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CharacterCreationManager : MonoBehaviour
 {
     public GameObject step1;
     public GameObject step2;
     public GameObject step3;
+    public ModelViewer modelViewer;
+    public ClassViewer classViewer;
+    public TMP_InputField nameInputField;
     private int currentStep = 0;
     private BasePlayer playerData = new BasePlayer();
 
@@ -14,12 +18,6 @@ public class CharacterCreationManager : MonoBehaviour
     void Start()
     {
         ContinueToNextStep();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     // Continue to the next step on button click.
@@ -32,15 +30,18 @@ public class CharacterCreationManager : MonoBehaviour
             ToggleGameObject(step3);
         } else if (currentStep == 2)
         {
+            SetPlayerModel(modelViewer.GetModel());
             ToggleGameObject(step1);
             ToggleGameObject(step2);
         } else if (currentStep == 3)
         {
+            SetPlayerClass(classViewer.GetClass());
             ToggleGameObject(step2);
             ToggleGameObject(step3);
         } else
         {
-            // ExitCharacterCreationScene();
+            SetPlayerName(nameInputField.text);
+            ExitCharacterCreationScene();
         }
     }
 
@@ -51,5 +52,36 @@ public class CharacterCreationManager : MonoBehaviour
     }
 
     // Save all player data and exit character creation scene.
+    void ExitCharacterCreationScene()
+    {
+        FinalizePlayerData(playerData.PlayerClass);
+        DataManager.Instance.PlayerData = playerData;
+        DataManager.Instance.SavePlayerData();
+        Debug.Log(playerData.Name);
+        Debug.Log(playerData.PlayerClass.Name);
+        Debug.Log(playerData.Model);
+        Debug.Log(playerData.Health);
+        Debug.Log(playerData.Flourish);
+    }
 
+    void SetPlayerModel(GameObject model)
+    {
+        playerData.Model = model;
+    }
+
+    void SetPlayerClass(BaseClass playerClass)
+    {
+        playerData.PlayerClass = playerClass;
+    }
+
+    void SetPlayerName(string name)
+    {
+        playerData.Name = name;
+    }
+
+    void FinalizePlayerData(BaseClass playerClass)
+    {
+        playerData.Health = 2 * playerClass.Stats[4].BaseValue;
+        playerData.Flourish = 2 * playerClass.Stats[0].BaseValue;
+    }
 }
