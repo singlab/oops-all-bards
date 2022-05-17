@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private GameObject player;
-    public float speed = 1;
+    public float speed = 5;
 
     void Start()
     {
@@ -23,21 +23,22 @@ public class PlayerController : MonoBehaviour
             player.transform.position += forward * speed * Time.deltaTime;
         }
 
-        // // Move Backwards
-        // if (Input.GetKey(KeyCode.S))
-        // {
-        //     // Adding a negative to the direction reverses it
-        //     rb.AddForce (-ForwardDirection * movementIntensity);
-        // }
-        // // Move Rightwards (eg Strafe. *We are using A & D to swivel)
-        // if (Input.GetKey(KeyCode.E))
-        // {
-        //    rb.AddForce (RightDirection * movementIntensity);
-        // }
-        // // Move Leftwards
-        // if (Input.GetKey(KeyCode.Q))
-        // {
-        //    rb.AddForce (-RightDirection * movementIntensity);
-        // }
+        // Move Backwards
+        if (Input.GetKey(KeyCode.S))
+        {
+            player.transform.position += -forward * speed * Time.deltaTime;
+        }
+        
+        // Move Rightwards (eg Strafe. *We are using A & D to swivel)
+        if (Input.GetKey(KeyCode.D))
+        {
+           player.transform.position += right * speed * Time.deltaTime;
+        }
+        
+        // Move Leftwards
+        if (Input.GetKey(KeyCode.A))
+        {
+           player.transform.position += -right * speed * Time.deltaTime;
+        }
     }
 }
