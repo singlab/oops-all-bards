@@ -29,5 +29,10 @@ public class TavernManager : MonoBehaviour
         // Set up player controller script and camera follow.
         PlayerController playerController = toInstantiate.AddComponent<PlayerController>();
         playerCamera.Player = toInstantiate;
+        // Set up player animator controller.
+        Animator a = toInstantiate.GetComponent<Animator>();
+        RuntimeAnimatorController test = Resources.Load<RuntimeAnimatorController>("Controllers/Player");
+        Debug.Log(test);
+        a.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Controllers/Player");
     }
 }
