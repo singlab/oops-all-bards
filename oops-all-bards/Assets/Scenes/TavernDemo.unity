@@ -2796,9 +2796,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Person 2
       objectReference: {fileID: 0}
+    - target: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 104704, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 138454, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2840,6 +2852,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9540510, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
 --- !u!1001 &206043183
@@ -6845,6 +6861,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Person 4
       objectReference: {fileID: 0}
+    - target: {fileID: 138454, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 176202, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -6889,6 +6913,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9540510, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
 --- !u!1001 &426310406
@@ -10775,11 +10803,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_Name
-      value: Person 3
+      value: Runt
+      objectReference: {fileID: 0}
+    - target: {fileID: 138454, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 139742, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 180220, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10821,6 +10861,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9540510, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
 --- !u!1 &677944722
@@ -10995,6 +11039,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Person 5
       objectReference: {fileID: 0}
+    - target: {fileID: 138454, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 144358, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -11039,6 +11091,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9540510, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
 --- !u!1001 &697509835
@@ -19248,7 +19304,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_Name
-      value: Person
+      value: Bartender
+      objectReference: {fileID: 0}
+    - target: {fileID: 122060, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_RootOrder
@@ -19294,6 +19354,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9540510, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
 --- !u!1001 &1152236137
@@ -30429,6 +30493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3330ddf5c8fe03a47a417ca3fe21e1f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 100
 --- !u!1001 &1912338284
 PrefabInstance:
   m_ObjectHideFlags: 0
