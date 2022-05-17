@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 484904}
   - component: {fileID: 9540510}
-  - component: {fileID: 193394692698515165}
+  - component: {fileID: 1334506568017257379}
   m_Layer: 0
   m_Name: Character_Shieldmadien_White
   m_TagString: Untagged
@@ -37,6 +37,7 @@ Transform:
   - {fileID: 466928}
   - {fileID: 425770}
   - {fileID: 485590}
+  - {fileID: 2238355776642290206}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -60,8 +61,8 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!136 &193394692698515165
-CapsuleCollider:
+--- !u!65 &1334506568017257379
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -70,10 +71,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2.0068433
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.9069315, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.874251, z: 0.45144612}
+  m_Center: {x: 0, y: 0.9201203, z: -0.05808887}
 --- !u!1 &103190
 GameObject:
   m_ObjectHideFlags: 0
@@ -3536,4 +3536,35 @@ Transform:
   - {fileID: 436106}
   m_Father: {fileID: 445992}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1584203058466577231
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2238355776642290206}
+  m_Layer: 0
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2238355776642290206
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584203058466577231}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 484904}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

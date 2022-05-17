@@ -24,7 +24,8 @@ public class TavernManager : MonoBehaviour
         BasePlayer playerData = DataManager.Instance.PlayerData;
         GameObject toInstantiate = Instantiate(playerData.Model, playerSpawnPoint.transform.position, Quaternion.identity);
         // Set up rigidbody and collider for physics.
-        toInstantiate.AddComponent<Rigidbody>();
+        Rigidbody rb = toInstantiate.AddComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
         // Set up player controller script and camera follow.
         PlayerController playerController = toInstantiate.AddComponent<PlayerController>();
         playerCamera.Player = toInstantiate;
