@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
             player.transform.position += -forward * speed * Time.deltaTime;
         }
         
-        // Move Rightwards (eg Strafe. *We are using A & D to swivel)
+        // Move Rightwards
         if (Input.GetKey(KeyCode.D))
         {
            player.transform.position += right * speed * Time.deltaTime;
