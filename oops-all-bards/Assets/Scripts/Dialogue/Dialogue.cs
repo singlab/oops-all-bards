@@ -85,4 +85,16 @@ public class NodeResponse
 public class Dialogues
 {
 	[SerializeField] public List<Dialogue> dialogues = new List<Dialogue>();
+
+    public Dialogue GetDialogue(int id)
+    {
+        foreach (Dialogue d in dialogues)
+        {
+            if (d.ID == id)
+            {
+                return d;
+            }
+        }
+        return null;
+    }
 }
