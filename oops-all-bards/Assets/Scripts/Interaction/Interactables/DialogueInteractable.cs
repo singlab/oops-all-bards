@@ -18,10 +18,8 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
     {
         if (triggering)
         {
-            Debug.Log("Within Range");
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                Debug.Log("Pressed the Interact Button");
                 Execute();
             }
         }
