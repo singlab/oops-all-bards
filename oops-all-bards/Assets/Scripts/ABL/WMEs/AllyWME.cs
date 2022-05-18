@@ -52,20 +52,20 @@ public class AllyWME
         // Handle CiF data
         this.partyIDs = new int[PartyManager.Instance.currentParty.Count];
         this.partyAffinities = new int[PartyManager.Instance.currentParty.Count];
-        this.statusIDs = new int[player.CiFData.statuses.Count];
-        this.traitIDs = new int[player.CiFData.traits.Count];
+        this.statusIDs = new int[player.CiFData.Statuses.Count];
+        this.traitIDs = new int[player.CiFData.Traits.Count];
         for (int i = 0; i < PartyManager.Instance.currentParty.Count; i++)
         {
             partyIDs[i] = PartyManager.Instance.currentParty[i].ID;
             partyAffinities[i] = PartyManager.Instance.currentParty[i].CiFData.GetAffinityByID(partyIDs[i]);
         }
-        for (int i = 0; i < player.CiFData.statuses.Count; i++)
+        for (int i = 0; i < player.CiFData.Statuses.Count; i++)
         {
-            statusIDs[i] = player.CiFData.statuses[i].id;
+            statusIDs[i] = player.CiFData.Statuses[i].ID;
         }
-        for (int i = 0; i < player.CiFData.traits.Count; i++)
+        for (int i = 0; i < player.CiFData.Traits.Count; i++)
         {
-            traitIDs[i] = player.CiFData.traits[i].id;
+            traitIDs[i] = player.CiFData.Traits[i].ID;
         }
     }   
 }

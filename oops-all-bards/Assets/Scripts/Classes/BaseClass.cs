@@ -65,4 +65,10 @@ public class BaseClass
 public class BaseClasses
 {
 	[SerializeField] public List<BaseClass> baseClasses = new List<BaseClass>();
+
+	public BaseClass GetRandomClass()
+	{
+		int rand = UnityEngine.Random.Range(0, baseClasses.Count);
+		return baseClasses[0];
+	}
 }

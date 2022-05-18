@@ -6,20 +6,29 @@ using UnityEngine.SceneManagement;
 // A class that manages the features of the combat demo.
 public class DemoManager : MonoBehaviour
 {
-    // A reference to the player party.
-    List<BasePlayer> party = new List<BasePlayer>();
-    // A reference to the enemies.
-    List<BaseEnemy> enemies = new List<BaseEnemy>();
+    private static DemoManager _instance;
+    public static DemoManager Instance => DemoManager._instance;
+    public JSONReader jsonReader;
+
+    // Singleton pattern
+    void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        } else if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         // Subscribe to events that the demo manager should be aware of.
         SubscribeToEvents();
-        // Setup party and enemies for demo.
-        GatherParty();
-        // Have CombatManager init combat with preselected party/enemies above.
-        CombatManager.Instance.InitCombatQueue(party, enemies);
+        
     }
 
     // Update is called once per frame
@@ -28,70 +37,14 @@ public class DemoManager : MonoBehaviour
         
     }
 
-    // A function that initializes the demo with all actors and starting values.
-    public void GatherParty()
+    public List<BaseEnemy> GenerateEnemies()
     {
-        // Init player and ally.
-        BaseClass playerClass = CreatePlayerClass(BaseClass.ClassTypes.SKALD);
-        BasePlayer player = new BasePlayer("Player", 0, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null, null);
-        BasePlayer ally = new BasePlayer("Ally", 1, 20, 10, 0, playerClass, playerClass.Stats, 0, 0, null, null, null);
-        party.Add(player);
-        party.Add(ally);
-
-        // Init enemies.
-        BaseEnemy enemy = new BaseEnemy("Enemy1", 10, 5, 0, playerClass);
+        List<BaseEnemy> enemies = new List<BaseEnemy>();
+        BaseEnemy enemy = new BaseEnemy("Devotee", 10, 5, 0, jsonReader.baseClasses.GetRandomClass());
         enemies.Add(enemy);
-        enemy = new BaseEnemy("Enemy2", 10, 5, 0, playerClass);
+        enemy = new BaseEnemy("Fanatic", 10, 5, 0, jsonReader.baseClasses.GetRandomClass());
         enemies.Add(enemy);
-    }
-
-    // A function that returns a class based on class type. Only for demo use.
-    private BaseClass CreatePlayerClass(BaseClass.ClassTypes type)
-    {
-        BaseClass playerClass = null;
-        if (type == BaseClass.ClassTypes.SKALD)
-        {
-            playerClass = new BaseClass("Skald", "A warrior poet.", BaseClass.ClassTypes.SKALD, CreateClassStats(BaseClass.ClassTypes.SKALD), CreateClassAbilities(BaseClass.ClassTypes.SKALD));       
-        }
-
-        return playerClass == null ? null : playerClass;
-    }
-
-    // A function that returns a list of stats based on class type. Only for demo use.
-    private List<BaseStat> CreateClassStats(BaseClass.ClassTypes type)
-    {
-        List<BaseStat> stats = new List<BaseStat>();
-        if (type == BaseClass.ClassTypes.SKALD)
-        {
-            BaseStat stat = new BaseStat("Flourish", "A measure of vigorous style.", BaseStat.StatTypes.FLOURISH, 5, 0);
-            stats.Add(stat);
-            stat = new BaseStat("Oratory", "A measure of refined speech.", BaseStat.StatTypes.ORATORY, 3, 0);
-            stats.Add(stat);
-            stat = new BaseStat("Rhapsody", "A measure of enchanting persuasion.", BaseStat.StatTypes.RHAPSODY, 4, 0);
-            stats.Add(stat);
-            stat = new BaseStat("Tempo", "A measure of quickened pace.", BaseStat.StatTypes.TEMPO, 6, 0);
-            stats.Add(stat);
-            stat = new BaseStat("Elan", "A measure of great gusto.", BaseStat.StatTypes.ELAN, 4, 0);
-        }
-
-        return stats;
-    }
-
-    // A function that returns a list of abilities based on class type. Only for demo use.
-    private List<BaseAbility> CreateClassAbilities(BaseClass.ClassTypes type)
-    {
-        List<BaseAbility> abilities = new List<BaseAbility>();
-        if (type == BaseClass.ClassTypes.SKALD)
-        {
-            BaseAbility ability = new BaseAbility("Attack", 0, "A basic attack.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.ATTACK, 3, 0, 1, 5);
-            abilities.Add(ability);
-            ability = new BaseAbility("Defend", 1, "Take defensive precautions.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.DEFEND, 3, 0, 1, 5);
-            abilities.Add(ability);
-            ability = new BaseAbility("Shrug It Off", 2, "Heal wounds.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.HEAL, 3, 3, 1, 5);
-            abilities.Add(ability);
-        }
-
-        return abilities;
+        return enemies;
     }
 
     // A function used to debug the player object.
@@ -101,10 +54,6 @@ public class DemoManager : MonoBehaviour
         Debug.Log("FAME: " + player.Fame);
         Debug.Log("GOLD: " + player.Gold);
         Debug.Log(player.PlayerClass.Name);
-        foreach (BaseStat stat in player.PlayerStats)
-        {
-            Debug.Log(stat.Name + " " + stat.BaseValue);
-        }
         foreach (BaseAbility ability in player.PlayerClass.Abilities)
         {
             Debug.Log(ability.Name + " " + ability.Damage + " " + ability.Cost);
@@ -144,13 +93,38 @@ public class DemoManager : MonoBehaviour
 
     public void CombatWin()
     {
-        SceneManager.LoadScene("CombatWin");
         PartyManager.Instance.ToggleInCombat(false);
+        LoadScene("CombatWin");
     }
 
     public void CombatLoss()
     {
-        SceneManager.LoadScene("CombatLoss");
         PartyManager.Instance.ToggleInCombat(false);
+        LoadScene("CombatLoss");
+    }
+
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void TogglePlayerControls()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Camera camera = Camera.main;
+        player.GetComponent<PlayerController>().ToggleControls();
+        camera.GetComponent<CameraController>().ToggleControls();
+    }
+
+    public void PrepareForGig()
+    {
+        // Add player to the party.
+        PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
+        // Recruit Quinton to the party.
+        BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
+        quinton.PlayerClass = jsonReader.baseClasses.baseClasses[2];
+        PartyManager.Instance.AddCharacterToParty(quinton);
+        // Load the combat scene.
+        LoadScene("GigDemo");
     }
 }

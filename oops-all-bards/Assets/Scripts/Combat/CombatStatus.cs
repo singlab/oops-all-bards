@@ -5,7 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class CombatStatus
 {
-    public StatusTypes type { get; set; }
+    [SerializeField] private StatusTypes type;
+
+    public StatusTypes Type
+    {
+        get { return this.type; }
+        set { this.type = value; }
+    }
 
     public enum StatusTypes 
     {

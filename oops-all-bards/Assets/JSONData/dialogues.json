@@ -50,12 +50,127 @@
                 },
                 {
                     "id": 3,
-                    "nodeText": "We shouldn't really be talking about this... They don't like it when you say the name. Listen, if it's a gig you want, maybe we can work something out. You see that gentleman in the corner? That's Quinton, he usually sorts out the entertainment here. Worth a shot speaking to him, I should think.",
+                    "nodeText": "We shouldn't really be talking about this... They don't like it when you say the name. Listen, if it's a gig you want, maybe we can work something out.",
                     "nodeResponses":
                     [
                         {
-                            "nodeResponseText": "Thanks, I will.",
+                            "nodeResponseText": "I'm listening.",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "You see that gentleman in the corner? That's Quinton, he usually sorts out the entertainment here. Worth a shot speaking to him, I should think. Tell him Samaren sent you over.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Thanks, Samaren. I will.",
                             "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "... Do I know you?",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Not yet, but you -- and everyone in this tavern -- soon will.",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "I'm passing through, looking for work. Samaren sent me over, told me you might help me get a gig here.",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Excellent, another bard with an inflated ego. Just what this city needs.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "It sounds like the city needs a lot of things. Who are these Followers I heard about?",
+                            "nextNode": 3
+                        },
+                        {
+                            "nodeResponseText": "So... do I have the job?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "I think we can arrange something. The Followers make it hard for us these days, but we make it work.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Who are they? These Followers?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Devotees and fanatics of the ancient 'protector' of our fair city, the god Bolothamogg.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "And what do they want?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "They want what we all want: for fortune to return to Crestmourn. But they believe the only way to do this is by appeasing their god.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "And appeasing gods never involves baking cupcakes, it seems.",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Hah, I like you. No, it doesn't. They want to strip away everything that makes our city beautiful, our art, our music, our entire culture.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Hence why it's hard to get a gig around here.",
+                            "nextNode": 6
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "Exactly. Anyway, why don't you go around back and settle in, I'll call when -- hold on...",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What's going on?",
+                            "nextNode": 7
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "nodeText": "They're already here. I hope you can do more than sing, kid.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Oh, for --",
+                            "nextNode": -999
                         }
                     ]
                 }

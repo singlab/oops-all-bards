@@ -55,4 +55,9 @@ public class PlayerController : MonoBehaviour
            player.transform.position += -right * speed * Time.deltaTime;
         }
     }
+
+    public void ToggleControls()
+    {
+        this.enabled = !this.enabled;
+    }
 }

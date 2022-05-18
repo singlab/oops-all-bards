@@ -5,13 +5,26 @@ using UnityEngine;
 public class DialogueInteractable : MonoBehaviour, IInteractable
 {
     private bool triggering;
+    
+    // Assigned in editor.
     public int dialogueID;
+    public string exhaustedDialogueResponse;
 
-    // Assigned DialogueTrigger starts dialogue from manager.
+    // Assigned DialogueTrigger starts dialogue from manager if the dialogue
+    // has not already been exhausted, or falls back to exhausted dialogue response if it has.
     public void Execute()
     {
         Debug.Log("Executing dialogue.");
-        DialogueManager.Instance.StartDialogue(dialogueID);  
+        // TODO: Have characters in dialogue actually look towards the player when they speak.
+        // transform.LookAt(Camera.main.transform);
+        Dialogue toStart = DialogueManager.Instance.jsonReader.dialogues.GetDialogue(dialogueID);
+        if (!toStart.Exhausted)
+        {
+            DialogueManager.Instance.StartDialogue(dialogueID);
+        } else
+        {
+            DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
+        }  
     }
 
     void Update()
