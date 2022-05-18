@@ -35,4 +35,9 @@ public class CameraController : MonoBehaviour
         get { return player; }
         set { player = value; }
     }
+
+    public void ToggleControls()
+    {
+        this.enabled = !this.enabled;
+    }
 }

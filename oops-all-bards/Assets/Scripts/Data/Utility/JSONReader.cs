@@ -7,6 +7,7 @@ public class JSONReader : MonoBehaviour
     public List<TextAsset> files = new List<TextAsset>();
     public BaseClasses baseClasses;
     public Dialogues dialogues;
+    public Allies allies;
     
     void Awake()
     {
@@ -26,6 +27,10 @@ public class JSONReader : MonoBehaviour
         if (file.name == "dialogues")
         {
             dialogues = JsonUtility.FromJson<Dialogues>(file.text);
+        }
+        if (file.name == "allies")
+        {
+            allies = JsonUtility.FromJson<Allies>(file.text);
         }
     }
 }

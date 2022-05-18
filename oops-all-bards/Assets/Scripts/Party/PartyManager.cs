@@ -18,6 +18,7 @@ public class PartyManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
     }
 
     public void AddCharacterToParty(BasePlayer character)

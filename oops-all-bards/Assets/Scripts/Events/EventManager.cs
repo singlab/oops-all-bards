@@ -75,6 +75,7 @@ public class EventManager : MonoBehaviour
                 this.eventPublishers.Add(eventType, new Publisher());
             }
         }
+        DontDestroyOnLoad(gameObject);
     }
 
     /// <summary>

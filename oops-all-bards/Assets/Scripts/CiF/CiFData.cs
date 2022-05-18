@@ -5,9 +5,27 @@ using UnityEngine;
 [System.Serializable]
 public class CiFData
 {
-    public List<Affinity> affinities { get; set; }
-    public List<Status> statuses { get; set; }
-    public List<Trait> traits { get; set; }
+    [SerializeField] private List<Affinity> affinities;
+    [SerializeField] private List<Status> statuses;
+    [SerializeField] private List<Trait> traits;
+
+    public List<Affinity> Affinities
+    {
+        get { return this.affinities; }
+        set { this.affinities = value; }
+    }
+
+    public List<Status> Statuses
+    {
+        get { return this.statuses; }
+        set { this.statuses = value; }
+    }
+
+    public List<Trait> Traits
+    {
+        get { return this.traits; }
+        set { this.traits = value; }
+    }
 
     public CiFData()
     {

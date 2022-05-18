@@ -11,7 +11,6 @@ public class BasePlayer : ITargetable
     [SerializeField] private int flourish;
     [SerializeField] private int shield;
     [SerializeField] private BaseClass playerClass;
-    [SerializeField] private List<BaseStat> playerStats = new List<BaseStat>();
     [SerializeField] private int fame;
 	[SerializeField] private int gold;
     [SerializeField] private List<BaseItem> equipment = new List<BaseItem>();
@@ -29,7 +28,6 @@ public class BasePlayer : ITargetable
         this.flourish = 0;
         this.shield = 0;
         this.playerClass = null;
-        this.playerStats = null;
         this.fame = 0;
         this.gold = 0;
         this.equipment = new List<BaseItem>();
@@ -40,7 +38,7 @@ public class BasePlayer : ITargetable
         this.model = null;
     }
 
-    public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, List<BaseStat> playerStats, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory, GameObject model)
+    public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory, GameObject model)
     {
         this.name = name;
         this.id = id;
@@ -48,7 +46,6 @@ public class BasePlayer : ITargetable
         this.flourish = flourish;
         this.shield = shield;
         this.playerClass = playerClass;
-        this.playerStats = playerStats;
         this.fame = fame;
         this.gold = gold;
         this.equipment = equipment;
@@ -92,12 +89,6 @@ public class BasePlayer : ITargetable
     {
         get { return this.playerClass; }
         set { this.playerClass = value; }
-    }
-
-    public List<BaseStat> PlayerStats
-    {
-        get { return this.playerStats; }
-        set { this.playerStats = value; }
     }
 
     public int Fame
@@ -146,5 +137,23 @@ public class BasePlayer : ITargetable
     {
         get { return this.model; }
         set { this.model = value; }
+    }
+}
+
+[System.Serializable]
+public class Allies
+{
+    [SerializeField] public List<BasePlayer> allies = new List<BasePlayer>();
+
+    public BasePlayer GetBasePlayerByID(int id)
+    {
+        foreach (BasePlayer ally in allies)
+        {
+            if (ally.ID == id)
+            {
+                return ally;
+            }
+        }
+        return null;
     }
 }

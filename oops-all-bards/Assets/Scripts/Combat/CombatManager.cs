@@ -10,10 +10,10 @@ public class CombatManager : MonoBehaviour
 
     private static CombatManager _instance;
     // References to player and enemy portraits.
-    GameObject partyPortraits;
-    GameObject enemyPortraits;
+    public GameObject partyPortraits;
+    public GameObject enemyPortraits;
     // A reference to the gameobject queue.
-    GameObject queueableContainer;
+    public GameObject queueableContainer;
     // A reference to the queueable gameobject prefab.
     public GameObject goQueueable;
     // A reference to the portrait UI prefab.
@@ -21,7 +21,7 @@ public class CombatManager : MonoBehaviour
     // A reference to the combat queue.
     public CombatQueue combatQueue;
     // A reference to the combat action menu.
-    GameObject combatMenu;
+    public GameObject combatMenu;
     // A reference to the combat action menu button prefab.
     public GameObject actionButton;
     // A reference to the target button prefab.
@@ -50,16 +50,11 @@ public class CombatManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        partyPortraits = GameObject.Find("PartyPortraits");
-        enemyPortraits = GameObject.Find("EnemyPortraits");
-        queueableContainer = GameObject.Find("CombatQueue");
-        combatMenu = GameObject.Find("CombatMenu");
-
-        partyPortraits.SetActive(false);
-        enemyPortraits.SetActive(false);
-        queueableContainer.SetActive(false);
-        combatMenu.SetActive(false);
         SubscribeToEvents();
+        InitCombatQueue(PartyManager.Instance.currentParty, DemoManager.Instance.GenerateEnemies());
+        RenderUI();
+        DemoManager.Instance.CheckQueue();
+        Debug.Log("I've finished starting up.");
     }
 
     // Update is called once per frame
@@ -78,9 +73,6 @@ public class CombatManager : MonoBehaviour
     // A function used to render all UI elements for the demo.
     public void RenderUI()
     {
-        // Disable the init button.
-        GameObject.Find("InitButton").SetActive(false);
-
         // Render the portrait section, queueable container, and combat menu.
         partyPortraits.SetActive(true);
         enemyPortraits.SetActive(true);
@@ -91,6 +83,7 @@ public class CombatManager : MonoBehaviour
         // Need: name, current health/flourish, max health/flourish, portrait
         foreach (BasePlayer p in party)
         {
+            Debug.Log(party.Count);
             GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
             // Set name text
             toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = p.Name;
@@ -147,7 +140,6 @@ public class CombatManager : MonoBehaviour
         this.party = party;
         this.enemies = enemies;
         // Set PartyManager variables.
-        PartyManager.Instance.currentParty = party;
         PartyManager.Instance.ToggleInCombat(true);
         // Clean up for new combat scenario.
         combatQueue = new CombatQueue();
@@ -497,7 +489,7 @@ public class CombatManager : MonoBehaviour
         {
             foreach (CombatStatus s in target.CombatStatuses)
             {
-                if (s.type == CombatStatus.StatusTypes.PROTECTED)
+                if (s.Type == CombatStatus.StatusTypes.PROTECTED)
                 {
                     Debug.Log(target.Name + " has a PROTECTED status effect");
                     foreach (BasePlayer p in party)
@@ -506,7 +498,7 @@ public class CombatManager : MonoBehaviour
                         {
                             foreach (CombatStatus st in p.CombatStatuses)
                             {
-                                if (st.type == CombatStatus.StatusTypes.PROTECTING)
+                                if (st.Type == CombatStatus.StatusTypes.PROTECTING)
                                 {
                                     Debug.Log(p.Name + " has a PROTECTING status effect");
                                     BasePlayer newTarget = p;
