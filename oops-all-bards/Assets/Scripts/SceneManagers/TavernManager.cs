@@ -10,10 +10,11 @@ public class TavernManager : MonoBehaviour
     void Awake()
     {
         SpawnPlayer();
+        AudioManager.Instance.ChangeTrack(1);
     }
 
     // Update is called once per frame
-    void Update()
+    void Start()
     {
         
     }
