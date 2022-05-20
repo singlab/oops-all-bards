@@ -6,7 +6,9 @@ public class AudioManager : MonoBehaviour
 {
 
     private static AudioManager _instance;
+    private AudioSource source;
     public static AudioManager Instance => AudioManager._instance;
+    public List<AudioClip> tracks;
 
     // Singleton pattern
     void Awake()
@@ -21,15 +23,14 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        source = gameObject.GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeTrack(int trackNum)
     {
-        
+        source.clip = tracks[trackNum];
+        source.Play();
     }
 }
