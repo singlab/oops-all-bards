@@ -109,11 +109,6 @@ public class DemoManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
-    public void LoadSceneAdditive(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-    }
-
     public void TogglePlayerControls()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
