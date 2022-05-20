@@ -96,6 +96,7 @@ public class DialogueManager : MonoBehaviour
             CloseDialogue();
         } else
         {
+            CloseDialogue();
             DemoManager.Instance.PrepareForGig();
         }
     }

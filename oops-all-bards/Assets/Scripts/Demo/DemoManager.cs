@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 // A class that manages the features of the combat demo.
 public class DemoManager : MonoBehaviour
@@ -40,9 +41,9 @@ public class DemoManager : MonoBehaviour
     public List<BaseEnemy> GenerateEnemies()
     {
         List<BaseEnemy> enemies = new List<BaseEnemy>();
-        BaseEnemy enemy = new BaseEnemy("Devotee", 10, 5, 0, jsonReader.baseClasses.GetRandomClass());
+        BaseEnemy enemy = new BaseEnemy("Devotee", 8, 5, 0, jsonReader.baseClasses.GetRandomClass());
         enemies.Add(enemy);
-        enemy = new BaseEnemy("Fanatic", 10, 5, 0, jsonReader.baseClasses.GetRandomClass());
+        enemy = new BaseEnemy("Fanatic", 8, 5, 0, jsonReader.baseClasses.GetRandomClass());
         enemies.Add(enemy);
         return enemies;
     }
@@ -108,6 +109,11 @@ public class DemoManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    public void LoadSceneAdditive(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+    }
+
     public void TogglePlayerControls()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -123,8 +129,11 @@ public class DemoManager : MonoBehaviour
         // Recruit Quinton to the party.
         BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
         quinton.PlayerClass = jsonReader.baseClasses.baseClasses[2];
+        quinton.Model = Resources.Load<GameObject>("PolygonVikings/Prefabs/Characters/Character_Chief_01_White");
         PartyManager.Instance.AddCharacterToParty(quinton);
+        Debug.Log(PartyManager.Instance.FindPartyMemberById(1).Model);
         // Load the combat scene.
         LoadScene("GigDemo");
+        Debug.Log(PartyManager.Instance.FindPartyMemberById(1).Model);
     }
 }

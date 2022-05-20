@@ -52,14 +52,14 @@ public class ModelViewer : MonoBehaviour
     }
 
     // Render given model
-    private void RenderModel(GameObject model)
+    public void RenderModel(GameObject model)
     {
         if (transform.childCount > 0)
         {
             GameObject currentChild = transform.GetChild(0).gameObject;
             Destroy(currentChild);
         }
-        GameObject toInstantiate = Instantiate(model, transform.position, Quaternion.identity);
+        GameObject toInstantiate = Instantiate(model, transform.position, Quaternion.Euler(new Vector3(0,180,0)));
         // GameObject toInstantiate = Instantiate(model, new Vector3(transform.position.x,-1,transform.position.z), Quaternion.identity);
         toInstantiate.transform.parent = gameObject.transform;
         toInstantiate.layer = 5;
