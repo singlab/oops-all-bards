@@ -926,7 +926,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 119458, guid: a6ebdfa58063c6e40a19612fc9013404, type: 3}
       propertyPath: m_Name
-      value: Enemy2Model
+      value: FanaticModel
       objectReference: {fileID: 0}
     - target: {fileID: 425282, guid: a6ebdfa58063c6e40a19612fc9013404, type: 3}
       propertyPath: m_RootOrder
@@ -5848,7 +5848,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 157842, guid: ef3c7a6cdd822654c9ff74c4222fa2b9, type: 3}
       propertyPath: m_Name
-      value: Enemy1Model
+      value: DevoteeModel
       objectReference: {fileID: 0}
     - target: {fileID: 403112, guid: ef3c7a6cdd822654c9ff74c4222fa2b9, type: 3}
       propertyPath: m_RootOrder

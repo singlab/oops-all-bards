@@ -380,6 +380,7 @@ public class CombatManager : MonoBehaviour
     {
         ICombatQueueable[] array = combatQueue.queue.ToArray();
         Tuple<BasePlayer, BaseEnemy> parsedCharacter = ParseTargetable(character);
+        ApplyDeathAnimation(parsedCharacter);
         // Remove instance of character from appropriate list and ensure no turns in the queue belong to the downed character.
         if (parsedCharacter.Item1 != null)
         {
@@ -536,5 +537,37 @@ public class CombatManager : MonoBehaviour
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.Name);
         relevantValueBars.Item1.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
+    }
+
+    private void ApplyDeathAnimation(Tuple<BasePlayer, BaseEnemy> parsedCharacter)
+    {
+        GameObject model = null;
+        if (parsedCharacter.Item1 != null)
+        {
+            model = GetModelByID(parsedCharacter.Item1.ID);
+        }
+        if (parsedCharacter.Item2 != null)
+        {
+            model = GetModelByName(parsedCharacter.Item2.Name);
+        }
+
+        Animator animator = model.GetComponent<Animator>();
+        animator.SetBool("isDefeated", true);
+    }
+
+    private GameObject GetModelByID(int id)
+    {
+        if (id == 0)
+        {
+            return GameObject.Find("PlayerModel");
+        } else
+        {
+            return GameObject.Find("AllyModel");
+        }
+    }
+
+    private GameObject GetModelByName(string name)
+    {
+        return GameObject.Find($"{name}Model");
     }  
 }
