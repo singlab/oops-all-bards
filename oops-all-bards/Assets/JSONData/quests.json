@@ -1,0 +1,25 @@
+{
+    "quests":
+    [
+        {
+            "name": "Humble Bard-ginnings",
+            "id": 0,
+            "stages":
+            [
+                {
+                    "id": 0,
+                    "npcTargetName": "Samaren",
+                    "complete": false,
+                    "displayText": "Speak with the innkeep to get your bearings"
+                },
+                {
+                    "id": 1,
+                    "npcTargetName": "Quinton",
+                    "complete": false,
+                    "displayText": "Speak with Quinton about getting a gig"
+                }
+            ],
+            "complete": false
+        }
+    ]
+}
