@@ -9,6 +9,9 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
     // Assigned in editor.
     public int dialogueID;
     public string exhaustedDialogueResponse;
+    // Quest link: [0] = quest ID
+    //             [1] = quest stage ID
+    public int[] questLink = new int[2]; 
 
     // Assigned DialogueTrigger starts dialogue from manager if the dialogue
     // has not already been exhausted, or falls back to exhausted dialogue response if it has.
@@ -21,6 +24,7 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
         if (!toStart.Exhausted)
         {
             DialogueManager.Instance.StartDialogue(dialogueID);
+            QuestManager.Instance.MarkStageComplete(questLink[1]);
         } else
         {
             DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);

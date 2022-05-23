@@ -8,6 +8,7 @@ public class JSONReader : MonoBehaviour
     public BaseClasses baseClasses;
     public Dialogues dialogues;
     public Allies allies;
+    public Quests quests;
     
     void Awake()
     {
@@ -31,6 +32,10 @@ public class JSONReader : MonoBehaviour
         if (file.name == "allies")
         {
             allies = JsonUtility.FromJson<Allies>(file.text);
+        }
+        if (file.name == "quests")
+        {
+            quests = JsonUtility.FromJson<Quests>(file.text);
         }
     }
 }
