@@ -11,6 +11,7 @@ public class TavernManager : MonoBehaviour
     {
         SpawnPlayer();
         AudioManager.Instance.ChangeTrack(1);
+        CheckDialogueUI();
     }
 
     // Update is called once per frame
@@ -35,5 +36,14 @@ public class TavernManager : MonoBehaviour
         a.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Controllers/Player");
         // Add player tag.
         toInstantiate.tag = "Player";
+    }
+
+    void CheckDialogueUI()
+    {
+        DialogueManager.Instance.AssignDialogueUI();
+        if (DialogueManager.Instance.dialogueUI.activeSelf)
+        {
+            DialogueManager.Instance.ToggleDialogueUI();
+        }
     }
 }

@@ -35,10 +35,10 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
-        ToggleDialogueUI();
+        
     }
 
-    private void ToggleDialogueUI()
+    public void ToggleDialogueUI()
     {
         dialogueUI.SetActive(!dialogueUI.activeSelf);
     }
@@ -115,5 +115,10 @@ public class DialogueManager : MonoBehaviour
         GameObject target = character.transform.Find("CameraTarget").gameObject;
         GameObject toInstantiate = Instantiate(textBubblePrefab, (target.transform.position + new Vector3(0, 0.5f, 0)), Quaternion.identity, target.transform);
         toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
+    }
+
+    public void AssignDialogueUI()
+    {
+        dialogueUI = GameObject.Find("DialogueUI");
     }
 }
