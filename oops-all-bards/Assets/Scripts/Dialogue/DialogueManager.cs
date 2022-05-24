@@ -86,7 +86,7 @@ public class DialogueManager : MonoBehaviour
 
     public void NextNode(int index)
     {
-        if (index != -1 && index != -999)
+        if (index != -1 && index != -2 && index != -999)
         {
             nodeIndex = index;
             DialogueNode currentNode = jsonReader.dialogues.GetDialogue(dialogueIndex).DialogueNodes[nodeIndex];
@@ -94,10 +94,15 @@ public class DialogueManager : MonoBehaviour
         } else if (index == -1)
         {
             CloseDialogue();
+        } else if (index == -2)
+        {
+            CloseDialogue();
+            DemoManager.Instance.RecruitQuinton();
+            GameObject.Find("Quinton").GetComponent<NPCMovement>().SendQuintonToBackroom();
         } else
         {
             CloseDialogue();
-            DemoManager.Instance.PrepareForGig();
+            DemoManager.Instance.LoadScene("GigDemo");
         }
     }
 

@@ -17,6 +17,12 @@
                     "npcTargetName": "Quinton",
                     "complete": false,
                     "displayText": "Speak with Quinton about getting a gig"
+                },
+                {
+                    "id": 2,
+                    "npcTargetName": "Quinton",
+                    "complete": false,
+                    "displayText": "Follow Quinton to the back room and get ready for the gig"
                 }
             ],
             "complete": false

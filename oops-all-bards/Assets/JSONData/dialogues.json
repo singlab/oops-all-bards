@@ -154,18 +154,37 @@
                 },
                 {
                     "id": 6,
-                    "nodeText": "Exactly. Anyway, why don't you go around back and settle in, I'll call when -- hold on...",
+                    "nodeText": "Exactly. Anyway, why don't you come with me and we'll get you settled.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Sounds like a plan.",
+                            "nextNode": -2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Something doesn't feel right...",
                     "nodeResponses":
                     [
                         {
                             "nodeResponseText": "What's going on?",
-                            "nextNode": 7
+                            "nextNode": 1
                         }
                     ]
                 },
                 {
-                    "id": 7,
-                    "nodeText": "They're already here. I hope you can do more than sing, kid.",
+                    "id": 1,
+                    "nodeText": "They're already here! I hope you can do more than sing, kid.",
                     "nodeResponses":
                     [
                         {
