@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor;
+using TMPro;
+using UnityEngine.UI;
 
 // A class that manages the features of the combat demo.
 public class DemoManager : MonoBehaviour
@@ -10,6 +11,16 @@ public class DemoManager : MonoBehaviour
     private static DemoManager _instance;
     public static DemoManager Instance => DemoManager._instance;
     public JSONReader jsonReader;
+    public GameObject signpostContainer;
+    public GameObject signpostPrefab;
+
+    // Some constant strings for demo use/gameplay guidance only
+    const string help1 = "Welcome to the Oops! All Bards demo. You can control your character using WASD, and shift the camera using Q/E.";
+    const string help2 = "Check the top right corner of your screen for your current quest. You can interact with certain characters, like the innkeep, by pressing F.";
+    const string help3 = "Quinton has the Sardonic trait. Something you said resonated with him, and this has increased his affinity towards you.";
+    const string help4 = "Affinity is a measure of relationship recorded by CiF. Other data recorded by CiF include statuses and traits.";
+    const string help5 = "Quinton has joined your Band! You can check the members of your Band, their statuses, traits, and affinities by pressing B.";
+
 
     // Singleton pattern
     void Awake()
@@ -29,7 +40,10 @@ public class DemoManager : MonoBehaviour
     {
         // Subscribe to events that the demo manager should be aware of.
         SubscribeToEvents();
-        
+        CreateSignpostMessage(help2);
+        CreateSignpostMessage(help1);
+        // Add player to the party.
+        PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
     }
 
     // Update is called once per frame
@@ -117,18 +131,31 @@ public class DemoManager : MonoBehaviour
         camera.GetComponent<CameraController>().ToggleControls();
     }
 
-    public void PrepareForGig()
+    public void RecruitQuinton()
     {
-        // Add player to the party.
-        PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
         // Recruit Quinton to the party.
         BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
         quinton.PlayerClass = jsonReader.baseClasses.baseClasses[2];
         quinton.Model = Resources.Load<GameObject>("PolygonVikings/Prefabs/Characters/Character_Chief_01_White");
         PartyManager.Instance.AddCharacterToParty(quinton);
-        Debug.Log(PartyManager.Instance.FindPartyMemberById(1).Model);
-        // Load the combat scene.
-        LoadScene("GigDemo");
-        Debug.Log(PartyManager.Instance.FindPartyMemberById(1).Model);
+    }
+
+    public void DestroySignpostMessage(GameObject toDestroy)
+    {
+        foreach (Transform child in signpostContainer.transform)
+        {
+            if (child.gameObject == toDestroy)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    public void CreateSignpostMessage(string text)
+    {
+        GameObject toInstantiate = Instantiate(signpostPrefab, signpostContainer.transform.position, Quaternion.identity);
+        toInstantiate.transform.SetParent(signpostContainer.transform, true);
+        toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
+        toInstantiate.GetComponentInChildren<Button>().onClick.AddListener(delegate { DestroySignpostMessage(toInstantiate); });
     }
 }
