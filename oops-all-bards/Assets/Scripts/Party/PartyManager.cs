@@ -8,6 +8,7 @@ public class PartyManager : MonoBehaviour
     public static PartyManager Instance => PartyManager._instance;
     public List<BasePlayer> currentParty = new List<BasePlayer>();
     public bool inCombat = false;
+    public GameObject partyUI;
 
     void Awake()
     {
@@ -19,6 +20,15 @@ public class PartyManager : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            RenderPartyUI();
+            TogglePartyUI();
+        }
     }
 
     public void AddCharacterToParty(BasePlayer character)
@@ -46,5 +56,29 @@ public class PartyManager : MonoBehaviour
             }
         }
         return null;
+    }
+
+    private void TogglePartyUI()
+    {
+        AssignPartyUI();
+        partyUI.SetActive(!partyUI.activeSelf);
+    }
+
+    private void RenderPartyUI()
+    {
+        AssignPartyUI();
+        Transform partyMembersContainer = partyUI.transform.GetChild(0).Find("PartyMembers");
+        foreach (BasePlayer p in currentParty)
+        {
+
+        }
+    }
+
+    private void AssignPartyUI()
+    {
+        if (partyUI == null)
+        {
+            partyUI = GameObject.Find("PartyUI");
+        }
     }
 }
