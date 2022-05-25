@@ -9,6 +9,7 @@ import abl.util.*;
 behaving_entity GameAgent {
 
 	register act protect(int, int) with Protect;
+	register act quip(int) with Quip;
 	
 	// Declare utility class that holds most up-to-date copies of WME for given char by ID
 	WMEDictionary dict = new WMEDictionary();
@@ -47,11 +48,11 @@ behaving_entity GameAgent {
 
     parallel behavior manageAllyAgent(AllyWME allyAgent) {
         with (persistent) subgoal manageCombat(allyAgent);
-        // with (persistent) subgoal manageNoncombat(allyAgent);
+        with (persistent) subgoal manageNoncombat(allyAgent);
         // with (persistent) subgoal lookForQuip(allyAgent); 
     }
 
-    parallel behavior manageCombat(AllyWME allyAgent) {
+    sequential behavior manageCombat(AllyWME allyAgent) {
         with ( success_test { ( allyAgent.getInCombat()==true ) } ) wait;
         mental_act {
         	System.out.println("Ally is in combat.");
@@ -97,6 +98,30 @@ behaving_entity GameAgent {
             System.out.println("I am assisting.");
         }
         act protect(actingCharacter, targetCharacter);
+    }
+    
+    sequential behavior manageNoncombat(AllyWME allyAgent) {
+        with ( success_test { ( allyAgent.getInCombat()==false ) } ) wait;
+        mental_act {
+        	System.out.println("Ally is not in combat.");
+        }
+        
+        with (persistent) subgoal lookForQuip(allyAgent);
+        subgoal waitForTurn(allyAgent);
+    }
+    
+    sequential behavior lookForQuip(AllyWME allyAgent) {
+    	int actingCharacter;
+    	long startTime = System.currentTimeMillis();
+    	
+    	with ( success_test { ( System.currentTimeMillis() > startTime + 40000 ) } ) wait;
+    	
+    	mental_act {
+    		System.out.println("Starting quip.");
+    		actingCharacter = allyAgent.getID();
+    	}
+    	
+    	act quip(actingCharacter);
     }
 
     // This is a collection behavior s.t. all children act in parallel and never result in failure

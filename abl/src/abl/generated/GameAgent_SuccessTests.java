@@ -70,7 +70,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 9: {
+         case 10: {
             // manageCombat_1Step1
                if (
                   ((AllyWME)__$behaviorFrame[0]).getInCombat() == true
@@ -83,7 +83,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 14: {
+         case 15: {
             // waitForTurn_1Step2
                if (
                   ((AllyWME)__$behaviorFrame[0]).getOwnsTurn() == true
@@ -96,7 +96,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 17: {
+         case 18: {
             // lookToAssist_1Step2
                List wmeList0;
                ListIterator wmeIter0;
@@ -121,6 +121,32 @@ public class GameAgent_SuccessTests {
 
                   }
 
+               }
+
+
+            return false;
+         }
+         case 23: {
+            // manageNoncombat_1Step1
+               if (
+                  ((AllyWME)__$behaviorFrame[0]).getInCombat() == false
+               )
+
+               {
+                  return true;
+               }
+
+
+            return false;
+         }
+         case 27: {
+            // lookForQuip_1Step1
+               if (
+                  System.currentTimeMillis() > ((__ValueTypes.LongVar)__$behaviorFrame[2]).l + 40000
+               )
+
+               {
+                  return true;
                }
 
 

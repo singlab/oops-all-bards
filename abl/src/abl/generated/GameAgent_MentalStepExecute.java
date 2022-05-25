@@ -38,34 +38,45 @@ public class GameAgent_MentalStepExecute {
             ((GameAgent)__$thisEntity).dict.addCharacter(((AllyWME)__$behaviorFrame[0]).getID() , ((AllyWME)__$behaviorFrame[0]));
             break;
          }
-         case 10: {
+         case 11: {
             // manageCombat_1Step2
             System.out.println("Ally is in combat.");
             break;
          }
-         case 13: {
+         case 14: {
             // waitForTurn_1Step1
             System.out.println("I am waiting to take my turn.");
             break;
          }
-         case 16: {
+         case 17: {
             // lookToAssist_1Step1
             System.out.println("I am looking to assist.");
             break;
          }
-         case 19: {
+         case 20: {
             // takeTurn_1Step1
             System.out.println("I am taking my turn.");
             break;
          }
-         case 20: {
+         case 21: {
             // assistAlly_1Step1
             ((__ValueTypes.IntVar)__$behaviorFrame[2]).i = ((AllyWME)__$behaviorFrame[0]).getID();
             ((__ValueTypes.IntVar)__$behaviorFrame[3]).i = ((AllyWME)__$behaviorFrame[1]).getID();
             System.out.println("I am assisting.");
             break;
          }
-         case 22: {
+         case 24: {
+            // manageNoncombat_1Step2
+            System.out.println("Ally is not in combat.");
+            break;
+         }
+         case 28: {
+            // lookForQuip_1Step2
+            System.out.println("Starting quip.");
+            ((__ValueTypes.IntVar)__$behaviorFrame[1]).i = ((AllyWME)__$behaviorFrame[0]).getID();
+            break;
+         }
+         case 30: {
             // GameAgent_RootCollectionBehaviorStep1
             System.out.println("Starting game agent...");
             break;

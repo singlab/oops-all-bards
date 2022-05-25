@@ -29,36 +29,60 @@ public class GameAgent_ArgumentStepExecute {
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 11: {
-            // manageCombat_1Step3
+         case 9: {
+            // manageAllyAgent_1Step2
             final Object[] args = new Object[1];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
          case 12: {
+            // manageCombat_1Step3
+            final Object[] args = new Object[1];
+            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            return args;
+         }
+         case 13: {
             // manageCombat_1Step4
             final Object[] args = new Object[1];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 15: {
+         case 16: {
             // waitForTurn_1Step3
             final Object[] args = new Object[1];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 18: {
+         case 19: {
             // lookToAssist_1Step3
             final Object[] args = new Object[2];
             args[0] = ((AllyWME)__$behaviorFrame[0]);
             args[1] = ((AllyWME)__$behaviorFrame[1]);
             return args;
          }
-         case 21: {
+         case 22: {
             // assistAlly_1Step2
             final Object[] args = new Object[2];
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
             args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
+            return args;
+         }
+         case 25: {
+            // manageNoncombat_1Step3
+            final Object[] args = new Object[1];
+            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            return args;
+         }
+         case 26: {
+            // manageNoncombat_1Step4
+            final Object[] args = new Object[1];
+            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            return args;
+         }
+         case 29: {
+            // lookForQuip_1Step3
+            final Object[] args = new Object[1];
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             return args;
          }
       default:
