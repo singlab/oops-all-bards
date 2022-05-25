@@ -15,11 +15,11 @@ public class DemoManager : MonoBehaviour
     public GameObject signpostPrefab;
 
     // Some constant strings for demo use/gameplay guidance only
-    const string help1 = "Welcome to the Oops! All Bards demo. You can control your character using WASD, and shift the camera using Q/E.";
-    const string help2 = "Check the top right corner of your screen for your current quest. You can interact with certain characters, like the innkeep, by pressing F.";
-    const string help3 = "Quinton has the Sardonic trait. Something you said resonated with him, and this has increased his affinity towards you.";
-    const string help4 = "Affinity is a measure of relationship recorded by CiF. Other data recorded by CiF include statuses and traits.";
-    const string help5 = "Quinton has joined your Band! You can check the members of your Band, their statuses, traits, and affinities by pressing B.";
+    public const string help1 = "Welcome to the Oops! All Bards demo. You can control your character using WASD, and shift the camera using Q/E.";
+    public const string help2 = "Check the top right corner of your screen for your current quest. You can interact with certain characters, like the innkeep, by pressing F.";
+    public const string help3 = "Quinton has the Sardonic trait. Something you said resonated with him, and this has increased his affinity towards you.";
+    public const string help4 = "Affinity is a measure of relationship recorded by CiF. Other data recorded by CiF include statuses and traits.";
+    public const string help5 = "Quinton has joined your Band! You can check the members of your Band, their statuses, traits, and affinities by pressing B.";
 
 
     // Singleton pattern

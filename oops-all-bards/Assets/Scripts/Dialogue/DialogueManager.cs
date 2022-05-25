@@ -73,6 +73,11 @@ public class DialogueManager : MonoBehaviour
             toInstantiate.transform.parent = nodeContentOrganizer.transform;
             toInstantiate.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
             toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); } );
+            if (response.Then != null)
+            {
+                Debug.Log($"{response.Then}");
+                toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { Invoke(response.Then, 0); } );
+            }
         }
     }
 
@@ -125,5 +130,11 @@ public class DialogueManager : MonoBehaviour
     public void AssignDialogueUI()
     {
         dialogueUI = GameObject.Find("DialogueUI");
+    }
+
+    public void QuintonDialogueTrigger()
+    {
+        DemoManager.Instance.CreateSignpostMessage(DemoManager.help4);
+        DemoManager.Instance.CreateSignpostMessage(DemoManager.help3);
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class PartyManager : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class PartyManager : MonoBehaviour
     public List<BasePlayer> currentParty = new List<BasePlayer>();
     public bool inCombat = false;
     public GameObject partyUI;
+    public GameObject partyMemberPrefab;
+    public GameObject tsaText;
 
     void Awake()
     {
@@ -20,6 +24,11 @@ public class PartyManager : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+    }
+
+    void Start()
+    {
+        TogglePartyUI();
     }
 
     void Update()
@@ -67,10 +76,41 @@ public class PartyManager : MonoBehaviour
     private void RenderPartyUI()
     {
         AssignPartyUI();
-        Transform partyMembersContainer = partyUI.transform.GetChild(0).Find("PartyMembers");
+        ClearPartyUI();
+
+        Transform container = partyUI.transform.GetChild(0).Find("PartyMembers");
         foreach (BasePlayer p in currentParty)
         {
+            GameObject toInstantiate = Instantiate(partyMemberPrefab, container.position, Quaternion.identity);
+            toInstantiate.transform.SetParent(container);
+            Transform partyMember = toInstantiate.transform.Find("PartyMember");
+            partyMember.GetChild(0).Find("Portrait").gameObject.GetComponent<Image>().sprite = GetPortraitByName(p.Name);
+            partyMember.Find("Name").gameObject.GetComponent<TMP_Text>().text = p.Name;
 
+            Transform traits = toInstantiate.transform.Find("Traits");
+            foreach (Trait t in p.CiFData.Traits)
+            {
+                GameObject text = Instantiate(tsaText, traits.position, Quaternion.identity);
+                text.transform.SetParent(traits);
+                text.GetComponent<TMP_Text>().text = t.Name;
+            }
+
+            Transform statuses = toInstantiate.transform.Find("Statuses");
+            foreach (Status s in p.CiFData.Statuses)
+            {
+                GameObject text = Instantiate(tsaText, statuses.position, Quaternion.identity);
+                text.transform.SetParent(statuses);
+                text.GetComponent<TMP_Text>().text = s.Name;
+            }
+
+            Transform affinities = toInstantiate.transform.Find("Affinities");
+            foreach (Affinity a in p.CiFData.Affinities)
+            {
+                GameObject text = Instantiate(tsaText, affinities.position, Quaternion.identity);
+                text.transform.SetParent(affinities);
+                BasePlayer towards = FindPartyMemberById(a.CharacterID);
+                text.GetComponent<TMP_Text>().text = $"{towards.Name}: {a.Value}";
+            }
         }
     }
 
@@ -80,5 +120,20 @@ public class PartyManager : MonoBehaviour
         {
             partyUI = GameObject.Find("PartyUI");
         }
+    }
+
+    private void ClearPartyUI()
+    {
+        Transform container = partyUI.transform.GetChild(0).Find("PartyMembers");
+        foreach (Transform child in container)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public Sprite GetPortraitByName(string name)
+    {
+        Sprite sprite = Resources.Load<Sprite>($"Portraits/{name}");
+        return sprite == null ? null : sprite;
     }
 }
