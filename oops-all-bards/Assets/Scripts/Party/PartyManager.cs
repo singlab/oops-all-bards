@@ -26,11 +26,6 @@ public class PartyManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
-    {
-        TogglePartyUI();
-    }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.B))

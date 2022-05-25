@@ -16,7 +16,9 @@ public class CombatStatus
     public enum StatusTypes 
     {
         PROTECTED,
-        PROTECTING
+        PROTECTING,
+        STRENGTHENED,
+        BLINDED
     }
 
     public CombatStatus(StatusTypes type)
