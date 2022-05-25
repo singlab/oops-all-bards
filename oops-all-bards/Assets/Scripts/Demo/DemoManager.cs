@@ -137,7 +137,12 @@ public class DemoManager : MonoBehaviour
         BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
         quinton.PlayerClass = jsonReader.baseClasses.baseClasses[2];
         quinton.Model = Resources.Load<GameObject>("PolygonVikings/Prefabs/Characters/Character_Chief_01_White");
+        quinton.CiFData = new CiFData();
+        quinton.CiFData.AddTrait(new Trait("Sardonic", 0));
+        quinton.CiFData.AddTrait(new Trait("Vengeful", 1));
+        quinton.CiFData.AddAffinity(new Affinity(0,5));
         PartyManager.Instance.AddCharacterToParty(quinton);
+        CreateSignpostMessage(help5);
     }
 
     public void DestroySignpostMessage(GameObject toDestroy)
