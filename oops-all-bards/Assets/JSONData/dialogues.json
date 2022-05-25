@@ -137,7 +137,8 @@
                     [
                         {
                             "nodeResponseText": "And appeasing gods never involves baking cupcakes, it seems.",
-                            "nextNode": 5
+                            "nextNode": 5,
+                            "then": "QuintonDialogueTrigger"
                         }
                     ]
                 },

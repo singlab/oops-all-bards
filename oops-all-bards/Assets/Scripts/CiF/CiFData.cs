@@ -68,9 +68,9 @@ public class CiFData
     {
         foreach (Affinity a in affinities)
         {
-            if (a.characterID == id)
+            if (a.CharacterID == id)
             {
-                return a.value;
+                return a.Value;
             }
         }
         return 1000;

@@ -1585,7 +1585,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentParty: []
   inCombat: 0
-  partyUI: {fileID: 0}
+  partyUI: {fileID: 876083802}
+  partyMemberPrefab: {fileID: 1998586367973769351, guid: 171d3d17569aa5d42b7dad8b8629f7b2,
+    type: 3}
+  tsaText: {fileID: 811665850922827551, guid: 015a7267e6f997d49af7b3650a7ddd4b, type: 3}
 --- !u!4 &106023866
 Transform:
   m_ObjectHideFlags: 0
@@ -16764,7 +16767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &876083803
 RectTransform:
   m_ObjectHideFlags: 0
