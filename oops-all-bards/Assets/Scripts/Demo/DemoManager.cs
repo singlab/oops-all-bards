@@ -44,6 +44,7 @@ public class DemoManager : MonoBehaviour
         CreateSignpostMessage(help1);
         // Add player to the party.
         PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
+        TCPTestClient.Instance.RefreshWMEs();
     }
 
     // Update is called once per frame
@@ -142,6 +143,7 @@ public class DemoManager : MonoBehaviour
         quinton.CiFData.AddTrait(new Trait("Vengeful", 1));
         quinton.CiFData.AddAffinity(new Affinity(0,5));
         PartyManager.Instance.AddCharacterToParty(quinton);
+        TCPTestClient.Instance.RefreshWMEs();
         CreateSignpostMessage(help5);
     }
 

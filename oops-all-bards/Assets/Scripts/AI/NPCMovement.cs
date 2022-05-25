@@ -20,7 +20,6 @@ public class NPCMovement : MonoBehaviour
     {
         if (agent.hasPath)
         {
-            Debug.Log(agent.remainingDistance);
             if (agent.remainingDistance < 0.1)
             {
                 animator.SetBool("isMoving", false);

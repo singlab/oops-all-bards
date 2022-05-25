@@ -26,11 +26,11 @@ public class TCPTestClient : MonoBehaviour {
             Destroy(gameObject);
         }
 		ConnectToTcpServer();
+		DontDestroyOnLoad(gameObject);
     }
 
 	// Use this for initialization 	
 	void Start () {
-		
 	}
 
 	// Update is called once per frame	
@@ -81,9 +81,7 @@ public class TCPTestClient : MonoBehaviour {
 	/// <summary> 	
 	/// Send a stringified JSON object to server using socket connection. 	
 	/// </summary> 	
-	public void SendMessage(ABLMessage message) { 
-		// TODO: Send WME to ABL server.
-		// TODO: SEND OVER THE BOTWME TO ABL SERVER.        
+	public void SendMessage(ABLMessage message) {       
 		if (socketConnection == null) {       
 			Debug.Log("Returning because socket connection is null");      
 			return;         
@@ -112,6 +110,7 @@ public class TCPTestClient : MonoBehaviour {
 		AllyWME allyWME = new AllyWME(ally);
 		// Transform to json.
 		string data = JsonUtility.ToJson(allyWME);
+		Debug.Log(data);
 		// Prepare the message for ABL.
 		ABLMessage message = new ABLMessage();
 		message.code = 1;
@@ -123,6 +122,7 @@ public class TCPTestClient : MonoBehaviour {
 
 	public void RefreshWMEs()
 	{
+		Debug.Log("Refreshing WMEs");
 		foreach (BasePlayer partyMember in PartyManager.Instance.currentParty)
 		{
 			ABLMessage msg = CreateABLMessage(partyMember);

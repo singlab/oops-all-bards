@@ -89,6 +89,7 @@ public class TCPServer {
     	Message toHandle = new Message(jo);
     	if (toHandle.code == 1) {
     		AllyWME wme = (AllyWME) toHandle.parseData();
+    		System.out.println(wme.getInCombat());
     		agent.addWME(wme);
     	}
     }
