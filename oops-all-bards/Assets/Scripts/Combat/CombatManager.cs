@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using System.Linq;
 
 public class CombatManager : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class CombatManager : MonoBehaviour
     // A reference to the target button prefab.
     public GameObject targetButton;
     // A reference to the player party.
-    public List<BasePlayer> party = new List<BasePlayer>();
+    public BasePlayer[] party;
     // A reference to the enemies.
     public List<BaseEnemy> enemies = new List<BaseEnemy>();
     // A counter for the number of rounds combat has lasted for.
@@ -51,7 +52,7 @@ public class CombatManager : MonoBehaviour
     void Start()
     {
         SubscribeToEvents();
-        InitCombatQueue(PartyManager.Instance.currentParty, DemoManager.Instance.GenerateEnemies());
+        InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
         RenderUI();
         DemoManager.Instance.CheckQueue();
         Debug.Log("I've finished starting up.");
@@ -83,7 +84,6 @@ public class CombatManager : MonoBehaviour
         // Need: name, current health/flourish, max health/flourish, portrait
         foreach (BasePlayer p in party)
         {
-            Debug.Log(party.Count);
             GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
             // Set name text
             toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = p.Name;
@@ -130,11 +130,16 @@ public class CombatManager : MonoBehaviour
             // // Add on click functions to the buttons to create a PlayerAction queueable.
             toInstantiate.GetComponent<Button>().onClick.AddListener(() => 
                 {StartCoroutine(SelectTarget(currentAbility, actingCharacter));});
+            // If the ability assigned to the button cannot be executed due to lack of FP, disable it entirely.
+            if (currentAbility.Cost > actingCharacter.Flourish)
+            {
+                toInstantiate.GetComponent<Button>().interactable = false;
+            }
         }
     }
 
     // A function used to initialize the combat queue.
-    public void InitCombatQueue(List<BasePlayer> party, List<BaseEnemy> enemies)
+    public void InitCombatQueue(BasePlayer[] party, List<BaseEnemy> enemies)
     {
         // Set private references to party and enemies.
         this.party = party;
@@ -265,8 +270,10 @@ public class CombatManager : MonoBehaviour
 
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.ATTACK)
         {
-            action.target.Health -= action.ability.Damage;
-            Debug.Log(action.actingCharacter.Name + " deals " + action.ability.Damage + " damage to " + action.target.Name + ".");
+            bool isStrengthened = IsStrengthened(action.actingCharacter);
+            int modifiedDamage = isStrengthened ? (action.ability.Damage * 2) : action.ability.Damage;
+            action.target.Health -= modifiedDamage;
+            Debug.Log(action.actingCharacter.Name + " deals " + modifiedDamage + " damage to " + action.target.Name + ".");
             CheckCombatantsHealth(action.target);
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL)
@@ -278,6 +285,18 @@ public class CombatManager : MonoBehaviour
         {
             action.target.Shield += action.ability.Damage;
             Debug.Log(action.actingCharacter.Name + " is shielding " + action.target.Name + " for " + action.ability.Damage + " damage." );
+        }
+        if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT)
+        {
+            if (action.ability.ID == 4)
+            {
+                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.STRENGTHENED));
+                Debug.Log($"{action.actingCharacter.Name} has strengthened {action.target.Name}!");
+            } else if (action.ability.ID == 5)
+            {
+                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.BLINDED));
+                Debug.Log($"{action.actingCharacter.Name} has blinded {action.target.Name}!");
+            }
         }
         // Handle damage/heal and update UI to reflect new value.
         relevantValueBars = FindValueBars(action.target.Name);
@@ -326,9 +345,19 @@ public class CombatManager : MonoBehaviour
         
         // TODO: This AI is very simple. Should change to be more interesting.
         // Choose random party member and use Attack ability.
-        BasePlayer target = party[UnityEngine.Random.Range(0, party.Count)];
+        BasePlayer target = null;
+        if ( party.Length > 0) { target = party[UnityEngine.Random.Range(0, party.Length)]; };
         BaseAbility ability = actingCharacter.EnemyClass.Abilities[0];
-        ApplyEffects(actingCharacter, target, ability);
+        if ( target == null ) { CheckForWinLoss(); return; } 
+        bool isBlind = IsBlind(actingCharacter);
+        if (!isBlind)
+        {
+            ApplyEffects(actingCharacter, target, ability);
+        } else 
+        {
+            Debug.Log($"{actingCharacter.Name} tried to attack {target.Name}, but missed!");
+            actingCharacter.RemoveCombatStatus(CombatStatus.StatusTypes.BLINDED);
+        }
 
         actingCharacter.OwnsTurn = false;
         // Tell DemoManager to check the queue and continue to next turn.
@@ -354,12 +383,15 @@ public class CombatManager : MonoBehaviour
         }
 
         // Apply effects of ability, log the outcome, update value bar of target.
-        target.Health -= ability.Damage;
-        Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "!");
+        bool isStrengthened = IsStrengthened(actingCharacter);
+        int modifiedDamage = isStrengthened ? (ability.Damage * 2) : ability.Damage;
+        target.Health -= modifiedDamage;
+        Debug.Log(actingCharacter.Name + " deals " + modifiedDamage + " damage to " + target.Name + "!");
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.Name);
         relevantValueBars.Item1.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
 
+        if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.StatusTypes.STRENGTHENED); };
         actingCharacter.OwnsTurn = false;
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
@@ -384,7 +416,8 @@ public class CombatManager : MonoBehaviour
         // Remove instance of character from appropriate list and ensure no turns in the queue belong to the downed character.
         if (parsedCharacter.Item1 != null)
         {
-            party.Remove(parsedCharacter.Item1);
+            BasePlayer[] partyCopy = party.Where(x => x != parsedCharacter.Item1).ToArray();
+            party = partyCopy;
             // Update UI to no longer show character portrait.
             for (int i = 0; i < partyPortraits.transform.childCount; i++)
             {
@@ -449,7 +482,7 @@ public class CombatManager : MonoBehaviour
     // A function used to determine a win/loss of combat.
     public void CheckForWinLoss() 
     {
-        if (party.Count == 0)
+        if (party.Length == 0)
         {
             Debug.Log("Player has lost!");
             EventManager.Instance.InvokeEvent(EventType.CombatLoss, null);
@@ -485,34 +518,17 @@ public class CombatManager : MonoBehaviour
 
     public void ApplyEffects(BaseEnemy actingCharacter, BasePlayer target, BaseAbility ability)
     {
-        // TODO: Check for statuses. This is egregious.
-        if (target.CombatStatuses.Count != 0)
+        bool targetIsProtected = IsProtected(target);
+        if (targetIsProtected) 
         {
-            foreach (CombatStatus s in target.CombatStatuses)
-            {
-                if (s.Type == CombatStatus.StatusTypes.PROTECTED)
-                {
-                    Debug.Log(target.Name + " has a PROTECTED status effect");
-                    foreach (BasePlayer p in party)
-                    {
-                        if (p.CombatStatuses.Count != 0)
-                        {
-                            foreach (CombatStatus st in p.CombatStatuses)
-                            {
-                                if (st.Type == CombatStatus.StatusTypes.PROTECTING)
-                                {
-                                    Debug.Log(p.Name + " has a PROTECTING status effect");
-                                    BasePlayer newTarget = p;
-                                    Debug.Log(actingCharacter.Name + " tried attacking " + target.Name + ", but " + newTarget.Name + " protected them!");
-                                    target = newTarget;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            Debug.Log(target.Name + " has a PROTECTED status effect"); 
+            target.RemoveCombatStatus(CombatStatus.StatusTypes.PROTECTED);
+            ITargetable newTarget = AcquireProtectingTarget();
+            Debug.Log(newTarget.Name + " has a PROTECTING status effect");
+            newTarget.RemoveCombatStatus(CombatStatus.StatusTypes.PROTECTING);
+            Debug.Log(actingCharacter.Name + " tried attacking " + target.Name + ", but " + newTarget.Name + " protected them!");
+            target = (BasePlayer)newTarget;
         }
-        // TODO: At some point we have to remove the status effects.
 
         // Apply effects of ability, log the outcome, update value bar of target.
         if (target.Shield > 0)
@@ -537,6 +553,59 @@ public class CombatManager : MonoBehaviour
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.Name);
         relevantValueBars.Item1.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
+    }
+
+    private bool IsBlind(ITargetable actingCharacter)
+    {
+        foreach (CombatStatus cs in actingCharacter.CombatStatuses)
+        {
+            if (cs.Type == CombatStatus.StatusTypes.BLINDED)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsStrengthened(ITargetable actingCharacter)
+    {
+        foreach (CombatStatus cs in actingCharacter.CombatStatuses)
+        {
+            if (cs.Type == CombatStatus.StatusTypes.STRENGTHENED)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsProtected(ITargetable target)
+    {
+        foreach (CombatStatus cs in target.CombatStatuses)
+        {
+            if (cs.Type == CombatStatus.StatusTypes.PROTECTED)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsProtecting(ITargetable target)
+    {
+        foreach (CombatStatus cs in target.CombatStatuses)
+        {
+            if (cs.Type == CombatStatus.StatusTypes.PROTECTING)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ITargetable AcquireProtectingTarget()
+    {
+        return (BasePlayer)party.Where(x => x.HasCombatStatusType(CombatStatus.StatusTypes.PROTECTING));
     }
 
     private void ApplyDeathAnimation(Tuple<BasePlayer, BaseEnemy> parsedCharacter)

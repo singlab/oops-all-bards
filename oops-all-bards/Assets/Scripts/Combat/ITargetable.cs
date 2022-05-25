@@ -40,4 +40,27 @@ public class ITargetable
         get { return this.combatStatuses; }
         set { this.combatStatuses = value; }
     }
+
+    public virtual void RemoveCombatStatus(CombatStatus.StatusTypes type)
+    {
+        foreach (CombatStatus cs in this.CombatStatuses.ToArray())
+        {
+            if (cs.Type == type)
+            {
+                this.CombatStatuses.Remove(cs);
+            }
+        }
+    }
+
+    public virtual bool HasCombatStatusType(CombatStatus.StatusTypes type)
+    {
+        foreach (CombatStatus cs in this.CombatStatuses)
+        {
+            if (cs.Type == type)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

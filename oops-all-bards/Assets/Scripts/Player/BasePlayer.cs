@@ -138,6 +138,29 @@ public class BasePlayer : ITargetable
         get { return this.model; }
         set { this.model = value; }
     }
+
+    public override void RemoveCombatStatus(CombatStatus.StatusTypes type)
+    {
+        foreach (CombatStatus cs in this.CombatStatuses.ToArray())
+        {
+            if (cs.Type == type)
+            {
+                this.CombatStatuses.Remove(cs);
+            }
+        }
+    }
+
+    public override bool HasCombatStatusType(CombatStatus.StatusTypes type)
+    {
+        foreach (CombatStatus cs in this.CombatStatuses)
+        {
+            if (cs.Type == type)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 [System.Serializable]

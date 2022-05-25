@@ -55,9 +55,9 @@ public class DemoManager : MonoBehaviour
     public List<BaseEnemy> GenerateEnemies()
     {
         List<BaseEnemy> enemies = new List<BaseEnemy>();
-        BaseEnemy enemy = new BaseEnemy("Devotee", 8, 5, 0, jsonReader.baseClasses.GetRandomClass());
+        BaseEnemy enemy = new BaseEnemy("Devotee", 10, 5, 0, jsonReader.baseClasses.GetRandomClass());
         enemies.Add(enemy);
-        enemy = new BaseEnemy("Fanatic", 8, 5, 0, jsonReader.baseClasses.GetRandomClass());
+        enemy = new BaseEnemy("Fanatic", 10, 5, 0, jsonReader.baseClasses.GetRandomClass());
         enemies.Add(enemy);
         return enemies;
     }

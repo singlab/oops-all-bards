@@ -78,7 +78,7 @@ public class CharacterCreationManager : MonoBehaviour
 
     void FinalizePlayerData(BaseClass playerClass)
     {
-        playerData.Health = 2 * playerClass.Stats[4].BaseValue;
-        playerData.Flourish = 2 * playerClass.Stats[0].BaseValue;
+        playerData.Health = 15;
+        playerData.Flourish = 10;
     }
 }

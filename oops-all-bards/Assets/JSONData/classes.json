@@ -68,13 +68,13 @@
                     "maxRank": 5
                 },
                 {
-                    "name": "Exit Stage Left",
+                    "name": "A Palpable Hit",
                     "id": 2,
-                    "description": "Disappear stage left and appear miraculously behind the target to deliver a palpable hit!",
+                    "description": "Disappear and miraculously reappear behind the target to deliver a palpable hit!",
                     "type": 0,
                     "combatType": 1,
                     "damage": 6,
-                    "cost": 3,
+                    "cost": 5,
                     "currentRank": 1,
                     "maxRank": 5
                 }
@@ -307,11 +307,11 @@
                 {
                     "name": "Love is Blind",
                     "id": 5,
-                    "description": "Infuse an ally with confidence and strength.",
+                    "description": "Blind an attacker.",
                     "type": 0,
                     "combatType": 4,
                     "damage": 2,
-                    "cost": 5,
+                    "cost": 3,
                     "currentRank": 1,
                     "maxRank": 5
                 }
