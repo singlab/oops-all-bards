@@ -70,10 +70,10 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 10: {
-            // manageCombat_1Step1
+         case 12: {
+            // manageCombat_1Step2
                if (
-                  ((AllyWME)__$behaviorFrame[0]).getInCombat() == true
+                  ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i).getInCombat() == true
                )
 
                {
@@ -83,10 +83,10 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 15: {
+         case 17: {
             // waitForTurn_1Step2
                if (
-                  ((AllyWME)__$behaviorFrame[0]).getOwnsTurn() == true
+                  ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i).getOwnsTurn() == true
                )
 
                {
@@ -96,7 +96,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 18: {
+         case 19: {
             // lookToAssist_1Step2
                List wmeList0;
                ListIterator wmeIter0;
@@ -111,7 +111,7 @@ public class GameAgent_SuccessTests {
 
                   {
                         if (
-                           ((AllyWME)__$behaviorFrame[0]).getOwnsTurn() == false
+                           ((AllyWME)__$behaviorFrame[2]).getOwnsTurn() == false
                         )
 
                         {
@@ -126,7 +126,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 23: {
+         case 24: {
             // manageNoncombat_1Step1
                if (
                   ((AllyWME)__$behaviorFrame[0]).getInCombat() == false
@@ -139,10 +139,10 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 27: {
+         case 26: {
             // lookForQuip_1Step1
                if (
-                  System.currentTimeMillis() > ((__ValueTypes.LongVar)__$behaviorFrame[2]).l + 40000
+                  System.currentTimeMillis() > ((__ValueTypes.LongVar)__$behaviorFrame[3]).l + 10000
                )
 
                {

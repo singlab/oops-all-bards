@@ -16,6 +16,7 @@ public class ActionManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
     }
 
     // Start is called before the first frame update
@@ -33,14 +34,18 @@ public class ActionManager : MonoBehaviour
     // A function used to parse an ABLResponse for further processing.
     // Codes: 1 -- Combat
     //        2 -- Noncombat
+    //        3 -- Dialogue
     public void ParseData(ABLResponse response) 
     {
         if (response.code == 1)
         {
             ManageCombatAction(response);
-        } else
+        } else if (response.code == 2)
         {
             ManageNoncombatAction(response);
+        } else
+        {
+            ManageDialogue(response);
         }
     }
 
@@ -59,5 +64,15 @@ public class ActionManager : MonoBehaviour
     public void ManageNoncombatAction(ABLResponse response) 
     {
         Debug.Log("Received a noncombat action.");
+    }
+
+    public void ManageDialogue(ABLResponse response)
+    {
+        if (response.msg == "Quip")
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                DialogueManager.Instance.ChooseAppropriateQuip(response.data.actingCharacter, response.data.inCombat);
+            });
+        }
     } 
 }

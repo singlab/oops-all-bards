@@ -64,7 +64,7 @@ public class BaseEnemy : ITargetable
         set { this.combatStatuses = value; }
     }
 
-    public override void RemoveCombatStatus(CombatStatus.StatusTypes type)
+    public override void RemoveCombatStatus(CombatStatus.CombatStatusTypes type)
     {
         foreach (CombatStatus cs in this.CombatStatuses.ToArray())
         {
@@ -75,7 +75,7 @@ public class BaseEnemy : ITargetable
         }
     }
 
-    public override bool HasCombatStatusType(CombatStatus.StatusTypes type)
+    public override bool HasCombatStatusType(CombatStatus.CombatStatusTypes type)
     {
         foreach (CombatStatus cs in this.CombatStatuses)
         {

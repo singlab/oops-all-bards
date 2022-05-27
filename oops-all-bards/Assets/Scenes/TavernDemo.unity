@@ -24099,6 +24099,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   files:
   - {fileID: 4900000, guid: 7ba4b517f351a3d4fb3d67545c521e8e, type: 3}
+  - {fileID: 4900000, guid: a0c76673eddd63b418f6b3e374e2b90f, type: 3}
   baseClasses:
     baseClasses: []
   dialogues:
@@ -24107,6 +24108,8 @@ MonoBehaviour:
     allies: []
   quests:
     quests: []
+  quips:
+    quips: []
 --- !u!114 &1333121669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30616,6 +30619,8 @@ MonoBehaviour:
     allies: []
   quests:
     quests: []
+  quips:
+    quips: []
 --- !u!114 &1706479727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33671,6 +33676,8 @@ MonoBehaviour:
     allies: []
   quests:
     quests: []
+  quips:
+    quips: []
 --- !u!1001 &1891499499
 PrefabInstance:
   m_ObjectHideFlags: 0

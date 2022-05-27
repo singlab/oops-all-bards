@@ -9,7 +9,7 @@ import abl.util.*;
 behaving_entity GameAgent {
 
 	register act protect(int, int) with Protect;
-	register act quip(int) with Quip;
+	register act quip(int, boolean) with Quip;
 	
 	// Declare utility class that holds most up-to-date copies of WME for given char by ID
 	WMEDictionary dict = new WMEDictionary();
@@ -43,46 +43,57 @@ behaving_entity GameAgent {
     }
 
     parallel behavior allyAgentRoot() {  	
- 		with ( success_test { (!dict.isEmpty()) } ) wait;
+ 		with ( success_test { ( !dict.isEmpty() ) } ) wait;
     }
 
     parallel behavior manageAllyAgent(AllyWME allyAgent) {
-        with (persistent) subgoal manageCombat(allyAgent);
-        with (persistent) subgoal manageNoncombat(allyAgent);
-        // with (persistent) subgoal lookForQuip(allyAgent); 
+    	int id;
+    	mental_act {
+    		id = allyAgent.getID();
+    	}
+    	
+        with (persistent) subgoal manageCombat(id);
+        // with (persistent) subgoal manageNoncombat(allyAgent);
+        with (persistent) subgoal lookForQuip(id); 
     }
 
-    sequential behavior manageCombat(AllyWME allyAgent) {
-        with ( success_test { ( allyAgent.getInCombat()==true ) } ) wait;
-        mental_act {
-        	System.out.println("Ally is in combat.");
-        }
-        
-        subgoal lookToAssist(allyAgent);
-        subgoal waitForTurn(allyAgent);
+    sequential behavior manageCombat(int id) {
+    	if { ( dict.getCharacter(id) == null ) } {
+    		fail_step;
+    	}
+		
+		with ( success_test { ( dict.getCharacter(id).getInCombat() == true ) } ) wait;
+		mental_act {
+			System.out.println("Ally is in combat.");
+		}
+
+        subgoal lookToAssist(id);
+        subgoal waitForTurn(id);
     }
 
-    sequential behavior waitForTurn(AllyWME allyAgent) {
-        mental_act {
-			System.out.println("I am waiting to take my turn.");
+    sequential behavior waitForTurn(int id) {
+    	mental_act {
+    		System.out.println("I am waiting to take my turn.");
     	}
 
-        with ( success_test { (allyAgent.getOwnsTurn()==true) } ) wait;
-		subgoal takeTurn(allyAgent);
+        with ( success_test { ( dict.getCharacter(id).getOwnsTurn()==true ) } ) wait;
+		// subgoal takeTurn(id);
     }
 
-    sequential behavior lookToAssist(AllyWME allyAgent) {
+    sequential behavior lookToAssist(int id) {
         AllyWME otherAlly;
-
+        AllyWME agent;
+        
         mental_act {
-			System.out.println("I am looking to assist.");
+    		System.out.println("I am looking to assist.");
+    		agent = dict.getCharacter(id);
     	}
 
-        with ( success_test { otherAlly = (AllyWME ownsTurn==true) (allyAgent.getOwnsTurn()==false) } ) wait;
-		subgoal assistAlly(allyAgent, otherAlly);
+        with ( success_test { otherAlly = ( AllyWME ownsTurn==true ) ( agent.getOwnsTurn()==false ) } ) wait;
+		subgoal assistAlly(agent, otherAlly);
     }
 
-    sequential behavior takeTurn(AllyWME allyAgent) {
+    sequential behavior takeTurn(int id) {
         mental_act {
             System.out.println("I am taking my turn.");
         }
@@ -105,23 +116,29 @@ behaving_entity GameAgent {
         mental_act {
         	System.out.println("Ally is not in combat.");
         }
-        
-        with (persistent) subgoal lookForQuip(allyAgent);
-        subgoal waitForTurn(allyAgent);
     }
     
-    sequential behavior lookForQuip(AllyWME allyAgent) {
-    	int actingCharacter;
+    sequential behavior lookForQuip(int id) {
+    	AllyWME agent;
+    	boolean inCombat;
     	long startTime = System.currentTimeMillis();
     	
-    	with ( success_test { ( System.currentTimeMillis() > startTime + 40000 ) } ) wait;
+    	with ( success_test { ( System.currentTimeMillis() > startTime + 10000 ) } ) wait;
     	
     	mental_act {
-    		System.out.println("Starting quip.");
-    		actingCharacter = allyAgent.getID();
+    		agent = dict.getCharacter(id);
     	}
     	
-    	act quip(actingCharacter);
+    	if { (agent == null) } {
+    		fail_step;
+    	}
+    	
+    	mental_act {
+    		inCombat = agent.getInCombat();
+			System.out.println("Starting quip.");
+    	}
+    	
+    	act quip(id, inCombat);
     }
 
     // This is a collection behavior s.t. all children act in parallel and never result in failure

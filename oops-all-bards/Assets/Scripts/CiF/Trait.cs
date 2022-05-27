@@ -5,24 +5,23 @@ using UnityEngine;
 [System.Serializable]
 public class Trait
 {
-    [SerializeField] private string name;
-    [SerializeField] private int id;
-
-    public string Name
+    public enum TraitTypes
     {
-        get { return this.name; }
-        set { this.name = value; }
+        NONE,
+        SARDONIC,
+        VENGEFUL
     }
 
-    public int ID
+    [SerializeField] private TraitTypes type;
+
+    public TraitTypes Type
     {
-        get { return this.id; }
-        set { this.id = value; }
+        get { return this.type; }
+        set { this.type = value; }
     }
 
-    public Trait(string name, int id)
+    public Trait(TraitTypes type)
     {
-        this.name = name;
-        this.id = id;
+        this.type = type;
     }
 }

@@ -41,7 +41,7 @@ public class ITargetable
         set { this.combatStatuses = value; }
     }
 
-    public virtual void RemoveCombatStatus(CombatStatus.StatusTypes type)
+    public virtual void RemoveCombatStatus(CombatStatus.CombatStatusTypes type)
     {
         foreach (CombatStatus cs in this.CombatStatuses.ToArray())
         {
@@ -52,7 +52,7 @@ public class ITargetable
         }
     }
 
-    public virtual bool HasCombatStatusType(CombatStatus.StatusTypes type)
+    public virtual bool HasCombatStatusType(CombatStatus.CombatStatusTypes type)
     {
         foreach (CombatStatus cs in this.CombatStatuses)
         {

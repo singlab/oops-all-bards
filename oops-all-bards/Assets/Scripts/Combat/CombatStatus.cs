@@ -5,23 +5,26 @@ using UnityEngine;
 [System.Serializable]
 public class CombatStatus
 {
-    [SerializeField] private StatusTypes type;
+    [SerializeField] private CombatStatusTypes type;
 
-    public StatusTypes Type
+    public CombatStatusTypes Type
     {
         get { return this.type; }
         set { this.type = value; }
     }
 
-    public enum StatusTypes 
+    public enum CombatStatusTypes 
     {
+        NONE,
         PROTECTED,
         PROTECTING,
         STRENGTHENED,
-        BLINDED
+        BLINDED,
+        CONFIDENT,
+        BLOODIED
     }
 
-    public CombatStatus(StatusTypes type)
+    public CombatStatus(CombatStatusTypes type)
     {
         this.type = type;
     }

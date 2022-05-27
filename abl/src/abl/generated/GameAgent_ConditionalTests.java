@@ -29,6 +29,32 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
+         case 11: {
+            // manageCombat_1Step1
+               if (
+                  ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i) == null
+               )
+
+               {
+                  return true;
+               }
+
+
+            return false;
+         }
+         case 28: {
+            // lookForQuip_1Step3
+               if (
+                  ((AllyWME)__$behaviorFrame[1]) == null
+               )
+
+               {
+                  return true;
+               }
+
+
+            return false;
+         }
       default:
          throw new AblRuntimeError("Unexpected stepID " + __$stepID);
       }

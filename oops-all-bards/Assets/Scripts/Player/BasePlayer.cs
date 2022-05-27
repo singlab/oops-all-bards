@@ -139,7 +139,7 @@ public class BasePlayer : ITargetable
         set { this.model = value; }
     }
 
-    public override void RemoveCombatStatus(CombatStatus.StatusTypes type)
+    public override void RemoveCombatStatus(CombatStatus.CombatStatusTypes type)
     {
         foreach (CombatStatus cs in this.CombatStatuses.ToArray())
         {
@@ -150,7 +150,7 @@ public class BasePlayer : ITargetable
         }
     }
 
-    public override bool HasCombatStatusType(CombatStatus.StatusTypes type)
+    public override bool HasCombatStatusType(CombatStatus.CombatStatusTypes type)
     {
         foreach (CombatStatus cs in this.CombatStatuses)
         {

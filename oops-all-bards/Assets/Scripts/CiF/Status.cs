@@ -5,24 +5,22 @@ using UnityEngine;
 [System.Serializable]
 public class Status
 {
-    [SerializeField] private string name;
-    [SerializeField] private int id;
-
-    public string Name
+    // An enumeration of CiF status types
+    public enum StatusTypes 
     {
-        get { return this.name; }
-        set { this.name = value; }
+        NONE,
     }
 
-    public int ID
+    [SerializeField] private StatusTypes type;
+
+    public StatusTypes Type
     {
-        get { return this.id; }
-        set { this.id = value; }
+        get { return this.type; }
+        set { this.type = value; }
     }
 
-    public Status(string name, int id)
+    public Status(StatusTypes type)
     {
-        this.name = name;
-        this.id = id;
+        this.type = type;
     }
 }
