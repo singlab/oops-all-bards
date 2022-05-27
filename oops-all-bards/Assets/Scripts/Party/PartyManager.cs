@@ -62,15 +62,13 @@ public class PartyManager : MonoBehaviour
         return null;
     }
 
-    private void TogglePartyUI()
+    public void TogglePartyUI()
     {
-        AssignPartyUI();
         partyUI.SetActive(!partyUI.activeSelf);
     }
 
     private void RenderPartyUI()
     {
-        AssignPartyUI();
         ClearPartyUI();
 
         Transform container = partyUI.transform.GetChild(0).Find("PartyMembers");
@@ -106,14 +104,6 @@ public class PartyManager : MonoBehaviour
                 BasePlayer towards = FindPartyMemberById(a.CharacterID);
                 text.GetComponent<TMP_Text>().text = $"{towards.Name}: {a.Value}";
             }
-        }
-    }
-
-    private void AssignPartyUI()
-    {
-        if (partyUI == null)
-        {
-            partyUI = GameObject.Find("PartyUI");
         }
     }
 

@@ -60,6 +60,11 @@ public class VictoryManager : MonoBehaviour
     {
         DemoManager.Instance.IncrementTavernVisits();
     }
+
+    public void ToggleCombat()
+    {
+        PartyManager.Instance.ToggleInCombat(false);
+    }
 }
 
 public class Reward

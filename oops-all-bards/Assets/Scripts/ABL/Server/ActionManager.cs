@@ -63,10 +63,13 @@ public class ActionManager : MonoBehaviour
         if (response.msg == "RequestAssistance")
         {
             BasePlayer actingCharacter = PartyManager.Instance.FindPartyMemberById(response.data.actingCharacter);
-            actingCharacter.CiFData.AddStatus(new Status(Status.StatusTypes.REQUIRES_ASSISTANCE));
-            UnityMainThreadDispatcher.Instance().Enqueue(() => {
-                DialogueManager.Instance.TriggerAssistanceQuip(response.data.actingCharacter);
-            });
+            if (DemoManager.Instance.hasAssistedOnce == false) 
+            {
+                actingCharacter.CiFData.AddStatus(new Status(Status.StatusTypes.REQUIRES_ASSISTANCE));
+                UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    DialogueManager.Instance.TriggerAssistanceQuip(response.data.actingCharacter);
+                });
+            }
         }
     }
 

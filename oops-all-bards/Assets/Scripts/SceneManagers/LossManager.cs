@@ -20,4 +20,9 @@ public class LossManager : MonoBehaviour
     {
         DemoManager.Instance.IncrementTavernVisits();
     }
+
+    public void ToggleCombat()
+    {
+        PartyManager.Instance.ToggleInCombat(false);
+    }
 }

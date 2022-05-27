@@ -56,8 +56,6 @@ public class DialogueManager : MonoBehaviour
 
     private void RenderDialogueUI(Dialogue dialogue)
     {
-        portrait = dialogueUI.transform.GetChild(1).Find("Portrait").GetComponent<Image>();
-        speakerName = dialogueUI.transform.GetChild(1).Find("Name").GetComponent<TMP_Text>();
         speakerName.text = dialogue.SpeakerName;
         portrait.sprite = Resources.Load<Sprite>($"Portraits/{dialogue.SpeakerName}");
         DialogueNode currentNode = dialogue.DialogueNodes[nodeIndex];
@@ -68,7 +66,6 @@ public class DialogueManager : MonoBehaviour
     private void RenderCurrentNode(DialogueNode node)
     {
         ClearNodeResponses();
-        nodeText = dialogueUI.transform.GetChild(0).GetChild(0).Find("NodeText").GetComponent<TMP_Text>();
         nodeText.text = node.NodeText;
         for (int i = 0; i < node.NodeResponses.Count; i++)
         {
@@ -87,11 +84,6 @@ public class DialogueManager : MonoBehaviour
 
     private void ClearNodeResponses()
     {
-        if (nodeContentOrganizer == null)
-        {
-            nodeContentOrganizer = dialogueUI.transform.GetChild(0).GetChild(0).Find("NodeContentOrganizer").gameObject;
-        }
-
         foreach (Transform child in nodeContentOrganizer.transform)
         {
             Destroy(child.gameObject);
@@ -134,11 +126,6 @@ public class DialogueManager : MonoBehaviour
         GameObject target = character.transform.Find("CameraTarget").gameObject;
         GameObject toInstantiate = Instantiate(textBubblePrefab, (target.transform.position + new Vector3(0, 0.5f, 0)), Quaternion.identity, target.transform);
         toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
-    }
-
-    public void AssignDialogueUI()
-    {
-        dialogueUI = GameObject.Find("DialogueUI");
     }
 
     public void QuintonDialogueTrigger()
