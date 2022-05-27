@@ -16767,7 +16767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &876083803
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33638,6 +33638,7 @@ MonoBehaviour:
   signpostContainer: {fileID: 2107830600}
   signpostPrefab: {fileID: 6290234796240365683, guid: d28645affb2c32a4e81e56e9aa7c8d34,
     type: 3}
+  tavernVisits: 1
 --- !u!4 &1879723877
 Transform:
   m_ObjectHideFlags: 0

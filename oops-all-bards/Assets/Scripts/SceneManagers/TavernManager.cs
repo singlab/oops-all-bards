@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class TavernManager : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class TavernManager : MonoBehaviour
         SpawnPlayer();
         AudioManager.Instance.ChangeTrack(1);
         CheckDialogueUI();
+        CheckPartyUI();
         TCPTestClient.Instance.RefreshWMEs();
     }
 
@@ -48,10 +51,19 @@ public class TavernManager : MonoBehaviour
 
     void CheckDialogueUI()
     {
-        DialogueManager.Instance.AssignDialogueUI();
+        AssignDialogueUIToManager();
         if (DialogueManager.Instance.dialogueUI.activeSelf)
         {
             DialogueManager.Instance.ToggleDialogueUI();
+        }
+    }
+
+    void CheckPartyUI()
+    {
+        AssignPartyUIToManager();
+        if (PartyManager.Instance.partyUI.activeSelf)
+        {
+            PartyManager.Instance.TogglePartyUI();
         }
     }
 
@@ -80,5 +92,19 @@ public class TavernManager : MonoBehaviour
     public static GameObject QuintonModel
     {
         get { return quintonModel; }
+    }
+
+    public void AssignDialogueUIToManager()
+    {
+        DialogueManager.Instance.dialogueUI = GameObject.Find("DialogueUI");
+        DialogueManager.Instance.portrait = DialogueManager.Instance.dialogueUI.transform.GetChild(1).Find("Portrait").GetComponent<Image>();
+        DialogueManager.Instance.speakerName = DialogueManager.Instance.dialogueUI.transform.GetChild(1).Find("Name").GetComponent<TMP_Text>();
+        DialogueManager.Instance.nodeText = DialogueManager.Instance.dialogueUI.transform.GetChild(0).GetChild(0).Find("NodeText").GetComponent<TMP_Text>();
+        DialogueManager.Instance.nodeContentOrganizer = DialogueManager.Instance.dialogueUI.transform.GetChild(0).GetChild(0).Find("NodeContentOrganizer").gameObject;
+    }
+
+    public void AssignPartyUIToManager()
+    {
+        PartyManager.Instance.partyUI = GameObject.Find("PartyUI");
     }
 }
