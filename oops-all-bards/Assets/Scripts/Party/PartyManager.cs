@@ -87,7 +87,7 @@ public class PartyManager : MonoBehaviour
             {
                 GameObject text = Instantiate(tsaText, traits.position, Quaternion.identity);
                 text.transform.SetParent(traits);
-                text.GetComponent<TMP_Text>().text = t.Name;
+                text.GetComponent<TMP_Text>().text = t.Type.ToString();
             }
 
             Transform statuses = toInstantiate.transform.Find("Statuses");
@@ -95,7 +95,7 @@ public class PartyManager : MonoBehaviour
             {
                 GameObject text = Instantiate(tsaText, statuses.position, Quaternion.identity);
                 text.transform.SetParent(statuses);
-                text.GetComponent<TMP_Text>().text = s.Name;
+                text.GetComponent<TMP_Text>().text = s.Type.ToString();
             }
 
             Transform affinities = toInstantiate.transform.Find("Affinities");
@@ -130,5 +130,19 @@ public class PartyManager : MonoBehaviour
     {
         Sprite sprite = Resources.Load<Sprite>($"Portraits/{name}");
         return sprite == null ? null : sprite;
+    }
+
+    public GameObject GetModelByID(int id)
+    {
+        if (id == 0)
+        {
+            return TavernManager.PlayerModel;
+        }
+
+        if (id == 1)
+        {
+            return TavernManager.QuintonModel;
+        }
+        return null;
     }
 }

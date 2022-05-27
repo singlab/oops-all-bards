@@ -290,11 +290,11 @@ public class CombatManager : MonoBehaviour
         {
             if (action.ability.ID == 4)
             {
-                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.STRENGTHENED));
+                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED));
                 Debug.Log($"{action.actingCharacter.Name} has strengthened {action.target.Name}!");
             } else if (action.ability.ID == 5)
             {
-                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.BLINDED));
+                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.BLINDED));
                 Debug.Log($"{action.actingCharacter.Name} has blinded {action.target.Name}!");
             }
         }
@@ -356,7 +356,7 @@ public class CombatManager : MonoBehaviour
         } else 
         {
             Debug.Log($"{actingCharacter.Name} tried to attack {target.Name}, but missed!");
-            actingCharacter.RemoveCombatStatus(CombatStatus.StatusTypes.BLINDED);
+            actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.BLINDED);
         }
 
         actingCharacter.OwnsTurn = false;
@@ -391,7 +391,7 @@ public class CombatManager : MonoBehaviour
         relevantValueBars.Item1.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
 
-        if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.StatusTypes.STRENGTHENED); };
+        if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); };
         actingCharacter.OwnsTurn = false;
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
@@ -522,10 +522,10 @@ public class CombatManager : MonoBehaviour
         if (targetIsProtected) 
         {
             Debug.Log(target.Name + " has a PROTECTED status effect"); 
-            target.RemoveCombatStatus(CombatStatus.StatusTypes.PROTECTED);
+            target.RemoveCombatStatus(CombatStatus.CombatStatusTypes.PROTECTED);
             ITargetable newTarget = AcquireProtectingTarget();
             Debug.Log(newTarget.Name + " has a PROTECTING status effect");
-            newTarget.RemoveCombatStatus(CombatStatus.StatusTypes.PROTECTING);
+            newTarget.RemoveCombatStatus(CombatStatus.CombatStatusTypes.PROTECTING);
             Debug.Log(actingCharacter.Name + " tried attacking " + target.Name + ", but " + newTarget.Name + " protected them!");
             target = (BasePlayer)newTarget;
         }
@@ -559,7 +559,7 @@ public class CombatManager : MonoBehaviour
     {
         foreach (CombatStatus cs in actingCharacter.CombatStatuses)
         {
-            if (cs.Type == CombatStatus.StatusTypes.BLINDED)
+            if (cs.Type == CombatStatus.CombatStatusTypes.BLINDED)
             {
                 return true;
             }
@@ -571,7 +571,7 @@ public class CombatManager : MonoBehaviour
     {
         foreach (CombatStatus cs in actingCharacter.CombatStatuses)
         {
-            if (cs.Type == CombatStatus.StatusTypes.STRENGTHENED)
+            if (cs.Type == CombatStatus.CombatStatusTypes.STRENGTHENED)
             {
                 return true;
             }
@@ -583,7 +583,7 @@ public class CombatManager : MonoBehaviour
     {
         foreach (CombatStatus cs in target.CombatStatuses)
         {
-            if (cs.Type == CombatStatus.StatusTypes.PROTECTED)
+            if (cs.Type == CombatStatus.CombatStatusTypes.PROTECTED)
             {
                 return true;
             }
@@ -595,7 +595,7 @@ public class CombatManager : MonoBehaviour
     {
         foreach (CombatStatus cs in target.CombatStatuses)
         {
-            if (cs.Type == CombatStatus.StatusTypes.PROTECTING)
+            if (cs.Type == CombatStatus.CombatStatusTypes.PROTECTING)
             {
                 return true;
             }
@@ -605,7 +605,8 @@ public class CombatManager : MonoBehaviour
 
     private ITargetable AcquireProtectingTarget()
     {
-        return (BasePlayer)party.Where(x => x.HasCombatStatusType(CombatStatus.StatusTypes.PROTECTING));
+        var result = party.Where(x => x.HasCombatStatusType(CombatStatus.CombatStatusTypes.PROTECTING));
+        return result.First();
     }
 
     private void ApplyDeathAnimation(Tuple<BasePlayer, BaseEnemy> parsedCharacter)
@@ -624,7 +625,7 @@ public class CombatManager : MonoBehaviour
         animator.SetBool("isDefeated", true);
     }
 
-    private GameObject GetModelByID(int id)
+    public GameObject GetModelByID(int id)
     {
         if (id == 0)
         {

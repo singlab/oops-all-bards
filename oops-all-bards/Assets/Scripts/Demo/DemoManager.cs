@@ -139,8 +139,8 @@ public class DemoManager : MonoBehaviour
         quinton.PlayerClass = jsonReader.baseClasses.baseClasses[2];
         quinton.Model = Resources.Load<GameObject>("PolygonVikings/Prefabs/Characters/Character_Chief_01_White");
         quinton.CiFData = new CiFData();
-        quinton.CiFData.AddTrait(new Trait("Sardonic", 0));
-        quinton.CiFData.AddTrait(new Trait("Vengeful", 1));
+        quinton.CiFData.AddTrait(new Trait(Trait.TraitTypes.SARDONIC));
+        quinton.CiFData.AddTrait(new Trait(Trait.TraitTypes.VENGEFUL));
         quinton.CiFData.AddAffinity(new Affinity(0,5));
         PartyManager.Instance.AddCharacterToParty(quinton);
         TCPTestClient.Instance.RefreshWMEs();

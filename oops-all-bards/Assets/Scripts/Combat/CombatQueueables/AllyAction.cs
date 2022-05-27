@@ -34,8 +34,8 @@ public class AllyAction : MonoBehaviour, ICombatQueueable
         {
             BasePlayer targetCharacter = ParseTargetable(target);
             Debug.Log("Through the power of friendship, " + actingCharacter.Name + " is protecting " + target.Name + "!");
-            actingCharacter.CombatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.PROTECTING));
-            targetCharacter.CombatStatuses.Add(new CombatStatus(CombatStatus.StatusTypes.PROTECTED));
+            actingCharacter.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.PROTECTING));
+            targetCharacter.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.PROTECTED));
             Debug.Log(actingCharacter.Name + " has " + actingCharacter.CombatStatuses.Count + " combat statuses.");
             Debug.Log(targetCharacter.Name + " has " + targetCharacter.CombatStatuses.Count + " combat statuses.");
         }

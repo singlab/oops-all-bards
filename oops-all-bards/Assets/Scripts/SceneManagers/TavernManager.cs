@@ -6,18 +6,22 @@ public class TavernManager : MonoBehaviour
 {
     public GameObject playerSpawnPoint;
     public CameraController playerCamera;
+    private static GameObject playerModel;
+    private static GameObject quintonModel;
 
     void Awake()
     {
         SpawnPlayer();
         AudioManager.Instance.ChangeTrack(1);
         CheckDialogueUI();
+        TCPTestClient.Instance.RefreshWMEs();
     }
 
     // Update is called once per frame
     void Start()
     {
-        
+        playerModel = GameObject.FindGameObjectWithTag("Player");
+        quintonModel = GameObject.Find("Quinton");
     }
 
     void SpawnPlayer()
@@ -45,5 +49,15 @@ public class TavernManager : MonoBehaviour
         {
             DialogueManager.Instance.ToggleDialogueUI();
         }
+    }
+
+    public static GameObject PlayerModel
+    {
+        get { return playerModel; }
+    }
+
+    public static GameObject QuintonModel
+    {
+        get { return quintonModel; }
     }
 }

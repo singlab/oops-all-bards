@@ -308,15 +308,17 @@ public class GameAgent extends BehavingEntity {
       behaviorLibrary.registerBehavior(new __BehaviorDesc(1, __$behaviorFactory0_rfield, null, null, "lookForAllyAgent-0->ConditionalStep3_IF_MentalStep_GoalStep()", new String[] {"lookForAllyAgent-0->ConditionalStep3_IF_MentalStep_GoalStep()"}, null, (short)0), __$analysis0_rfield);
       behaviorLibrary.registerBehavior(new __BehaviorDesc(2, __$behaviorFactory0_rfield, null, null, "allyAgentRoot()", new String[] {"allyAgentRoot()"}, null, (short)0), __$analysis0_rfield);
       behaviorLibrary.registerBehavior(new __BehaviorDesc(3, __$behaviorFactory0_rfield, null, null, "manageAllyAgent(AllyWME)", new String[] {"manageAllyAgent(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(4, __$behaviorFactory0_rfield, null, null, "manageCombat(AllyWME)", new String[] {"manageCombat(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(5, __$behaviorFactory0_rfield, null, null, "waitForTurn(AllyWME)", new String[] {"waitForTurn(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(6, __$behaviorFactory0_rfield, null, null, "lookToAssist(AllyWME)", new String[] {"lookToAssist(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(7, __$behaviorFactory0_rfield, null, null, "takeTurn(AllyWME)", new String[] {"takeTurn(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(8, __$behaviorFactory0_rfield, null, null, "assistAlly(AllyWME, AllyWME)", new String[] {"assistAlly(AllyWME, AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(9, __$behaviorFactory0_rfield, null, null, "manageNoncombat(AllyWME)", new String[] {"manageNoncombat(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(10, __$behaviorFactory0_rfield, null, null, "lookForQuip(AllyWME)", new String[] {"lookForQuip(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(11, __$behaviorFactory0_rfield, null, null, "GameAgent_RootCollectionBehavior()", new String[] {"GameAgent_RootCollectionBehavior()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(12, __$behaviorFactory0_rfield, null, null, "__$defaultMemoryExecuteBehavior()", new String[] {"__$defaultMemoryExecuteBehavior()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(4, __$behaviorFactory0_rfield, null, null, "manageCombat(int)", new String[] {"manageCombat(int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(5, __$behaviorFactory0_rfield, null, null, "manageCombat-4->ConditionalStep11_IF_FailStep()", new String[] {"manageCombat-4->ConditionalStep11_IF_FailStep()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(6, __$behaviorFactory0_rfield, null, null, "waitForTurn(int)", new String[] {"waitForTurn(int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(7, __$behaviorFactory0_rfield, null, null, "lookToAssist(int)", new String[] {"lookToAssist(int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(8, __$behaviorFactory0_rfield, null, null, "takeTurn(int)", new String[] {"takeTurn(int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(9, __$behaviorFactory0_rfield, null, null, "assistAlly(AllyWME, AllyWME)", new String[] {"assistAlly(AllyWME, AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(10, __$behaviorFactory0_rfield, null, null, "manageNoncombat(AllyWME)", new String[] {"manageNoncombat(AllyWME)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(11, __$behaviorFactory0_rfield, null, null, "lookForQuip(int)", new String[] {"lookForQuip(int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(12, __$behaviorFactory0_rfield, null, null, "lookForQuip-11->ConditionalStep28_IF_FailStep()", new String[] {"lookForQuip-11->ConditionalStep28_IF_FailStep()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(13, __$behaviorFactory0_rfield, null, null, "GameAgent_RootCollectionBehavior()", new String[] {"GameAgent_RootCollectionBehavior()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(14, __$behaviorFactory0_rfield, null, null, "__$defaultMemoryExecuteBehavior()", new String[] {"__$defaultMemoryExecuteBehavior()"}, null, (short)0), __$analysis0_rfield);
    }
 
    private static void registerBehaviors_1(BehaviorLibrary behaviorLibrary) {
@@ -328,13 +330,13 @@ public class GameAgent extends BehavingEntity {
    }
 
    public GameAgent() {
-      individualBehaviorLibrary = new BehaviorLibrary(26);
+      individualBehaviorLibrary = new BehaviorLibrary(30);
       jointBehaviorLibrary = new BehaviorLibrary(0);
       debugLevel = 2;
       debuggerGUI = new Debugger(this);
       registerBehaviors_0(individualBehaviorLibrary);
       registerBehaviors_1(jointBehaviorLibrary);
-      ABT = (CollectionBehavior)GameAgent_BehaviorFactories.behaviorFactory0(11, null, null, null, "GameAgent_RootCollectionBehavior()", this, (__BehaviorDesc)((List)individualBehaviorLibrary.lookupBehavior("GameAgent_RootCollectionBehavior()")).get(0));
+      ABT = (CollectionBehavior)GameAgent_BehaviorFactories.behaviorFactory0(13, null, null, null, "GameAgent_RootCollectionBehavior()", this, (__BehaviorDesc)((List)individualBehaviorLibrary.lookupBehavior("GameAgent_RootCollectionBehavior()")).get(0));
       startWMEReflection(ABT);
       registerEntity("GameAgent", this);
    }

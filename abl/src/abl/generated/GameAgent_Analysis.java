@@ -35,59 +35,66 @@ public class GameAgent_Analysis {
          case 3: {
             // manageAllyAgent_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("manageCombat(AllyWME)"); // stepID 8
-            _$analysisStepIDs.add("manageNoncombat(AllyWME)"); // stepID 9
+            _$analysisStepIDs.add("manageCombat(int)"); // stepID 9
+            _$analysisStepIDs.add("lookForQuip(int)"); // stepID 10
+            return _$analysisStepIDs;
+         }
+         case 5: {
+            // manageCombat-4->ConditionalStep11_IF_FailStep_1
+            List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
          case 4: {
             // manageCombat_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("lookToAssist(AllyWME)"); // stepID 12
-            _$analysisStepIDs.add("waitForTurn(AllyWME)"); // stepID 13
-            return _$analysisStepIDs;
-         }
-         case 5: {
-            // waitForTurn_1
-            List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("takeTurn(AllyWME)"); // stepID 16
+            _$analysisStepIDs.add("lookToAssist(int)"); // stepID 14
+            _$analysisStepIDs.add("waitForTurn(int)"); // stepID 15
             return _$analysisStepIDs;
          }
          case 6: {
-            // lookToAssist_1
+            // waitForTurn_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("assistAlly(AllyWME, AllyWME)"); // stepID 19
             return _$analysisStepIDs;
          }
          case 7: {
+            // lookToAssist_1
+            List<String> _$analysisStepIDs = new ArrayList<String>();
+            _$analysisStepIDs.add("assistAlly(AllyWME, AllyWME)"); // stepID 20
+            return _$analysisStepIDs;
+         }
+         case 8: {
             // takeTurn_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
-         case 8: {
+         case 9: {
             // assistAlly_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
-         case 9: {
+         case 10: {
             // manageNoncombat_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("lookForQuip(AllyWME)"); // stepID 25
-            _$analysisStepIDs.add("waitForTurn(AllyWME)"); // stepID 26
             return _$analysisStepIDs;
          }
-         case 10: {
-            // lookForQuip_1
+         case 12: {
+            // lookForQuip-11->ConditionalStep28_IF_FailStep_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
          case 11: {
-            // GameAgent_RootCollectionBehavior
+            // lookForQuip_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("allyAgentRoot()"); // stepID 31
-            _$analysisStepIDs.add("lookForAllyAgent()"); // stepID 32
             return _$analysisStepIDs;
          }
-         case 12: {
+         case 13: {
+            // GameAgent_RootCollectionBehavior
+            List<String> _$analysisStepIDs = new ArrayList<String>();
+            _$analysisStepIDs.add("allyAgentRoot()"); // stepID 32
+            _$analysisStepIDs.add("lookForAllyAgent()"); // stepID 33
+            return _$analysisStepIDs;
+         }
+         case 14: {
             // __$defaultMemoryExecuteBehavior_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;

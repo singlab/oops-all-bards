@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
-        
+        //jsonReader.quips.DebugQuips();
     }
 
     public void ToggleDialogueUI()
@@ -136,5 +137,66 @@ public class DialogueManager : MonoBehaviour
     {
         DemoManager.Instance.CreateSignpostMessage(DemoManager.help4);
         DemoManager.Instance.CreateSignpostMessage(DemoManager.help3);
+    }
+
+    public void ChooseAppropriateQuip(int actingCharacter, bool inCombat)
+    {
+        Quip chosenQuip;
+        List<Quip> relevantQuips = new List<Quip>();
+        GameObject model;
+        BasePlayer ac = PartyManager.Instance.FindPartyMemberById(actingCharacter);
+
+        List<Quip> specificQuips = new List<Quip>();
+        List<Quip> genericQuips = new List<Quip>();
+        IEnumerable<Quip> result;
+
+        if (inCombat && (inCombat == PartyManager.Instance.inCombat))
+        {
+            Debug.Log("We're in combat.");
+            foreach (CombatStatus cs in ac.CombatStatuses)
+            {
+                result = specificQuips.Concat(jsonReader.quips.GetQuipsByCombatStatus(cs.Type));
+                foreach (Quip q in result)
+                {
+                    relevantQuips.Add(q);
+                }
+            }
+            if (relevantQuips.Count == 0)
+            {
+                result = genericQuips.Concat(jsonReader.quips.GetGenericCombatQuips());
+                foreach (Quip q in result)
+                {
+                    relevantQuips.Add(q);
+                }
+            }
+            model = CombatManager.Instance.GetModelByID(actingCharacter);
+        } else if (!inCombat && (inCombat == PartyManager.Instance.inCombat))
+        {
+            Debug.Log("We're not in combat.");
+            foreach (Status s in ac.CiFData.Statuses)
+            {
+                result = specificQuips.Concat(jsonReader.quips.GetQuipsByCiFStatus(s.Type));
+                foreach (Quip q in result)
+                {
+                    relevantQuips.Add(q);
+                }
+            }
+            if (relevantQuips.Count == 0)
+            {
+                result = genericQuips.Concat(jsonReader.quips.GetGenericNoncombatQuips());
+                foreach (Quip q in result)
+                {
+                    relevantQuips.Add(q);
+                }
+            }
+            model = PartyManager.Instance.GetModelByID(actingCharacter);
+        } else
+        {
+            return;
+        }
+        
+        Debug.Log(relevantQuips.Count);
+        chosenQuip = relevantQuips[Random.Range(0, relevantQuips.Count - 1)];
+        SpawnTextBubble(model, chosenQuip.Text);
     }
 }

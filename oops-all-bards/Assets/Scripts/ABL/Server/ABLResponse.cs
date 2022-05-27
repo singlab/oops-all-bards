@@ -13,10 +13,14 @@ public class ABLResponse
     public ActionData data;
 }
 
-// A class used to hold the characters IDs sent as part of the data field of an ABLResponse.
+// A class used to hold various things sent as part of the data field of an ABLResponse.
 [System.Serializable]
 public class ActionData 
 {
+    // The character ID of the acting character, if any
     public int actingCharacter;
+    // The character ID of the target character, if any
     public int targetCharacter;
+    // Whether or not the acting character is in combat, if relevant
+    public bool inCombat;
 }

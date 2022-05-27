@@ -61,11 +61,11 @@ public class AllyWME
         }
         for (int i = 0; i < player.CiFData.Statuses.Count; i++)
         {
-            statusIDs[i] = player.CiFData.Statuses[i].ID;
+            statusIDs[i] = (int)player.CiFData.Statuses[i].Type;
         }
         for (int i = 0; i < player.CiFData.Traits.Count; i++)
         {
-            traitIDs[i] = player.CiFData.Traits[i].ID;
+            traitIDs[i] = (int)player.CiFData.Traits[i].Type;
         }
     }   
 }

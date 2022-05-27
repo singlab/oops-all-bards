@@ -23,66 +23,49 @@ public class GameAgent_ArgumentStepExecute {
             args[1] = ((AllyWME)__$behaviorFrame[0]);
             return args;
          }
-         case 8: {
-            // manageAllyAgent_1Step1
-            final Object[] args = new Object[1];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
-            return args;
-         }
          case 9: {
             // manageAllyAgent_1Step2
             final Object[] args = new Object[1];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             return args;
          }
-         case 12: {
-            // manageCombat_1Step3
+         case 10: {
+            // manageAllyAgent_1Step3
             final Object[] args = new Object[1];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             return args;
          }
-         case 13: {
+         case 14: {
             // manageCombat_1Step4
             final Object[] args = new Object[1];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
             return args;
          }
-         case 16: {
-            // waitForTurn_1Step3
+         case 15: {
+            // manageCombat_1Step5
             final Object[] args = new Object[1];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
             return args;
          }
-         case 19: {
+         case 20: {
             // lookToAssist_1Step3
             final Object[] args = new Object[2];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
+            args[0] = ((AllyWME)__$behaviorFrame[2]);
             args[1] = ((AllyWME)__$behaviorFrame[1]);
             return args;
          }
-         case 22: {
+         case 23: {
             // assistAlly_1Step2
             final Object[] args = new Object[2];
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
             args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
             return args;
          }
-         case 25: {
-            // manageNoncombat_1Step3
-            final Object[] args = new Object[1];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
-            return args;
-         }
-         case 26: {
-            // manageNoncombat_1Step4
-            final Object[] args = new Object[1];
-            args[0] = ((AllyWME)__$behaviorFrame[0]);
-            return args;
-         }
-         case 29: {
-            // lookForQuip_1Step3
-            final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
+         case 30: {
+            // lookForQuip_1Step5
+            final Object[] args = new Object[2];
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[1] = new Boolean(((__ValueTypes.BooleanVar)__$behaviorFrame[2]).b);
             return args;
          }
       default:
