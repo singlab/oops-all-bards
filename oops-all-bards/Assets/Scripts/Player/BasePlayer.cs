@@ -115,7 +115,7 @@ public class BasePlayer : ITargetable
         set { this.inventory = value; }
     }
 
-    public CiFData CiFData
+    public override CiFData CiFData
     {
         get { return this.cifData; }
         set { this.cifData = value; }

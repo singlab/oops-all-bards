@@ -47,7 +47,7 @@ public class Quip
 [System.Serializable]
 public class Quips
 {
-    [SerializeField] private List<Quip> quips = new List<Quip>();
+    [SerializeField] public List<Quip> quips = new List<Quip>();
 
     public List<Quip> GetQuipsByCiFStatus(Status.StatusTypes type)
     {

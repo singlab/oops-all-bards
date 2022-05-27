@@ -47,21 +47,33 @@ public class GameAgent_ArgumentStepExecute {
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
             return args;
          }
-         case 20: {
+         case 16: {
+            // manageCombat_1Step6
+            final Object[] args = new Object[1];
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            return args;
+         }
+         case 19: {
+            // lookForAssistance_1Step3
+            final Object[] args = new Object[1];
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            return args;
+         }
+         case 24: {
             // lookToAssist_1Step3
             final Object[] args = new Object[2];
             args[0] = ((AllyWME)__$behaviorFrame[2]);
             args[1] = ((AllyWME)__$behaviorFrame[1]);
             return args;
          }
-         case 23: {
+         case 27: {
             // assistAlly_1Step2
             final Object[] args = new Object[2];
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
             args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
             return args;
          }
-         case 30: {
+         case 34: {
             // lookForQuip_1Step5
             final Object[] args = new Object[2];
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);

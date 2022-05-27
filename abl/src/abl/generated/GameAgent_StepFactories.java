@@ -94,76 +94,92 @@ public class GameAgent_StepFactories {
             return new GoalStepDebug(15, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, "waitForTurn(int)", null, (short)0);
          }
          case 16: {
-            // waitForTurn_1Step1
-            return new MentalStepDebug(16, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "waitForTurn_1Step1");
+            // manageCombat_1Step6
+            return new GoalStepDebug(16, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, "lookForAssistance(int)", null, (short)0);
          }
          case 17: {
-            // waitForTurn_1Step2
+            // lookForAssistance_1Step1
             return new WaitStepDebug(17, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
          }
          case 18: {
-            // lookToAssist_1Step1
-            return new MentalStepDebug(18, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "lookToAssist_1Step1");
+            // lookForAssistance_1Step2
+            return new MentalStepDebug(18, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "lookForAssistance_1Step2");
          }
          case 19: {
-            // lookToAssist_1Step2
-            return new WaitStepDebug(19, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
+            // lookForAssistance_1Step3
+            return new PrimitiveStepDebug(19, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, new RequestAssistance(), null, "requestAssistance");
          }
          case 20: {
-            // lookToAssist_1Step3
-            return new GoalStepDebug(20, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, "assistAlly(AllyWME, AllyWME)", null, (short)0);
+            // waitForTurn_1Step1
+            return new MentalStepDebug(20, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "waitForTurn_1Step1");
          }
          case 21: {
-            // takeTurn_1Step1
-            return new MentalStepDebug(21, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "takeTurn_1Step1");
+            // waitForTurn_1Step2
+            return new WaitStepDebug(21, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
          }
          case 22: {
-            // assistAlly_1Step1
-            return new MentalStepDebug(22, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "assistAlly_1Step1");
+            // lookToAssist_1Step1
+            return new MentalStepDebug(22, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "lookToAssist_1Step1");
          }
          case 23: {
-            // assistAlly_1Step2
-            return new PrimitiveStepDebug(23, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, new Protect(), null, "protect");
+            // lookToAssist_1Step2
+            return new WaitStepDebug(23, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
          }
          case 24: {
-            // manageNoncombat_1Step1
-            return new WaitStepDebug(24, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
+            // lookToAssist_1Step3
+            return new GoalStepDebug(24, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, "assistAlly(AllyWME, AllyWME)", null, (short)0);
          }
          case 25: {
-            // manageNoncombat_1Step2
-            return new MentalStepDebug(25, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "manageNoncombat_1Step2");
+            // takeTurn_1Step1
+            return new MentalStepDebug(25, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "takeTurn_1Step1");
          }
          case 26: {
-            // lookForQuip_1Step1
-            return new WaitStepDebug(26, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
+            // assistAlly_1Step1
+            return new MentalStepDebug(26, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "assistAlly_1Step1");
          }
          case 27: {
-            // lookForQuip_1Step2
-            return new MentalStepDebug(27, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "lookForQuip_1Step2");
+            // assistAlly_1Step2
+            return new PrimitiveStepDebug(27, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, new Protect(), null, "protect");
          }
          case 28: {
-            // lookForQuip_1Step3
-            return new ConditionalStepDebug(28, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, GameAgent.__$conditionalTest0_rfield, null, "lookForQuip-11->ConditionalStep28_IF_FailStep()", null);
+            // manageNoncombat_1Step1
+            return new WaitStepDebug(28, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
          }
          case 29: {
-            // lookForQuip_1Step4
-            return new MentalStepDebug(29, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "lookForQuip_1Step4");
+            // manageNoncombat_1Step2
+            return new MentalStepDebug(29, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "manageNoncombat_1Step2");
          }
          case 30: {
-            // lookForQuip_1Step5
-            return new PrimitiveStepDebug(30, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, new Quip(), null, "quip");
+            // lookForQuip_1Step1
+            return new WaitStepDebug(30, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, GameAgent.__$successTest0_rfield, null, null);
          }
          case 31: {
-            // GameAgent_RootCollectionBehaviorStep1
-            return new MentalStepDebug(31, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)3, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "GameAgent_RootCollectionBehaviorStep1");
+            // lookForQuip_1Step2
+            return new MentalStepDebug(31, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "lookForQuip_1Step2");
          }
          case 32: {
-            // GameAgent_RootCollectionBehaviorStep2
-            return new GoalStepDebug(32, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "allyAgentRoot()", null, (short)0);
+            // lookForQuip_1Step3
+            return new ConditionalStepDebug(32, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, GameAgent.__$conditionalTest0_rfield, null, "lookForQuip-12->ConditionalStep32_IF_FailStep()", null);
          }
          case 33: {
+            // lookForQuip_1Step4
+            return new MentalStepDebug(33, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "lookForQuip_1Step4");
+         }
+         case 34: {
+            // lookForQuip_1Step5
+            return new PrimitiveStepDebug(34, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, new Quip(), null, "quip");
+         }
+         case 35: {
+            // GameAgent_RootCollectionBehaviorStep1
+            return new MentalStepDebug(35, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)3, (short)0, false, null, GameAgent.__$mentalExecute0_rfield, null, null, null, (byte)2, "GameAgent_RootCollectionBehaviorStep1");
+         }
+         case 36: {
+            // GameAgent_RootCollectionBehaviorStep2
+            return new GoalStepDebug(36, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "allyAgentRoot()", null, (short)0);
+         }
+         case 37: {
             // GameAgent_RootCollectionBehaviorStep3
-            return new GoalStepDebug(33, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "lookForAllyAgent()", null, (short)0);
+            return new GoalStepDebug(37, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, null, null, null, null, "lookForAllyAgent()", null, (short)0);
          }
       default:
          throw new AblRuntimeError("Unexpected stepID " + __$stepID);

@@ -13,6 +13,7 @@ public class DemoManager : MonoBehaviour
     public JSONReader jsonReader;
     public GameObject signpostContainer;
     public GameObject signpostPrefab;
+    public int tavernVisits = 1;
 
     // Some constant strings for demo use/gameplay guidance only
     public const string help1 = "Welcome to the Oops! All Bards demo. You can control your character using WASD, and shift the camera using Q/E.";
@@ -164,5 +165,10 @@ public class DemoManager : MonoBehaviour
         toInstantiate.transform.SetParent(signpostContainer.transform, true);
         toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
         toInstantiate.GetComponentInChildren<Button>().onClick.AddListener(delegate { DestroySignpostMessage(toInstantiate); });
+    }
+
+    public void IncrementTavernVisits()
+    {
+        tavernVisits++;
     }
 }

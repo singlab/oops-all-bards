@@ -48,46 +48,51 @@ public class GameAgent_MentalStepExecute {
             System.out.println("Ally is in combat.");
             break;
          }
-         case 16: {
+         case 18: {
+            // lookForAssistance_1Step2
+            System.out.println("Ally is in need of assistance.");
+            break;
+         }
+         case 20: {
             // waitForTurn_1Step1
             System.out.println("I am waiting to take my turn.");
             break;
          }
-         case 18: {
+         case 22: {
             // lookToAssist_1Step1
             System.out.println("I am looking to assist.");
             __$behaviorFrame[2] = ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
             break;
          }
-         case 21: {
+         case 25: {
             // takeTurn_1Step1
             System.out.println("I am taking my turn.");
             break;
          }
-         case 22: {
+         case 26: {
             // assistAlly_1Step1
             ((__ValueTypes.IntVar)__$behaviorFrame[2]).i = ((AllyWME)__$behaviorFrame[0]).getID();
             ((__ValueTypes.IntVar)__$behaviorFrame[3]).i = ((AllyWME)__$behaviorFrame[1]).getID();
             System.out.println("I am assisting.");
             break;
          }
-         case 25: {
+         case 29: {
             // manageNoncombat_1Step2
             System.out.println("Ally is not in combat.");
             break;
          }
-         case 27: {
+         case 31: {
             // lookForQuip_1Step2
             __$behaviorFrame[1] = ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
             break;
          }
-         case 29: {
+         case 33: {
             // lookForQuip_1Step4
             ((__ValueTypes.BooleanVar)__$behaviorFrame[2]).b = ((AllyWME)__$behaviorFrame[1]).getInCombat();
             System.out.println("Starting quip.");
             break;
          }
-         case 31: {
+         case 35: {
             // GameAgent_RootCollectionBehaviorStep1
             System.out.println("Starting game agent...");
             break;

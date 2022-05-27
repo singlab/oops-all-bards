@@ -195,6 +195,129 @@
                     ]
                 }
             ]
+        },
+        {
+            "id": 3,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "You know, I just met you and all. But I was really expecting you to have my back in there.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What do you mean?",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "You left me hanging, kid. I asked for help, and you didn't help.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'm sorry, Quinton... It won't happen again.",
+                            "nextNode": 2
+                        },
+                        {
+                            "nodeResponseText": "Rhesa helps those who help themselves.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Yea, alright. I'll let it slide this once. Folks like us, we need to stick together, you know.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I agree. How about I buy you a drink, let me make up for it?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Oh, don't give me that. You know what? You can forget the gig. Get out of here, haunt someone else's bar.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Fine. The place reeks anyway.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Now you're talking. Let's go, kid, I hear Samaren's pouring Dwarvish Fire tonight.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Now that sounds like a good time.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "You know, I just met you and all. So I appreciate you having my back in there.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Think nothing of it, Quinton. We artists have to stick together.",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "We don't get many people like you these days. Anyway. How about I buy you a drink, in thanks?",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "That sounds like a plan to me.",
+                            "nextNode": 2
+                        },
+                        {
+                            "nodeResponseText": "I usually stay away from mind-altering drugs.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "I heard Samaren's pouring Dwarvish Fire tonight. All sorts of raucous revelry will surely ensue.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Well, what are we waiting for?",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Oh, Rhesa... Well, to each their own. I'll drink, and you can watch. Maybe we can swap stories.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yeah, I can get behind that. Lead the way, Quinton!",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

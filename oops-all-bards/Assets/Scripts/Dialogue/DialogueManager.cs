@@ -56,6 +56,8 @@ public class DialogueManager : MonoBehaviour
 
     private void RenderDialogueUI(Dialogue dialogue)
     {
+        portrait = dialogueUI.transform.GetChild(1).Find("Portrait").GetComponent<Image>();
+        speakerName = dialogueUI.transform.GetChild(1).Find("Name").GetComponent<TMP_Text>();
         speakerName.text = dialogue.SpeakerName;
         portrait.sprite = Resources.Load<Sprite>($"Portraits/{dialogue.SpeakerName}");
         DialogueNode currentNode = dialogue.DialogueNodes[nodeIndex];
@@ -66,6 +68,7 @@ public class DialogueManager : MonoBehaviour
     private void RenderCurrentNode(DialogueNode node)
     {
         ClearNodeResponses();
+        nodeText = dialogueUI.transform.GetChild(0).GetChild(0).Find("NodeText").GetComponent<TMP_Text>();
         nodeText.text = node.NodeText;
         for (int i = 0; i < node.NodeResponses.Count; i++)
         {
@@ -84,6 +87,11 @@ public class DialogueManager : MonoBehaviour
 
     private void ClearNodeResponses()
     {
+        if (nodeContentOrganizer == null)
+        {
+            nodeContentOrganizer = dialogueUI.transform.GetChild(0).GetChild(0).Find("NodeContentOrganizer").gameObject;
+        }
+
         foreach (Transform child in nodeContentOrganizer.transform)
         {
             Destroy(child.gameObject);
@@ -137,6 +145,18 @@ public class DialogueManager : MonoBehaviour
     {
         DemoManager.Instance.CreateSignpostMessage(DemoManager.help4);
         DemoManager.Instance.CreateSignpostMessage(DemoManager.help3);
+    }
+
+    public void TriggerAssistanceQuip(int actingCharacter)
+    {
+        if (!PartyManager.Instance.inCombat)
+        {
+            return;
+        }
+
+        Quip assistanceQuip = jsonReader.quips.quips[4];
+        GameObject model = CombatManager.Instance.GetModelByID(actingCharacter);
+        SpawnTextBubble(model, assistanceQuip.Text);
     }
 
     public void ChooseAppropriateQuip(int actingCharacter, bool inCombat)

@@ -75,4 +75,28 @@ public class CiFData
         }
         return 1000;
     }
+
+    public bool HasStatusType(Status.StatusTypes type)
+    {
+        foreach (Status s in statuses)
+        {
+            if (s.Type == type)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void RemoveStatusByType(Status.StatusTypes type)
+    {
+        foreach (Status s in statuses)
+        {
+            if (s.Type == type)
+            {
+                RemoveStatus(s);
+                return;
+            }
+        }
+    }
 }

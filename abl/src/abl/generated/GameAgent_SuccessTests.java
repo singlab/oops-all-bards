@@ -84,6 +84,19 @@ public class GameAgent_SuccessTests {
             return false;
          }
          case 17: {
+            // lookForAssistance_1Step1
+               if (
+                  ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i).getHealth() <= 5
+               )
+
+               {
+                  return true;
+               }
+
+
+            return false;
+         }
+         case 21: {
             // waitForTurn_1Step2
                if (
                   ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i).getOwnsTurn() == true
@@ -96,7 +109,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 19: {
+         case 23: {
             // lookToAssist_1Step2
                List wmeList0;
                ListIterator wmeIter0;
@@ -126,7 +139,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 24: {
+         case 28: {
             // manageNoncombat_1Step1
                if (
                   ((AllyWME)__$behaviorFrame[0]).getInCombat() == false
@@ -139,7 +152,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 26: {
+         case 30: {
             // lookForQuip_1Step1
                if (
                   System.currentTimeMillis() > ((__ValueTypes.LongVar)__$behaviorFrame[3]).l + 10000

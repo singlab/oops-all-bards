@@ -42,7 +42,7 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 28: {
+         case 32: {
             // lookForQuip_1Step3
                if (
                   ((AllyWME)__$behaviorFrame[1]) == null

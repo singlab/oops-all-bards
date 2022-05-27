@@ -10,6 +10,7 @@ behaving_entity GameAgent {
 
 	register act protect(int, int) with Protect;
 	register act quip(int, boolean) with Quip;
+	register act requestAssistance(int) with RequestAssistance;
 	
 	// Declare utility class that holds most up-to-date copies of WME for given char by ID
 	WMEDictionary dict = new WMEDictionary();
@@ -69,6 +70,16 @@ behaving_entity GameAgent {
 
         subgoal lookToAssist(id);
         subgoal waitForTurn(id);
+        subgoal lookForAssistance(id);
+    }
+    
+    sequential behavior lookForAssistance(int id) {
+    	with ( success_test { ( dict.getCharacter(id).getHealth() <= 5 ) } ) wait;
+    	mental_act {
+    		System.out.println("Ally is in need of assistance.");
+    	}
+    	
+    	act requestAssistance(id);
     }
 
     sequential behavior waitForTurn(int id) {

@@ -247,18 +247,53 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1832487207}
     - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1832487207}
+    - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: IncrementTavernVisits
+      objectReference: {fileID: 0}
+    - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: RedirectToTavern
       objectReference: {fileID: 0}
     - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: VictoryManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: VictoryManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fff9fc439eb23040b389b5c2be44fe6, type: 3}

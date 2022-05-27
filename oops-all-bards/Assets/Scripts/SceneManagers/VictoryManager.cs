@@ -55,6 +55,11 @@ public class VictoryManager : MonoBehaviour
     {
         DemoManager.Instance.LoadScene("TavernDemo");
     }
+
+    public void IncrementTavernVisits()
+    {
+        DemoManager.Instance.IncrementTavernVisits();
+    }
 }
 
 public class Reward
