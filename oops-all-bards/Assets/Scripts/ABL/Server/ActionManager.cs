@@ -59,6 +59,15 @@ public class ActionManager : MonoBehaviour
             // Add this action to the queue with priority.
             CombatManager.Instance.combatQueue.PriorityPush(action);
         }
+
+        if (response.msg == "RequestAssistance")
+        {
+            BasePlayer actingCharacter = PartyManager.Instance.FindPartyMemberById(response.data.actingCharacter);
+            actingCharacter.CiFData.AddStatus(new Status(Status.StatusTypes.REQUIRES_ASSISTANCE));
+            UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                DialogueManager.Instance.TriggerAssistanceQuip(response.data.actingCharacter);
+            });
+        }
     }
 
     public void ManageNoncombatAction(ABLResponse response) 

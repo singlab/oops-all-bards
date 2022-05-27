@@ -38,4 +38,15 @@ public class NPCMovement : MonoBehaviour
         Transform goal = GameObject.Find("QuintonQuestTrigger").transform;
         SetGoalDestination(goal);
     }
+
+    public void SendQuintonToPlayer()
+    {
+        Transform goal = GameObject.FindGameObjectWithTag("Player").transform;
+        SetGoalDestination(goal);
+    }
+
+    public bool HasStopped()
+    {
+        return agent.velocity == Vector3.zero;
+    }
 }

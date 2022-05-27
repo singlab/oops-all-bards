@@ -10,6 +10,7 @@ public class ITargetable
     private int flourish;
     private int shield;
     private List<CombatStatus> combatStatuses = new List<CombatStatus>();
+    private CiFData cifData = new CiFData();
 
     public virtual string Name
     {
@@ -39,6 +40,12 @@ public class ITargetable
     {
         get { return this.combatStatuses; }
         set { this.combatStatuses = value; }
+    }
+
+    public virtual CiFData CiFData
+    {
+        get { return this.cifData; }
+        set { this.cifData = value; }
     }
 
     public virtual void RemoveCombatStatus(CombatStatus.CombatStatusTypes type)

@@ -9,6 +9,8 @@ public class Status
     public enum StatusTypes 
     {
         NONE,
+        REQUIRES_ASSISTANCE,
+        LEFT_HANGING,
     }
 
     [SerializeField] private StatusTypes type;

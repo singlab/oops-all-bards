@@ -22,6 +22,10 @@ public class TavernManager : MonoBehaviour
     {
         playerModel = GameObject.FindGameObjectWithTag("Player");
         quintonModel = GameObject.Find("Quinton");
+        if (DemoManager.Instance.tavernVisits == 2)
+        {
+            StartCoroutine(DemoResolution());
+        }
     }
 
     void SpawnPlayer()
@@ -48,6 +52,23 @@ public class TavernManager : MonoBehaviour
         if (DialogueManager.Instance.dialogueUI.activeSelf)
         {
             DialogueManager.Instance.ToggleDialogueUI();
+        }
+    }
+
+    IEnumerator DemoResolution()
+    {
+        NPCMovement quintonAgent = quintonModel.gameObject.GetComponent<NPCMovement>();
+        bool didNotAssist = PartyManager.Instance.FindPartyMemberById(1).CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
+        quintonAgent.SendQuintonToPlayer();
+        yield return new WaitUntil(quintonAgent.HasStopped);
+        
+        if (didNotAssist)
+        {
+            PartyManager.Instance.FindPartyMemberById(1).CiFData.AddStatus(new Status(Status.StatusTypes.LEFT_HANGING));
+            DialogueManager.Instance.StartDialogue(3);
+        } else
+        {
+            DialogueManager.Instance.StartDialogue(4);
         }
     }
 

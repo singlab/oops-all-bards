@@ -278,13 +278,17 @@ public class CombatManager : MonoBehaviour
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL)
         {
+            bool requiresAssistance = action.target.CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
             action.target.Health += action.ability.Damage;
             Debug.Log(action.actingCharacter.Name + " heals " + action.target.Name + " for " + action.ability.Damage + " health!" );
+            if (requiresAssistance) { action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE); }; 
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
         {
+            bool requiresAssistance = action.target.CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
             action.target.Shield += action.ability.Damage;
             Debug.Log(action.actingCharacter.Name + " is shielding " + action.target.Name + " for " + action.ability.Damage + " damage." );
+            if (requiresAssistance) { action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE); };
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT)
         {
