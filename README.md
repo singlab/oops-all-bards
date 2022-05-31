@@ -41,7 +41,7 @@ and find the executable file in the ```Build``` folder within the ```oops-all-ba
 ### Build Project from Source ###
 
 1. If you wish to build this project from source, it is recommended you have
-[Unity 2019.4.12f1](https://unity3d.com/unity/whats-new/2019.4.12) installed on
+[Unity 2021.2.9f1]([https://unity3d.com/unity/whats-new/2021.2.9]) installed on
 your machine.
 
 1. Clone this repository:
