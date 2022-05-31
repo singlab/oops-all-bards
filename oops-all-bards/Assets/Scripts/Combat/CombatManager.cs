@@ -531,7 +531,7 @@ public class CombatManager : MonoBehaviour
     public void ApplyEffects(BaseEnemy actingCharacter, BasePlayer target, BaseAbility ability)
     {
         bool targetIsProtected = IsProtected(target);
-        if (targetIsProtected) 
+        if (targetIsProtected && party.Length > 1) 
         {
             Debug.Log(target.Name + " has a PROTECTED status effect"); 
             target.RemoveCombatStatus(CombatStatus.CombatStatusTypes.PROTECTED);
