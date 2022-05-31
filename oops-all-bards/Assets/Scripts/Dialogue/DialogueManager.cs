@@ -71,7 +71,7 @@ public class DialogueManager : MonoBehaviour
         {
             NodeResponse response = node.NodeResponses[i];
             GameObject toInstantiate = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform.position, Quaternion.identity);
-            toInstantiate.transform.parent = nodeContentOrganizer.transform;
+            toInstantiate.transform.SetParent(nodeContentOrganizer.transform);
             toInstantiate.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
             toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); } );
             if (response.Then != null)
