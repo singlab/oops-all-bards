@@ -8,6 +8,7 @@ public class NPCMovement : MonoBehaviour
 
     private NavMeshAgent agent;
     private Animator animator;
+    private bool hasMovingTarget = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,10 +21,20 @@ public class NPCMovement : MonoBehaviour
     {
         if (agent.hasPath)
         {
-            if (agent.remainingDistance < 0.1)
+            if (agent.remainingDistance < 0.5)
             {
+                agent.Stop();
                 animator.SetBool("isMoving", false);
+                hasMovingTarget = false;
             }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (hasMovingTarget)
+        {
+            SendQuintonToPlayer();
         }
     }
 
@@ -41,6 +52,7 @@ public class NPCMovement : MonoBehaviour
 
     public void SendQuintonToPlayer()
     {
+        hasMovingTarget = true;
         Transform goal = GameObject.FindGameObjectWithTag("Player").transform;
         SetGoalDestination(goal);
     }

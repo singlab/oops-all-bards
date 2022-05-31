@@ -72,6 +72,7 @@ public class TavernManager : MonoBehaviour
         NPCMovement quintonAgent = quintonModel.gameObject.GetComponent<NPCMovement>();
         bool didNotAssist = PartyManager.Instance.FindPartyMemberById(1).CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
         quintonAgent.SendQuintonToPlayer();
+        yield return new WaitForSeconds(1);
         yield return new WaitUntil(quintonAgent.HasStopped);
         
         if (didNotAssist)
