@@ -87,6 +87,8 @@ public class CombatManager : MonoBehaviour
             GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
             // Set name text
             toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = p.Name;
+            // Set portraits
+            toInstantiate.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = PartyManager.Instance.GetPortraitByName(p.Name);
             // Set health and flourish values and update them
             ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
             healthBar.maxValue = p.Health;
@@ -101,6 +103,8 @@ public class CombatManager : MonoBehaviour
             GameObject toInstantiate = Instantiate(portraitUI, enemyPortraits.transform);
             // Set name text
             toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = e.Name;
+            // Set portraits
+            toInstantiate.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = PartyManager.Instance.GetPortraitByName("Piggy");
             // Set health and flourish values and update them
             ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
             healthBar.maxValue = e.Health;

@@ -119,7 +119,7 @@ public class PartyManager : MonoBehaviour
     public Sprite GetPortraitByName(string name)
     {
         Sprite sprite = Resources.Load<Sprite>($"Portraits/{name}");
-        return sprite == null ? null : sprite;
+        return sprite == null ? Resources.Load<Sprite>($"Portraits/Player") : sprite;
     }
 
     public GameObject GetModelByID(int id)
