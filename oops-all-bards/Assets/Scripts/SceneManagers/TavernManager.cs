@@ -70,7 +70,15 @@ public class TavernManager : MonoBehaviour
     IEnumerator DemoResolution()
     {
         NPCMovement quintonAgent = quintonModel.gameObject.GetComponent<NPCMovement>();
+        Animator a = quintonModel.gameObject.GetComponent<Animator>();
         bool didNotAssist = PartyManager.Instance.FindPartyMemberById(1).CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
+        if (didNotAssist) 
+        { 
+            a.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"Controllers/InjuredNPC"); 
+        } else
+        {
+            a.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"Controllers/HappyNPC");
+        }
         quintonAgent.SendQuintonToPlayer();
         yield return new WaitForSeconds(1);
         yield return new WaitUntil(quintonAgent.HasStopped);
