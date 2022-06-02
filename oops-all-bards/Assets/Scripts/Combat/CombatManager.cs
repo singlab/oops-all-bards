@@ -13,10 +13,6 @@ public class CombatManager : MonoBehaviour
     // References to player and enemy portraits.
     public GameObject partyPortraits;
     public GameObject enemyPortraits;
-    // A reference to the gameobject queue.
-    public GameObject queueableContainer;
-    // A reference to the queueable gameobject prefab.
-    public GameObject goQueueable;
     // A reference to the portrait UI prefab.
     public GameObject portraitUI;
     // A reference to the combat queue.
@@ -74,10 +70,9 @@ public class CombatManager : MonoBehaviour
     // A function used to render all UI elements for the demo.
     public void RenderUI()
     {
-        // Render the portrait section, queueable container, and combat menu.
+        // Render the portrait section and combat menu.
         partyPortraits.SetActive(true);
         enemyPortraits.SetActive(true);
-        queueableContainer.SetActive(true);
         combatMenu.SetActive(true);
 
         // Instantiate portrait UI for party and enemies.
@@ -153,7 +148,6 @@ public class CombatManager : MonoBehaviour
         // Clean up for new combat scenario.
         combatQueue = new CombatQueue();
         combatQueue.Clear();
-        ClearQueueUI();
         // Add standard functions for start, player input, enemy AI, and end.
         PushAndCreateCombatQueueable(new CombatStart());
         foreach (BasePlayer p in party)
@@ -179,18 +173,6 @@ public class CombatManager : MonoBehaviour
     {
         // Push the queueable to the CombatQueue.
         combatQueue.Push(queueable);
-        // Create gameobject and set container as parent.
-        Instantiate(goQueueable, queueableContainer.transform.GetChild(0).transform);
-    }
-
-    // A function used to clear the queueable container UI of child gameobjects.
-    public void ClearQueueUI()
-    {
-        for(int i = 0; i < queueableContainer.transform.GetChild(0).transform.childCount; i++)
-        {
-            GameObject go = queueableContainer.transform.GetChild(0).transform.GetChild(i).gameObject;
-            Destroy(go);
-        }
     }
 
     // A coroutine used to open the target menu after clicking on an ability button. Waits until target
