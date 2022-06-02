@@ -1,0 +1,18 @@
+{
+    "allies":
+    [
+        {
+            "name": "Quinton",
+            "id": 1,
+            "health": 10,
+            "flourish": 8,
+            "shield": 0,
+            "fame": 0,
+            "gold": 0,
+            "equipment": [],
+            "inventory": [],
+            "ownsTurn": false,
+            "combatStatuses": []
+        }
+    ]
+}

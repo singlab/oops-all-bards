@@ -1,0 +1,41 @@
+{
+    "quips":
+    [
+        {
+            "text": "Shall we get a move on, then?",
+            "type": 0,
+            "cifStatusType": 0,
+            "combatStatusType": 0 
+        },
+        {
+            "text": "This reminds me of the time I served as court musician for the Chancellor. Ugh.",
+            "type": 0,
+            "cifStatusType": 0,
+            "combatStatusType": 0 
+        },
+        {
+            "text": "Feeling a little thirsty. Something to wet our whistles?",
+            "type": 0,
+            "cifStatusType": 0,
+            "combatStatusType": 0 
+        },
+        {
+            "text": "We have them on the ropes!",
+            "type": 1,
+            "cifStatusType": 0,
+            "combatStatusType": 5 
+        },
+        {
+            "text": "I require assistance!",
+            "type": 1,
+            "cifStatusType": 0,
+            "combatStatusType": 6 
+        },
+        {
+            "text": "Every day is a good day for a scrap.",
+            "type": 1,
+            "cifStatusType": 0,
+            "combatStatusType": 0 
+        }
+    ]
+}

@@ -1,0 +1,327 @@
+{
+    "dialogues":
+    [
+        {
+            "id": 0,
+            "speakerName": "Samaren",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "I can't say I've seen you around here before, stranger. What brings you to the once-great city of Crestmourn?",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'm looking for work. Know of anything?",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "I've heard things are bad here. I've come to help.",
+                            "nextNode": 2
+                        },
+                        {
+                            "nodeResponseText": "Oh, I'm just sightseeing.",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "You've come at a particularly bad time, I'm afraid. The whole city's been taken over by those wretched Followers of Bolothamogg.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "The Followers of who, now?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "That's a nice sentiment, but take it from me -- you don't want to mess with the Followers of Bolothamogg.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "The Followers of who, now?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "We shouldn't really be talking about this... They don't like it when you say the name. Listen, if it's a gig you want, maybe we can work something out.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'm listening.",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "You see that gentleman in the corner? That's Quinton, he usually sorts out the entertainment here. Worth a shot speaking to him, I should think. Tell him Samaren sent you over.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Thanks, Samaren. I will.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "... Do I know you?",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Not yet, but you -- and everyone in this tavern -- soon will.",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "I'm passing through, looking for work. Samaren sent me over, told me you might help me get a gig here.",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Excellent, another bard with an inflated ego. Just what this city needs.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "It sounds like the city needs a lot of things. Who are these Followers I heard about?",
+                            "nextNode": 3
+                        },
+                        {
+                            "nodeResponseText": "So... do I have the job?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "I think we can arrange something. The Followers make it hard for us these days, but we make it work.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Who are they? These Followers?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Devotees and fanatics of the ancient 'protector' of our fair city, the god Bolothamogg.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "And what do they want?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "They want what we all want: for fortune to return to Crestmourn. But they believe the only way to do this is by appeasing their god.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "And appeasing gods never involves baking cupcakes, it seems.",
+                            "nextNode": 5,
+                            "then": "QuintonDialogueTrigger"
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Hah, I like you. No, it doesn't. They want to strip away everything that makes our city beautiful, our art, our music, our entire culture.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Hence why it's hard to get a gig around here.",
+                            "nextNode": 6
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "Exactly. Anyway, why don't you come with me and we'll get you settled.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Sounds like a plan.",
+                            "nextNode": -2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Something doesn't feel right...",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What's going on?",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "They're already here! I hope you can do more than sing, kid.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Oh, for --",
+                            "nextNode": -999
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "You know, I just met you and all. But I was really expecting you to have my back in there.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What do you mean?",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "You left me hanging, kid. I asked for help, and you didn't help.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'm sorry, Quinton... It won't happen again.",
+                            "nextNode": 2
+                        },
+                        {
+                            "nodeResponseText": "Rhesa helps those who help themselves.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Yea, alright. I'll let it slide this once. Folks like us, we need to stick together, you know.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I agree. How about I buy you a drink, let me make up for it?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Oh, don't give me that. You know what? You can forget the gig. Get out of here, haunt someone else's bar.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Fine. The place reeks anyway.",
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Now you're talking. Let's go, kid, I hear Samaren's pouring Dwarvish Fire tonight.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Now that sounds like a good time.",
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "You know, I just met you and all. So I appreciate you having my back in there.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Think nothing of it, Quinton. We artists have to stick together.",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "We don't get many people like you these days. Anyway. How about I buy you a drink, in thanks?",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "That sounds like a plan to me.",
+                            "nextNode": 2
+                        },
+                        {
+                            "nodeResponseText": "I usually stay away from mind-altering drugs.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "I heard Samaren's pouring Dwarvish Fire tonight. All sorts of raucous revelry will surely ensue.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Well, what are we waiting for?",
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Oh, Rhesa... Well, to each their own. I'll drink, and you can watch. Maybe we can swap stories.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yeah, I can get behind that. Lead the way, Quinton!",
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -4,5 +4,23 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/StartMenu.unity
+    guid: 7a6d8b0ec0f69174f9abcce538c61887
+  - enabled: 1
+    path: Assets/Scenes/CharacterCreation.unity
+    guid: 0f1b0617d84f93041bc5b99d097ecaf7
+  - enabled: 1
+    path: Assets/Scenes/TavernDemo.unity
+    guid: e1d8489879e142a4bb986dde7aa0a9c0
+  - enabled: 1
+    path: Assets/Scenes/GigDemo.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/CombatWin.unity
+    guid: fe7e3e50c25ab614283cc434e02db435
+  - enabled: 1
+    path: Assets/Scenes/CombatLoss.unity
+    guid: 37d5aa94c0a48be4dab86a6bbb8035d6
   m_configObjects: {}
