@@ -2,8 +2,6 @@
   :video_game: Oops! All Bards :video_game:
 </h1>
 
-Code base for a game featuring a heterogeneous AI system comprised of ABL and CiF, built with Unity.
-
 ## Contributors ##
 
 1. [Kyle Mitchell](https://github.com/kdavidmitchell)
@@ -17,12 +15,12 @@ Code base for a game featuring a heterogeneous AI system comprised of ABL and Ci
     height="75%" width="75%">
 </p>
 
-### Project Overview ###
+## Project Overview ##
 
 Broadly, this repository is a code base for an ongoing research project concerned with game agent believability, artificial intelligence for game NPCs, and leveraging heterogeneous AI systems to open new game design spaces. Within the ```abl``` folder of this repository, you will find source code for a Java proxy server that runs a game agent using [ABL](http://www.cs.cmu.edu/~michaelm/publications/AI-IE2002.pdf). Within the ```oops-all-bards``` folder, you will find source code for a game demo built with Unity that is intended to be run alongside the Java proxy server to showcase the game agent.
 
 ## The _Oops! All Bards_ Game Demo ##
-Central to our current work is a testbed virtual world to test new ideas. In our case, this takes the form of _Oops! All Bards_. _Oops! All Bards_ is a 3D roleplaying game in which the player can inhabit the persona of a bard living in a medieval fantasy world currently under siege by a mysterious and maleficent entity. We drew much inspiration from classic tabletop RPGs, in which it is common that the player gathers a party of NPCs to join them as they progress through the game. 
+Central to our current work is a testbed virtual world to realize new ideas. In our case, this takes the form of _Oops! All Bards_. _Oops! All Bards_ is a 3D roleplaying game in which the player can inhabit the persona of a bard living in a medieval fantasy world currently under siege by a mysterious and maleficent entity. We drew much inspiration from classic tabletop RPGs, in which it is common that the player gathers a party of NPCs to join them as they progress through the game. 
 
 ### Project Goals ###
 
