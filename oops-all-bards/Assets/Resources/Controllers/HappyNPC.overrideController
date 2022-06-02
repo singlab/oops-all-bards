@@ -7,5 +7,13 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HappyNPC
-  m_Controller: {fileID: 0}
-  m_Clips: []
+  m_Controller: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 18c942f090838654abdd427ae696bbc8,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: b8fc7b330d703a64486dfca0eb9d8f02,
+      type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: d9194628be320e14893b27b476a74f3e,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: eca44d8cbf32f5e47b4d16d48c3a681a,
+      type: 3}

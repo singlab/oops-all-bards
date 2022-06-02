@@ -53,6 +53,13 @@ public class ActionManager : MonoBehaviour
     {
         if (response.msg == "Protect")
         {
+            if (DemoManager.Instance.hasBeenProtectedOnce == false)
+            {
+                UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    DemoManager.Instance.CreateSignpostMessage(DemoManager.help6);
+                });
+                DemoManager.Instance.hasBeenProtectedOnce = true;
+            }
             BasePlayer actingCharacter = PartyManager.Instance.FindPartyMemberById(response.data.actingCharacter);
             ITargetable target = PartyManager.Instance.FindPartyMemberById(response.data.targetCharacter);
             AllyAction action = new AllyAction(actingCharacter, target, AllyAction.ActionTypes.PROTECT);
@@ -62,6 +69,13 @@ public class ActionManager : MonoBehaviour
 
         if (response.msg == "RequestAssistance")
         {
+            if (DemoManager.Instance.hasRequestAidOnce == false)
+            {
+                UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    DemoManager.Instance.CreateSignpostMessage(DemoManager.help7);
+                });
+                DemoManager.Instance.hasRequestAidOnce = true;
+            }
             BasePlayer actingCharacter = PartyManager.Instance.FindPartyMemberById(response.data.actingCharacter);
             if (DemoManager.Instance.hasAssistedOnce == false) 
             {

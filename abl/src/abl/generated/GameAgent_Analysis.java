@@ -35,8 +35,8 @@ public class GameAgent_Analysis {
          case 3: {
             // manageAllyAgent_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("manageCombat(int)"); // stepID 9
-            _$analysisStepIDs.add("lookForQuip(int)"); // stepID 10
+            _$analysisStepIDs.add("lookForQuip(int)"); // stepID 9
+            _$analysisStepIDs.add("manageCombat(int)"); // stepID 10
             return _$analysisStepIDs;
          }
          case 5: {

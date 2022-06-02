@@ -246,7 +246,8 @@
                     [
                         {
                             "nodeResponseText": "Fine. The place reeks anyway.",
-                            "nextNode": -1
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
                         }
                     ]
                 },
@@ -257,7 +258,8 @@
                     [
                         {
                             "nodeResponseText": "Now that sounds like a good time.",
-                            "nextNode": -1
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
                         }
                     ]
                 }
@@ -302,7 +304,8 @@
                     [
                         {
                             "nodeResponseText": "Well, what are we waiting for?",
-                            "nextNode": -1
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
                         }
                     ]
                 },
@@ -313,7 +316,8 @@
                     [
                         {
                             "nodeResponseText": "Yeah, I can get behind that. Lead the way, Quinton!",
-                            "nextNode": -1
+                            "nextNode": -1,
+                            "then": "FinalHelpTrigger"
                         }
                     ]
                 }
