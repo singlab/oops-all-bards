@@ -33639,6 +33639,7 @@ MonoBehaviour:
   signpostPrefab: {fileID: 6290234796240365683, guid: d28645affb2c32a4e81e56e9aa7c8d34,
     type: 3}
   tavernVisits: 1
+  hasAssistedOnce: 0
 --- !u!4 &1879723877
 Transform:
   m_ObjectHideFlags: 0
