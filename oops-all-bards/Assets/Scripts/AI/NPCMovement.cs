@@ -23,7 +23,7 @@ public class NPCMovement : MonoBehaviour
         {
             if (agent.remainingDistance < 0.5)
             {
-                agent.Stop();
+                agent.isStopped = true;
                 animator.SetBool("isMoving", false);
                 hasMovingTarget = false;
             }
