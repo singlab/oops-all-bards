@@ -7,5 +7,13 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: InjuredNPC
-  m_Controller: {fileID: 0}
-  m_Clips: []
+  m_Controller: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 18c942f090838654abdd427ae696bbc8,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 24273f1dd6b818d4babcd0e9a37d17a8,
+      type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: d9194628be320e14893b27b476a74f3e,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: ad128780a4a4c5440b081eea2d26fc0c,
+      type: 3}

@@ -15,6 +15,9 @@ public class DemoManager : MonoBehaviour
     public GameObject signpostPrefab;
     public int tavernVisits = 1;
     public bool hasAssistedOnce = false;
+    public bool hasBeenProtectedOnce = false;
+    public bool hasRequestAidOnce = false;
+    public bool completedDemo = false;
 
     // Some constant strings for demo use/gameplay guidance only
     public const string help1 = "Welcome to the Oops! All Bards demo. You can control your character using WASD, and shift the camera using Q/E.";
@@ -22,6 +25,10 @@ public class DemoManager : MonoBehaviour
     public const string help3 = "Quinton has the Sardonic trait. Something you said resonated with him, and this has increased his affinity towards you.";
     public const string help4 = "Affinity is a measure of relationship recorded by CiF. Other data recorded by CiF include statuses and traits.";
     public const string help5 = "Quinton has joined your Band! You can check the members of your Band, their statuses, traits, and affinities by pressing B.";
+    public const string help6 = "During combat, your allies like Quinton will often act according to their current CiF status. Quinton has just decided to PROTECT you from the next enemy attack headed your way!";
+    public const string help7 = "Allies like Quinton will also react to their immediate context. Quinton has just called out for help! Your response, or lack of one, will impact his CiF status and, possibly, long-term behaviors.";
+    public const string help8 = "Uh-oh. Looks like Quinton isn't too happy with how things went down. Maybe you can still salvage things?";
+    public const string help9 = "This concludes the demo of Oops! All Bards. You can look forward to expansions of this work in terms of AI, gameplay systems, and game content. You can press ESC to quit to desktop. Until next time, brave bard!";
 
 
     // Singleton pattern
@@ -52,7 +59,17 @@ public class DemoManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (completedDemo)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+                #else
+                Application.Quit();
+                #endif
+            }
+        }
     }
 
     public List<BaseEnemy> GenerateEnemies()
@@ -123,7 +140,9 @@ public class DemoManager : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
+        // SceneManager.LoadScene(sceneName);
+        BlackFade fader = GameObject.Find("BlackFade").GetComponent<BlackFade>();
+        fader.FadeToLevel(sceneName);
     }
 
     public void TogglePlayerControls()
@@ -162,8 +181,10 @@ public class DemoManager : MonoBehaviour
 
     public void CreateSignpostMessage(string text)
     {
+        if (signpostContainer == null) { signpostContainer = GameObject.Find("SignpostContainer"); }
         GameObject toInstantiate = Instantiate(signpostPrefab, signpostContainer.transform.position, Quaternion.identity);
         toInstantiate.transform.SetParent(signpostContainer.transform, true);
+        toInstantiate.transform.position = toInstantiate.transform.parent.position;
         toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
         toInstantiate.GetComponentInChildren<Button>().onClick.AddListener(delegate { DestroySignpostMessage(toInstantiate); });
     }

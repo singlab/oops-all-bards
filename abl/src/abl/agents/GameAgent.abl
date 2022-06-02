@@ -40,6 +40,7 @@ behaving_entity GameAgent {
 	    mental_act {
 	    	System.out.println("Updating ally wme in dictionary.");
             dict.addCharacter(newAllyWME.getID(), newAllyWME);
+            System.out.println(dict.getCharacter(newAllyWME.getID()));
         }
     }
 
@@ -53,9 +54,9 @@ behaving_entity GameAgent {
     		id = allyAgent.getID();
     	}
     	
+    	with (persistent) subgoal lookForQuip(id);
         with (persistent) subgoal manageCombat(id);
-        // with (persistent) subgoal manageNoncombat(allyAgent);
-        with (persistent) subgoal lookForQuip(id); 
+        // with (persistent) subgoal manageNoncombat(allyAgent); 
     }
 
     sequential behavior manageCombat(int id) {

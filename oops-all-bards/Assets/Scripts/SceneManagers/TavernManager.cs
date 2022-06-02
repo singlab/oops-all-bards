@@ -73,7 +73,8 @@ public class TavernManager : MonoBehaviour
         Animator a = quintonModel.gameObject.GetComponent<Animator>();
         bool didNotAssist = PartyManager.Instance.FindPartyMemberById(1).CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
         if (didNotAssist) 
-        { 
+        {
+            DemoManager.Instance.CreateSignpostMessage(DemoManager.help8); 
             a.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"Controllers/InjuredNPC"); 
         } else
         {

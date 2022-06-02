@@ -146,6 +146,12 @@ public class DialogueManager : MonoBehaviour
         SpawnTextBubble(model, assistanceQuip.Text);
     }
 
+    public void FinalHelpTrigger()
+    {
+        DemoManager.Instance.CreateSignpostMessage(DemoManager.help9);
+        DemoManager.Instance.completedDemo = true;
+    }
+
     public void ChooseAppropriateQuip(int actingCharacter, bool inCombat)
     {
         Quip chosenQuip;

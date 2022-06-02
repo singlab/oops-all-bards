@@ -12,6 +12,7 @@ public class CharacterCreationManager : MonoBehaviour
     public ModelViewer modelViewer;
     public ClassViewer classViewer;
     public TMP_InputField nameInputField;
+    public BlackFade fader;
     private int currentStep = 0;
     private BasePlayer playerData = new BasePlayer();
 
@@ -58,7 +59,8 @@ public class CharacterCreationManager : MonoBehaviour
         FinalizePlayerData(playerData.PlayerClass);
         DataManager.Instance.PlayerData = playerData;
         DataManager.Instance.SavePlayerData();
-        SceneManager.LoadScene("TavernDemo");
+        // SceneManager.LoadScene("TavernDemo");
+        fader.FadeToLevel("TavernDemo");
     }
 
     void SetPlayerModel(GameObject model)
