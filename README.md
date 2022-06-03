@@ -33,10 +33,14 @@ depending on how you wish to use it:
 
 ### Game Only ###
 
+Currently, this build only supports Windows users. If you are macOS user, or you are a Windows user but would like to learn more about this demo, please see the guided tour at this link: DON'T FORGET THIS LINK.
+
 If you only wish to play the demo, please follow these steps:
-1. Download the ```abl/build/oab.jar``` file, and download the ```oops-all-bards/Build/``` directory.
-2. Run ```oab.jar```. This will open an ABL debugger; you can click the "Continue" button at the bottom of this window.
+
+1. Download the ```abl/build/``` directory, and download the ```oops-all-bards/Build/``` directory.
+2. Run ```run_oab.bat``` from within the ```abl/build/``` directory. This will execute a batch job that will run the Java server in a way that will allow visibility of the logs created by the ABL agent. This will ultimately open both a command line prompt and an ABL debugger; you can click the "Continue" button at the bottom of the ABL debugger and forget about it.
 3. Run the game executable ```oops-all-bards.exe``` from within the downloaded ```Build``` folder. You should now be able to play the demo in the intended way.
+4. When you have finished the demo, you may quit the game application using ESC. You may also kill the Java program in your command line by pressing CTRL+C.
 
 ### Build Project from Source ###
 
