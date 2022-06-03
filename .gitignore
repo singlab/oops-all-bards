@@ -63,7 +63,4 @@ oops-all-bards/.vscode
 
 # abl folder
 abl/bin/
-abl/.settings
-abl/.classpath
-abl/.project
 
