@@ -11,7 +11,7 @@
 ## About ##
 
 <p align="center">
-    <img src="" alt="Main Menu render"
+    <img src="img/TitleCard.png" alt="Main Menu render"
     height="75%" width="75%">
 </p>
 
