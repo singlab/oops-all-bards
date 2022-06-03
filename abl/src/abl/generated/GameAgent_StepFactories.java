@@ -67,7 +67,7 @@ public class GameAgent_StepFactories {
          }
          case 9: {
             // manageAllyAgent_1Step2
-            return new GoalStepDebug(9, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, "lookForQuip(int)", null, (short)0);
+            return new GoalStepDebug(9, __$stepFactory, __$behaviorParent, true, false, false, false, false, false, (short)1, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, "lookForQuip(int)", null, (short)0);
          }
          case 10: {
             // manageAllyAgent_1Step3
