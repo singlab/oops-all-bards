@@ -34,9 +34,9 @@ depending on how you wish to use it:
 ### Game Only ###
 
 If you only wish to play the demo, please follow these steps:
-1. Download the ```abl/build/oab.jar``` file, and download the appropriate game executable from the ```oops-all-bards/Build/``` directory.
+1. Download the ```abl/build/oab.jar``` file, and download the ```oops-all-bards/Build/``` directory.
 2. Run ```oab.jar```. This will open an ABL debugger; you can click the "Continue" button at the bottom of this window.
-3. Run the game executable. You should now be able to play the demo in the intended way.
+3. Run the game executable ```oops-all-bards.exe``` from within the downloaded ```Build``` folder. You should now be able to play the demo in the intended way.
 
 ### Build Project from Source ###
 
