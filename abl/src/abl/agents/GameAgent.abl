@@ -40,7 +40,6 @@ behaving_entity GameAgent {
 	    mental_act {
 	    	System.out.println("Updating ally wme in dictionary.");
             dict.addCharacter(newAllyWME.getID(), newAllyWME);
-            System.out.println(dict.getCharacter(newAllyWME.getID()));
         }
     }
 
