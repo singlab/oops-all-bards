@@ -36,7 +36,6 @@ public class GameAgent_MentalStepExecute {
             // lookForAllyAgent_1Step5
             System.out.println("Updating ally wme in dictionary.");
             ((GameAgent)__$thisEntity).dict.addCharacter(((AllyWME)__$behaviorFrame[0]).getID() , ((AllyWME)__$behaviorFrame[0]));
-            System.out.println(((GameAgent)__$thisEntity).dict.getCharacter(((AllyWME)__$behaviorFrame[0]).getID()));
             break;
          }
          case 8: {
