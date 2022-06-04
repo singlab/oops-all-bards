@@ -33,14 +33,11 @@ depending on how you wish to use it:
 
 ### Game Only ###
 
-Currently, this build only supports Windows users. If you are macOS user, or you are a Windows user but would like to learn more about this demo, please see the guided tour at this link: DON'T FORGET THIS LINK.
-
 If you only wish to play the demo, please follow these steps:
 
-1. Download the ```abl/build/``` directory, and download the ```oops-all-bards/Build/``` directory.
-2. Run ```run_oab.bat``` from within the ```abl/build/``` directory. This will execute a batch job that will run the Java server in a way that will allow visibility of the logs created by the ABL agent. This will ultimately open both a command line prompt and an ABL debugger; you can click the "Continue" button at the bottom of the ABL debugger and forget about it.
-3. Run the game executable ```oops-all-bards.exe``` from within the downloaded ```Build``` folder. You should now be able to play the demo in the intended way.
-4. When you have finished the demo, you may quit the game application using ESC. You may also kill the Java program in your command line by pressing CTRL+C.
+1. Download the appropriate .zip file from the [Releases](https://github.com/singlab/oops-all-bards/releases/tag/aiide-2022-demo) hub according to your OS. There are executables for Windows and macOS. Each .zip file contains two directories: ```server``` and ```game```.
+2. For Windows users: Run ```run_oab.bat``` from within the ```server``` directory. For macOS users: You may execute the ```run_oab.sh``` shell script from the command line. This will ultimately open both a command line prompt and an ABL debugger; you can click the "Continue" button at the bottom of the ABL debugger and forget about it.
+3. Run the appropriate game executable from within the ```game``` directory. For Windows users, this will be ```oops-all-bards.exe```. For macOS users, this will be ```OAB.app```. You should now be able to play the demo in the intended way.
 
 ### Build Project from Source ###
 
