@@ -26,6 +26,10 @@ We intend our system in its current state to be used to improve the believabilit
 
 The scenarios we chose for this particular demo are slices of two central aspects of the game. The player is first introduced to an exploratory scenario, wherein they can engage in dialogue with NPCs like Quinton, learn about the kinds of characters they are, improve relationships with them, and generally learn more about the world of the game. After some conversation, the player will be introduced to a combat scenario alongside Quinton, during which they can experience how Quinton will react and respond to various things that the player may, or may not, do. Of particular note is what may happen when Quinton, a character with the Vengeful trait, asks for help in combat and the player does not do anything to aid him.
 
+## Guided Video Tour of the Oops! All Bards Demo ##
+
+For anyone interested in seeing a guided tour of the demo as played by one of the collaborators on this project, please navigate [here](https://drive.google.com/file/d/1FPHsX0k_L6ojVAS33owDis2Sa2_megJC/view?usp=sharing).
+
 ## Installation ##
 
 You can get a copy of this project up and running in the following ways,
