@@ -21,6 +21,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject nodeResponsePrefab;
     public GameObject textBubblePrefab;
 
+
     // Singleton pattern
     void Awake()
     {
@@ -105,10 +106,14 @@ public class DialogueManager : MonoBehaviour
             CloseDialogue();
             DemoManager.Instance.RecruitQuinton();
             GameObject.Find("Quinton").GetComponent<NPCMovement>().SendQuintonToBackroom();
-        } else
+        }
+        else 
         {
-            CloseDialogue();
-            DemoManager.Instance.LoadScene("GigDemo");
+            BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
+                        
+                CloseDialogue();
+                DemoManager.Instance.LoadScene("GigDemo");
+            
         }
     }
 

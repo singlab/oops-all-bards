@@ -13,6 +13,8 @@ public class DemoManager : MonoBehaviour
     public JSONReader jsonReader;
     public GameObject signpostContainer;
     public GameObject signpostPrefab;
+    public GameObject firstFightTrigger;
+
     public int tavernVisits = 1;
     public bool hasAssistedOnce = false;
     public bool hasBeenProtectedOnce = false;
@@ -54,6 +56,8 @@ public class DemoManager : MonoBehaviour
         // Add player to the party.
         PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
         TCPTestClient.Instance.RefreshWMEs();
+        // Prevent the first fight being able to trigger without quinton in the party
+        firstFightTrigger.SetActive(false); 
     }
 
     // Update is called once per frame
@@ -166,6 +170,8 @@ public class DemoManager : MonoBehaviour
         PartyManager.Instance.AddCharacterToParty(quinton);
         TCPTestClient.Instance.RefreshWMEs();
         CreateSignpostMessage(help5);
+        //once quinton is in the party, let the next scene be able to be triggered
+        firstFightTrigger.SetActive(true); 
     }
 
     public void DestroySignpostMessage(GameObject toDestroy)
