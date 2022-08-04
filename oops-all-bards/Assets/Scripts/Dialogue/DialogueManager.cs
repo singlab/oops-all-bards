@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using System.Linq;
 
@@ -28,7 +29,8 @@ public class DialogueManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-        } else if (_instance != null)
+        }
+        else if (_instance != null)
         {
             Destroy(gameObject);
         }
@@ -74,11 +76,12 @@ public class DialogueManager : MonoBehaviour
             GameObject toInstantiate = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform.position, Quaternion.identity);
             toInstantiate.transform.SetParent(nodeContentOrganizer.transform);
             toInstantiate.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
-            toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); } );
+            toInstantiate.AddComponent<DialogueHightlight>(); //Used in order to change text color when highlighting over response
+            toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); });
             if (response.Then != null)
             {
                 Debug.Log($"{response.Then}");
-                toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { Invoke(response.Then, 0); } );
+                toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { Invoke(response.Then, 0); });
             }
         }
     }
@@ -98,22 +101,24 @@ public class DialogueManager : MonoBehaviour
             nodeIndex = index;
             DialogueNode currentNode = jsonReader.dialogues.GetDialogue(dialogueIndex).DialogueNodes[nodeIndex];
             RenderCurrentNode(currentNode);
-        } else if (index == -1)
+        }
+        else if (index == -1)
         {
             CloseDialogue();
-        } else if (index == -2)
+        }
+        else if (index == -2)
         {
             CloseDialogue();
             DemoManager.Instance.RecruitQuinton();
             GameObject.Find("Quinton").GetComponent<NPCMovement>().SendQuintonToBackroom();
         }
-        else 
+        else
         {
             BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
-                        
-                CloseDialogue();
-                DemoManager.Instance.LoadScene("GigDemo");
-            
+
+            CloseDialogue();
+            DemoManager.Instance.LoadScene("GigDemo");
+
         }
     }
 
@@ -188,7 +193,8 @@ public class DialogueManager : MonoBehaviour
                 }
             }
             model = CombatManager.Instance.GetModelByID(actingCharacter);
-        } else if (!inCombat && (inCombat == PartyManager.Instance.inCombat))
+        }
+        else if (!inCombat && (inCombat == PartyManager.Instance.inCombat))
         {
             Debug.Log("We're not in combat.");
             foreach (Status s in ac.CiFData.Statuses)
@@ -208,13 +214,17 @@ public class DialogueManager : MonoBehaviour
                 }
             }
             model = PartyManager.Instance.GetModelByID(actingCharacter);
-        } else
+        }
+        else
         {
             return;
         }
-        
+
         Debug.Log(relevantQuips.Count);
         chosenQuip = relevantQuips[Random.Range(0, relevantQuips.Count - 1)];
         SpawnTextBubble(model, chosenQuip.Text);
     }
+
+
+    
 }

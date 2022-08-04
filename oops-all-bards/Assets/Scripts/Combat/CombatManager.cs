@@ -25,6 +25,8 @@ public class CombatManager : MonoBehaviour
     public GameObject actionButton;
     // A reference to the target button prefab.
     public GameObject targetButton;
+
+    public GameObject back;
     // A reference to the player party.
     public BasePlayer[] party;
     // A reference to the enemies.
@@ -246,23 +248,23 @@ public class CombatManager : MonoBehaviour
         }
 
         //TEST adding in a back button
-        GameObject backButton = Instantiate(targetButton, combatMenu.transform);
+        GameObject backButton = Instantiate(back, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
-        backButton.GetComponent<Button>().onClick.AddListener(ResetTEST);
-            
     }
-    //TEST
+
+    /*//TEST BACK BUTTON CODE
     public void ResetTEST()
     {
         //clear action queue somehow
         combatQueue = new CombatQueue();
         combatQueue.Clear();
 
+        ///I don't believe this is the correct command
         InitCombatQueue(party, enemies);
 
         
     }
-
+    */
 
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
     public void AddPlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)
