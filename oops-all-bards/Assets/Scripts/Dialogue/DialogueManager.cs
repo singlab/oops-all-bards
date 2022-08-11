@@ -76,6 +76,12 @@ public class DialogueManager : MonoBehaviour
             GameObject toInstantiate = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform.position, Quaternion.identity);
             toInstantiate.transform.SetParent(nodeContentOrganizer.transform);
             toInstantiate.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
+
+            //testing for fixing UI scaling issue
+            RectTransform testing = (RectTransform)nodeContentOrganizer.transform;
+            toInstantiate.GetComponent<RectTransform>().sizeDelta = new Vector2((testing.rect.width * 3), testing.rect.height);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(toInstantiate.GetComponent<RectTransform>());
+
             toInstantiate.AddComponent<DialogueHightlight>(); //Used in order to change text color when highlighting over response
             toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); });
             if (response.Then != null)
