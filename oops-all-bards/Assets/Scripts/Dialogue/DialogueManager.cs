@@ -45,10 +45,15 @@ public class DialogueManager : MonoBehaviour
     public void ToggleDialogueUI()
     {
         dialogueUI.SetActive(!dialogueUI.activeSelf);
+
     }
 
     public void StartDialogue(int dialogueID)
     {
+        //test to unlock cursor when dialogue is active
+        Cursor.lockState = CursorLockMode.Confined;
+        Debug.Log(Cursor.lockState);
+
         nodeIndex = 0;
         Debug.Log("Starting dialogue.");
         DemoManager.Instance.TogglePlayerControls();
@@ -130,10 +135,15 @@ public class DialogueManager : MonoBehaviour
 
     private void CloseDialogue()
     {
+        //test to unlock cursor when dialogue is active
+        Cursor.lockState = CursorLockMode.Locked;
+        Debug.Log(Cursor.lockState);
+
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueIndex);
         dialogue.Exhausted = true;
         ToggleDialogueUI();
         DemoManager.Instance.TogglePlayerControls();
+
     }
 
     // Spawn a text bubble prefab above the given character's gameobject with the given text.

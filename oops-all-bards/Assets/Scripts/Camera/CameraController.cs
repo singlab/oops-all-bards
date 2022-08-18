@@ -9,12 +9,37 @@ public class CameraController : MonoBehaviour
     private GameObject player;
     public float speed = 100;
 
+    public float sensitivity = 100f; //test
+    float xRotation = 0f;// test
+    public Transform playerTransform;
+
+    //test start
+    private void Start()
+    {
+        playerTransform = player.transform;
+        StartCoroutine(cursorLockPause()); 
+
+    }
+
     // Update is called after Update each frame
     void Update () 
     {
         // Align to camera target position
         transform.position = player.transform.Find("CameraTarget").position;
-        
+
+        //test
+        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+
+        xRotation -= mouseY;
+
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        transform.localEulerAngles = Vector3.right * xRotation;
+
+        playerTransform.Rotate(Vector3.up * mouseX);
+
+        /*
         // Rotate left
         if (Input.GetKey(KeyCode.Q))
         {
@@ -28,7 +53,17 @@ public class CameraController : MonoBehaviour
             transform.Rotate(right * Time.deltaTime * speed, Space.World);
             player.transform.Rotate(right * Time.deltaTime * speed, Space.World);
         }
+        */
     }
+
+    //Used to lock cursor at beginning of the level
+    IEnumerator cursorLockPause()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Debug.Log(Cursor.lockState);
+        yield return new WaitForSeconds(0.1f);
+    }
+
 
     public GameObject Player
     {

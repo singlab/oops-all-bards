@@ -55,6 +55,8 @@ public class CombatManager : MonoBehaviour
         InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
         RenderUI();
         DemoManager.Instance.CheckQueue();
+        Cursor.lockState = CursorLockMode.Confined;
+        Debug.Log(Cursor.lockState);
         Debug.Log("I've finished starting up.");
     }
 

@@ -23,6 +23,7 @@ public class TavernManager : MonoBehaviour
     // Update is called once per frame
     void Start()
     {
+
         playerModel = GameObject.FindGameObjectWithTag("Player");
         quintonModel = GameObject.Find("Quinton");
         if (DemoManager.Instance.tavernVisits == 2)
@@ -30,6 +31,7 @@ public class TavernManager : MonoBehaviour
             StartCoroutine(DemoResolution());
         }
     }
+    
 
     void SpawnPlayer()
     {
