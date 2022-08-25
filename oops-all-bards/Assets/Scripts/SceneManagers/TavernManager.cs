@@ -28,6 +28,8 @@ public class TavernManager : MonoBehaviour
         quintonModel = GameObject.Find("Quinton");
         if (DemoManager.Instance.tavernVisits == 2)
         {
+            //Prevents bad bug when going in the backrooms after the first fight
+            Destroy(GameObject.Find("QuintonQuestTrigger")); 
             StartCoroutine(DemoResolution());
         }
     }
@@ -35,6 +37,7 @@ public class TavernManager : MonoBehaviour
 
     void SpawnPlayer()
     {
+
         // Instantiate chosen player model at spawn point.
         BasePlayer playerData = DataManager.Instance.PlayerData;
         GameObject toInstantiate = Instantiate(playerData.Model, playerSpawnPoint.transform.position, Quaternion.identity);
@@ -119,4 +122,6 @@ public class TavernManager : MonoBehaviour
     {
         PartyManager.Instance.partyUI = GameObject.Find("PartyUI");
     }
+
+     
 }

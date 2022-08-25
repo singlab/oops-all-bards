@@ -126,7 +126,7 @@ public class DialogueManager : MonoBehaviour
         else
         {
             BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
-
+            
             CloseDialogue();
             DemoManager.Instance.LoadScene("GigDemo");
 

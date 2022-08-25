@@ -9173,7 +9173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484608, guid: 6bbe31aff045e654dbeb72b499f6529c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.7
+      value: -3.58
       objectReference: {fileID: 0}
     - target: {fileID: 484608, guid: 6bbe31aff045e654dbeb72b499f6529c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -26950,7 +26950,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484608, guid: 6bbe31aff045e654dbeb72b499f6529c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.9
+      value: -0.15
       objectReference: {fileID: 0}
     - target: {fileID: 484608, guid: 6bbe31aff045e654dbeb72b499f6529c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -34345,6 +34345,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 100
+  sensitivity: 100
+  playerTransform: {fileID: 0}
 --- !u!1001 &1912338284
 PrefabInstance:
   m_ObjectHideFlags: 0

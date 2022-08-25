@@ -50,11 +50,11 @@ public class DemoManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         // Subscribe to events that the demo manager should be aware of.
         SubscribeToEvents();
         CreateSignpostMessage(help2);
         CreateSignpostMessage(help1);
-        //Invoke("TogglePlayerControls", 0.5f); //Sarah Test: Alternate way of making that pause happen when when signpost is showing
         // Add player to the party.
         PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
         TCPTestClient.Instance.RefreshWMEs();
@@ -149,6 +149,7 @@ public class DemoManager : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         // SceneManager.LoadScene(sceneName);
+        Destroy(firstFightTrigger); //prevents after fight bug
         BlackFade fader = GameObject.Find("BlackFade").GetComponent<BlackFade>();
         fader.FadeToLevel(sceneName);
     }
@@ -188,7 +189,7 @@ public class DemoManager : MonoBehaviour
                 
             }
 
-            //test code: locks cursor when help messages are not shown
+            //Locks cursor when help messages are not shown
             //Code also prevent premature locking if a help message is displayed during dialogue
             if(GameObject.Find("SignpostContainer").transform.childCount == 1 && !DialogueManager.Instance.dialogueUI.activeInHierarchy)
             {
@@ -204,24 +205,30 @@ public class DemoManager : MonoBehaviour
 
     public void CreateSignpostMessage(string text)
     {
+        //StartCoroutine(togglePlayerPause());
+
         if (signpostContainer == null)
         { signpostContainer = GameObject.Find("SignpostContainer"); }
         GameObject toInstantiate = Instantiate(signpostPrefab, signpostContainer.transform.position, Quaternion.identity);
         toInstantiate.transform.SetParent(signpostContainer.transform, true);
         toInstantiate.transform.position = toInstantiate.transform.parent.position;
         toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
-
-        //Code enables cursor to be used to close the signpost message
-        Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log(Cursor.lockState);
-        //Note: Another method could be placing toggle controls right after calling this function
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = false;
-        //camera one could use some sort of delay because otherwise is too high up at the start
-        GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<CameraController>().enabled = false;
-
+        StartCoroutine(togglePlayerPause());
         toInstantiate.GetComponentInChildren<Button>().onClick.AddListener(delegate { DestroySignpostMessage(toInstantiate); });
     }
 
+    IEnumerator togglePlayerPause()
+    {
+       //Delay is used because otherwise camera and player model spawns too high up when scene is loaded in
+        yield return new WaitForSeconds(0.02f); //sarah note, must be bigger
+        //Code enables cursor to be used to close the signpost message
+        Cursor.lockState = CursorLockMode.Confined;
+        Debug.Log(Cursor.lockState);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = false;
+        GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<CameraController>().enabled = false;
+    }
+
+    
     public void IncrementTavernVisits()
     {
         tavernVisits++;
