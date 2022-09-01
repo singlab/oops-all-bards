@@ -10,6 +10,7 @@ public class DemoManager : MonoBehaviour
 {
     private static DemoManager _instance;
     public static DemoManager Instance => DemoManager._instance;
+
     public JSONReader jsonReader;
     public GameObject signpostContainer;
     public GameObject signpostPrefab;
@@ -217,10 +218,10 @@ public class DemoManager : MonoBehaviour
         toInstantiate.GetComponentInChildren<Button>().onClick.AddListener(delegate { DestroySignpostMessage(toInstantiate); });
     }
 
-    IEnumerator togglePlayerPause()
+    public static IEnumerator togglePlayerPause()
     {
        //Delay is used because otherwise camera and player model spawns too high up when scene is loaded in
-        yield return new WaitForSeconds(0.02f); //sarah note, must be bigger
+        yield return new WaitForSeconds(0.01f); 
         //Code enables cursor to be used to close the signpost message
         Cursor.lockState = CursorLockMode.Confined;
         Debug.Log(Cursor.lockState);
