@@ -52,8 +52,7 @@ public class DialogueManager : MonoBehaviour
     {
         //test to unlock cursor when dialogue is active
         Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log(Cursor.lockState);
-
+        Debug.Log(Cursor.lockState + " via start dialogue");
         nodeIndex = 0;
         Debug.Log("Starting dialogue.");
         DemoManager.Instance.TogglePlayerControls();
@@ -137,7 +136,7 @@ public class DialogueManager : MonoBehaviour
     {
         //test to unlock cursor when dialogue is active
         Cursor.lockState = CursorLockMode.Locked;
-        Debug.Log(Cursor.lockState);
+        Debug.Log(Cursor.lockState + "via close dialogue");
 
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueIndex);
         dialogue.Exhausted = true;

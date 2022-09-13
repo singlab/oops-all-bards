@@ -16,8 +16,14 @@ public class CameraController : MonoBehaviour
     //test start
     private void Start()
     {
+        //test
+        transform.position = player.transform.Find("CameraTarget").position;
+
         playerTransform = player.transform;
-        StartCoroutine(cursorLockPause());
+        if (!DialogueManager.Instance.dialogueUI.activeSelf)
+        {
+            StartCoroutine(cursorLockPause());
+        }
 
     }
 
@@ -59,10 +65,10 @@ public class CameraController : MonoBehaviour
     //Used to lock cursor at beginning of the level
     IEnumerator cursorLockPause()
     {
-        yield return new WaitForSeconds(0.002f);
+        yield return new WaitForSeconds(0.001f);
 
         Cursor.lockState = CursorLockMode.Locked;
-        Debug.Log(Cursor.lockState);
+        Debug.Log(Cursor.lockState + "via camera script");
     }
 
 

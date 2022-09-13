@@ -195,7 +195,7 @@ public class DemoManager : MonoBehaviour
             if(GameObject.Find("SignpostContainer").transform.childCount == 1 && !DialogueManager.Instance.dialogueUI.activeInHierarchy)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                Debug.Log(Cursor.lockState);
+                Debug.Log(Cursor.lockState + "via demo script");
                 TogglePlayerControls();
 
             }
@@ -221,10 +221,10 @@ public class DemoManager : MonoBehaviour
     public static IEnumerator togglePlayerPause()
     {
        //Delay is used because otherwise camera and player model spawns too high up when scene is loaded in
-        yield return new WaitForSeconds(0.01f); 
+        yield return new WaitForSeconds(0.003f); 
         //Code enables cursor to be used to close the signpost message
         Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log(Cursor.lockState);
+        Debug.Log(Cursor.lockState + "toggle pause in demo");
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = false;
         GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<CameraController>().enabled = false;
     }

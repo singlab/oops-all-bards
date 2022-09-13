@@ -26,33 +26,43 @@ public class SocialCircleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C)) //test key
+        if (Input.GetKeyDown(KeyCode.C) && !DialogueManager.Instance.dialogueUI.activeInHierarchy) //test key
         {
-            RenderSocialCircleUI();
-            ToggleSocialCircleUI();
+            //if menu is already enabled disable it
+            if (socialCircleUI.activeSelf || characterSocialCircleUI.activeSelf)
+            {
+                ToggleSocialCircleUIOff();
+            }
+            //otherwise enable the menu
+            else
+            {
+                ToggleSocialCircleUIOn();
+                RenderSocialCircleUI();
+            }
         }
     }
 
-    public void ToggleSocialCircleUI()
+    public void ToggleSocialCircleUIOn()
     {
-       socialCircleUI.SetActive(!socialCircleUI.activeSelf);
-       //currently can only press c on the first screen otherwise they will alternate toggle and never close the menu
-       //characterSocialCircleUI.SetActive(!characterSocialCircleUI.activeSelf);
+       socialCircleUI.SetActive(true);
+       characterSocialCircleUI.SetActive(true);
 
         //lock movement and camera while in menu
-       if(socialCircleUI.activeSelf || characterSocialCircleUI.activeSelf)
-        {
-            Cursor.lockState = CursorLockMode.Confined;
-            DemoManager.Instance.StartCoroutine(DemoManager.togglePlayerPause());
-        }
-       else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            DemoManager.Instance.TogglePlayerControls();
-        }
+        Cursor.lockState = CursorLockMode.Confined;
+        DemoManager.Instance.StartCoroutine(DemoManager.togglePlayerPause());
+        
     }
 
-    public void RenderSocialCircleUI()
+    public void ToggleSocialCircleUIOff()
+    {
+        socialCircleUI.SetActive(false);
+        characterSocialCircleUI.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        DemoManager.Instance.TogglePlayerControls();
+    }
+
+        public void RenderSocialCircleUI()
     {
         //stuff goes here eventually
     }

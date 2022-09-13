@@ -36,12 +36,12 @@ public class ToolTips : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if(EventSystem.current.IsPointerOverGameObject())
         {
             //Checks to see if tooltips is being used in Combat
-            if (gameObject.transform.parent.name == "Ability1" || gameObject.transform.parent.name == "Ability2" || gameObject.transform.parent.name == "Ability3")
+            if (gameObject.transform.parent.name == "Ability1" || gameObject.transform.parent.name == "Ability2" || gameObject.transform.parent.name == "Ability3" && gameObject.transform.parent.name != "RecipiesContainer")
             {
                 characterCreatorToolTipsUpdator();
                
             }
-            else
+            else if (gameObject.transform.parent.name != "Ability1" && gameObject.transform.parent.name != "Ability2" && gameObject.transform.parent.name != "Ability3" && gameObject.transform.parent.name != "RecipiesContainer")
             {
                 combatUIToolTipsUpdator();
             }
@@ -70,12 +70,13 @@ public class ToolTips : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         //Assign/update to appropriate class tooltip text
         //Checks to see if tooltips is being used in Combat
-        if (gameObject.transform.parent.name == "Ability1" || gameObject.transform.parent.name == "Ability2" || gameObject.transform.parent.name == "Ability3")
+        //clean this up too
+        if (gameObject.transform.parent.name == "Ability1" || gameObject.transform.parent.name == "Ability2" || gameObject.transform.parent.name == "Ability3" && gameObject.transform.parent.name != "RecipiesContainer")
         {
             //For tooltips being used in character creator
             descriptionDisplay.text = gameObject.GetComponent<TMP_Text>().text;
         }
-        else
+        else if (gameObject.transform.parent.name != "Ability1" && gameObject.transform.parent.name != "Ability2" && gameObject.transform.parent.name != "Ability3" && gameObject.transform.parent.name != "RecipiesContainer")
         {
             //For damage abilities
             if (gameObject.GetComponent<ActionButton>().ability.CombatType == BaseAbility.CombatAbilityTypes.ATTACK)
@@ -93,7 +94,6 @@ public class ToolTips : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //Make tooltips visible
 
         toolTipDisplay.alpha = 1f;
-        
     }
 
     //Used to un-render tooltips when not moused over buttons
