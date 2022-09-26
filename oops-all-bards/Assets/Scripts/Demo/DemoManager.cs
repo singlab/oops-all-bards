@@ -61,6 +61,8 @@ public class DemoManager : MonoBehaviour
         TCPTestClient.Instance.RefreshWMEs();
         // Prevent the first fight being able to trigger without quinton in the party
         firstFightTrigger.SetActive(false);
+
+       
     }
 
     // Update is called once per frame
@@ -195,13 +197,9 @@ public class DemoManager : MonoBehaviour
             if(GameObject.Find("SignpostContainer").transform.childCount == 1 && !DialogueManager.Instance.dialogueUI.activeInHierarchy)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                Debug.Log(Cursor.lockState + "via demo script");
                 TogglePlayerControls();
-
             }
-
         }
-        
     }
 
     public void CreateSignpostMessage(string text)
@@ -211,7 +209,7 @@ public class DemoManager : MonoBehaviour
         if (signpostContainer == null)
         { signpostContainer = GameObject.Find("SignpostContainer"); }
         GameObject toInstantiate = Instantiate(signpostPrefab, signpostContainer.transform.position, Quaternion.identity);
-        toInstantiate.transform.SetParent(signpostContainer.transform, true);
+        toInstantiate.transform.SetParent(signpostContainer.transform, false); 
         toInstantiate.transform.position = toInstantiate.transform.parent.position;
         toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
         StartCoroutine(togglePlayerPause());
@@ -220,11 +218,10 @@ public class DemoManager : MonoBehaviour
 
     public static IEnumerator togglePlayerPause()
     {
-       //Delay is used because otherwise camera and player model spawns too high up when scene is loaded in
-        yield return new WaitForSeconds(0.003f); 
+        //Delay necessary to prevent cursor from being locked too soon between start of level and 1st help message 
+        yield return new WaitForSeconds(0.003f);
         //Code enables cursor to be used to close the signpost message
         Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log(Cursor.lockState + "toggle pause in demo");
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = false;
         GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<CameraController>().enabled = false;
     }

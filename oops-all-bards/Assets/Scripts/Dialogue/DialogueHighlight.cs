@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine.UI;
 
 
-public class DialogueHightlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class DialogueHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     Color savedColor;
 

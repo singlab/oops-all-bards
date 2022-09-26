@@ -25,8 +25,6 @@ public class CombatManager : MonoBehaviour
     public GameObject actionButton;
     // A reference to the target button prefab.
     public GameObject targetButton;
-
-    public GameObject back;
     // A reference to the player party.
     public BasePlayer[] party;
     // A reference to the enemies.
@@ -250,7 +248,7 @@ public class CombatManager : MonoBehaviour
         }
 
         //TEST adding in a back button
-        GameObject backButton = Instantiate(back, combatMenu.transform);
+        GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
     }
 
