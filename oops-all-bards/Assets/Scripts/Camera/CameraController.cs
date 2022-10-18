@@ -1,43 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private Vector3 left = new Vector3(0, -1, 0);
-    private Vector3 right = new Vector3(0, 1, 0);
-    private GameObject player;
-    public float speed = 100;
+    [SerializeField] private PlayerManager playerManager;
+    [SerializeField] private OAB_KeyBoardControl keyBoardControl;
+    [SerializeField] private OAB_KeyBoard_Mouse_Control keyBoardMouseControl;
+    private GameObject _player;
 
-    // Update is called after Update each frame
-    void Update () 
+    private void Start()
     {
-        // Align to camera target position
-        transform.position = player.transform.Find("CameraTarget").position;
-        
-        // Rotate left
-        if (Input.GetKey(KeyCode.Q))
-        {
-            transform.Rotate(left * Time.deltaTime * speed, Space.World);
-            player.transform.Rotate(left * Time.deltaTime * speed, Space.World);
-        }
-        
-        // Rotate right
-        if (Input.GetKey(KeyCode.E))
-        {
-            transform.Rotate(right * Time.deltaTime * speed, Space.World);
-            player.transform.Rotate(right * Time.deltaTime * speed, Space.World);
-        }
+        playerManager.SubscribeControlTypeChange(ChangeControlType);
     }
 
-    public GameObject Player
+    public void CameraLinkPlayer(GameObject player)
     {
-        get { return player; }
-        set { player = value; }
+        _player = player;
+        keyBoardControl.Player = player;
+        keyBoardMouseControl.Player = player;
     }
 
+    private void ChangeControlType(PlayerManager.ControlType controlType)
+    {
+        switch (controlType)
+        {
+            case PlayerManager.ControlType.KEYBOARD_ONLY:
+                keyBoardControl.enabled = true;
+                keyBoardMouseControl.enabled = false;
+                break;
+            case PlayerManager.ControlType.KEYBOARD_MOUSE:
+                keyBoardControl.enabled = false;
+                keyBoardMouseControl.enabled = true;
+                break;
+        }
+    }
+    
     public void ToggleControls()
     {
-        this.enabled = !this.enabled;
+        keyBoardControl._enable = !keyBoardControl._enable;
+        keyBoardMouseControl._enable = !keyBoardMouseControl._enable;
     }
+    
+    
 }
