@@ -65,7 +65,7 @@ public class TCPTestClient : MonoBehaviour {
 						var incomingData = new byte[length]; 						
 						Array.Copy(bytes, 0, incomingData, 0, length);
 
-						// TODO: ADD MROE DOCS
+						// TODO: ADD MORE DOCS
 						string result = System.Text.Encoding.UTF8.GetString(incomingData);
 						ABLResponse response = JsonUtility.FromJson<ABLResponse>(result);
 						ActionManager.Instance.ParseData(response);

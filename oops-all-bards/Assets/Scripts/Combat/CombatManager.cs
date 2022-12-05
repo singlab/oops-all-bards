@@ -52,6 +52,7 @@ public class CombatManager : MonoBehaviour
         RenderUI();
         DemoManager.Instance.CheckQueue();
         Debug.Log("I've finished starting up.");
+        AudioManager.Instance.PlayCombatMusic();
     }
 
     // Update is called once per frame

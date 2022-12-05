@@ -1245,6 +1245,7 @@ MonoBehaviour:
   tracks:
   - {fileID: 8300000, guid: 277bdbdb052f9414f84fcd7e2e3fc64b, type: 3}
   - {fileID: 8300000, guid: 915cdb53ee74f2d41a03ccb02517d333, type: 3}
+  - {fileID: 8300000, guid: 95a094333f9983c4baff3efa215acd8a, type: 3}
 --- !u!4 &1430606985
 Transform:
   m_ObjectHideFlags: 0

@@ -33,4 +33,10 @@ public class AudioManager : MonoBehaviour
         source.clip = tracks[trackNum];
         source.Play();
     }
+
+    public void PlayCombatMusic()
+    {
+        source.clip = tracks[2];
+        source.Play();
+    }
 }
