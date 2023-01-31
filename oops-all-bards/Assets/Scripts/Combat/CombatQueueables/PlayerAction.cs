@@ -12,7 +12,7 @@ public class PlayerAction : MonoBehaviour, ICombatQueueable
     {
        
             Debug.Log("Executing " + actingCharacter.Name + "'s " + ability.Name + " action on " + target.Name + ".");
-            CombatManager.Instance.ResolvePlayerAction(this);
+            CombatManager.Instance.DoPlayerAction(this); //edited for camera
             actingCharacter.OwnsTurn = false;
             done = true;
         

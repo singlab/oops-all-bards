@@ -21,7 +21,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text speakerName;
     public GameObject nodeResponsePrefab;
     public GameObject textBubblePrefab;
-
+    public GameObject questUI;
 
     // Singleton pattern
     void Awake()
@@ -45,13 +45,20 @@ public class DialogueManager : MonoBehaviour
     public void ToggleDialogueUI()
     {
         dialogueUI.SetActive(!dialogueUI.activeSelf);
+
     }
 
     public void StartDialogue(int dialogueID)
     {
+        //Unlocks cursor when dialogue is active
+        Cursor.lockState = CursorLockMode.Confined;
+        //turn QuestUI off when dialogue is active
+        questUI = GameObject.Find("QuestUI");
+        questUI.SetActive(false);
         nodeIndex = 0;
         Debug.Log("Starting dialogue.");
         DemoManager.Instance.TogglePlayerControls();
+        Debug.Log("toggle pause in dialogue");
         dialogueIndex = dialogueID;
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueID);
         RenderDialogueUI(dialogue);
@@ -74,21 +81,25 @@ public class DialogueManager : MonoBehaviour
         {
             NodeResponse response = node.NodeResponses[i];
             GameObject toInstantiate = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform.position, Quaternion.identity);
-            toInstantiate.transform.SetParent(nodeContentOrganizer.transform);
             toInstantiate.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
+            toInstantiate.transform.SetParent(nodeContentOrganizer.transform, false); //test
 
-            //testing for fixing UI scaling issue
-            RectTransform testing = (RectTransform)nodeContentOrganizer.transform;
-            toInstantiate.GetComponent<RectTransform>().sizeDelta = new Vector2((testing.rect.width * 3), testing.rect.height);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(toInstantiate.GetComponent<RectTransform>());
-
-            toInstantiate.AddComponent<DialogueHightlight>(); //Used in order to change text color when highlighting over response
+            toInstantiate.AddComponent<DialogueHighlight>(); //Used in order to change text color when highlighting over response
             toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); });
             if (response.Then != null)
             {
                 Debug.Log($"{response.Then}");
                 toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { Invoke(response.Then, 0); });
             }
+
+            /*
+            //testing for fixing UI scaling issue
+            RectTransform testing = (RectTransform)nodeContentOrganizer.transform;
+            toInstantiate.GetComponent<RectTransform>().sizeDelta = new Vector2((testing.rect.width * 3), testing.rect.height);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(toInstantiate.GetComponent<RectTransform>());
+            */
+
+
         }
     }
 
@@ -121,19 +132,24 @@ public class DialogueManager : MonoBehaviour
         else
         {
             BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
-
+            
             CloseDialogue();
-            DemoManager.Instance.LoadScene("GigDemo");
+            DemoManager.Instance.LoadScene("GigDemoCopy"); //test reg. GigDemo
 
         }
     }
 
     private void CloseDialogue()
     {
+        //locks cursor while inactive
+        Cursor.lockState = CursorLockMode.Locked;
+        //turn QuestUI back on when dialogue is closed
+        questUI.SetActive(true);
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueIndex);
         dialogue.Exhausted = true;
         ToggleDialogueUI();
         DemoManager.Instance.TogglePlayerControls();
+
     }
 
     // Spawn a text bubble prefab above the given character's gameobject with the given text.

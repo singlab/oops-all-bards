@@ -65,6 +65,7 @@ public class PartyManager : MonoBehaviour
     public void TogglePartyUI()
     {
         partyUI.SetActive(!partyUI.activeSelf);
+        DemoManager.Instance.TogglePlayerControls();
     }
 
     private void RenderPartyUI()
