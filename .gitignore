@@ -8,6 +8,7 @@ oops-all-bards/[Oo]bj/
 oops-all-bards/[Bb]uilds/
 oops-all-bards/[Ll]ogs/
 oops-all-bards/[Mm]emoryCaptures/
+oops-all-bards/Build/oops-all-bards_BurstDebugInformation_DoNotShip
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/oops-all-bards/[Aa]ssets/**/*.meta
@@ -59,4 +60,7 @@ crashlytics-build.properties
 
 # .vscode
 oops-all-bards/.vscode
+
+# abl folder
+abl/bin/
 

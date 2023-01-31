@@ -11,8 +11,8 @@
 ## About ##
 
 <p align="center">
-    <img src="" alt="Main Menu render"
-    height="75%" width="75%">
+    <img src="img/TitleCard.png" alt="Main Menu render"
+    height="50%" width="50%">
 </p>
 
 Broadly, this repository is a code base for an ongoing research project concerned with game agent believability, artificial intelligence for game NPCs, and leveraging heterogeneous AI systems to open new game design spaces. Within the ```abl``` folder of this repository, you will find source code for a Java proxy server that runs a game agent using [ABL](http://www.cs.cmu.edu/~michaelm/publications/AI-IE2002.pdf). Within the ```oops-all-bards``` folder, you will find source code for a game demo built with Unity that is intended to be run alongside the Java proxy server to showcase the game agent.
@@ -26,6 +26,10 @@ We intend our system in its current state to be used to improve the believabilit
 
 The scenarios we chose for this particular demo are slices of two central aspects of the game. The player is first introduced to an exploratory scenario, wherein they can engage in dialogue with NPCs like Quinton, learn about the kinds of characters they are, improve relationships with them, and generally learn more about the world of the game. After some conversation, the player will be introduced to a combat scenario alongside Quinton, during which they can experience how Quinton will react and respond to various things that the player may, or may not, do. Of particular note is what may happen when Quinton, a character with the Vengeful trait, asks for help in combat and the player does not do anything to aid him.
 
+## Guided Video Tour of the Oops! All Bards Demo ##
+
+For anyone interested in seeing a guided tour of the demo as played by one of the collaborators on this project, please navigate [here](https://drive.google.com/file/d/1FPHsX0k_L6ojVAS33owDis2Sa2_megJC/view?usp=sharing).
+
 ## Installation ##
 
 You can get a copy of this project up and running in the following ways,
@@ -33,8 +37,11 @@ depending on how you wish to use it:
 
 ### Game Only ###
 
-If you only wish to play the demo, please download/clone this repository
-and find the executable file in the ```Build``` folder within the ```oops-all-bards``` directory. There will be executables for Windows and MacOS.
+If you only wish to play the demo, please follow these steps:
+
+1. Download the appropriate .zip file from the [Releases](https://github.com/singlab/oops-all-bards/releases/tag/aiide-2022-demo) hub according to your OS. There are executables for Windows and macOS. Each .zip file contains two directories: ```server``` and ```game```.
+2. For Windows users: Run ```run_oab.bat``` from within the ```server``` directory. For macOS users: You may execute the ```run_oab.sh``` shell script from the command line. This will ultimately open both a command line prompt and an ABL debugger; you can click the "Continue" button at the bottom of the ABL debugger and forget about it.
+3. Run the appropriate game executable from within the ```game``` directory. For Windows users, this will be ```oops-all-bards.exe```. For macOS users, this will be ```OAB.app```. You should now be able to play the demo in the intended way.
 
 ### Build Project from Source ###
 

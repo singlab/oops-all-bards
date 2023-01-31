@@ -15,6 +15,8 @@ public class CombatManager : MonoBehaviour
     public GameObject enemyPortraits;
     // A reference to the portrait UI prefab.
     public GameObject portraitUI;
+    //A reference to the tooltip UI
+    public CanvasGroup currentToolTip;
     // A reference to the combat queue.
     public CombatQueue combatQueue;
     // A reference to the combat action menu.
@@ -32,6 +34,12 @@ public class CombatManager : MonoBehaviour
     // A reference to a target name, if any.
     public string target = null;
     public static CombatManager Instance => CombatManager._instance;
+
+    //A reference to the virtual cameras for combat.
+    public GameObject OverviewCamera;
+    public GameObject AudienceCamera;
+    public GameObject BandCamera;
+    public GameObject EnemyCamera;
 
     void Awake()
     {
@@ -51,6 +59,9 @@ public class CombatManager : MonoBehaviour
         InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
         RenderUI();
         DemoManager.Instance.CheckQueue();
+        Cursor.lockState = CursorLockMode.Confined;
+        Debug.Log(Cursor.lockState);
+        OverviewCamera.SetActive(true);
         Debug.Log("I've finished starting up.");
     }
 
@@ -63,8 +74,10 @@ public class CombatManager : MonoBehaviour
     // A function that uses the event management system to subscribe to events used in this manager.
     private void SubscribeToEvents()
     {
-        EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, TakeEnemyAction);
-        EventManager.Instance.SubscribeToEvent(EventType.AllyAI, TakeAllyAction);
+        EventManager.Instance.SubscribeToEvent(EventType.AllyAI, DoAllyAction);
+
+        EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, DoEnemyAction);
+
     }
 
     // A function used to render all UI elements for the demo.
@@ -75,6 +88,10 @@ public class CombatManager : MonoBehaviour
         enemyPortraits.SetActive(true);
         combatMenu.SetActive(true);
 
+        //Set tooltips to initially be invisible
+        currentToolTip.alpha = 0f;
+        currentToolTip.blocksRaycasts = false;
+        
         // Instantiate portrait UI for party and enemies.
         // Need: name, current health/flourish, max health/flourish, portrait
         foreach (BasePlayer p in party)
@@ -107,6 +124,8 @@ public class CombatManager : MonoBehaviour
             ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
             flourishBar.maxValue = e.Flourish;
             flourishBar.UpdateValueBar(e.Flourish);
+            //Dont really need to see the flourish bar for enemies for any reason right now
+            //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
     }
 
@@ -129,6 +148,11 @@ public class CombatManager : MonoBehaviour
             // // Add on click functions to the buttons to create a PlayerAction queueable.
             toInstantiate.GetComponent<Button>().onClick.AddListener(() => 
                 {StartCoroutine(SelectTarget(currentAbility, actingCharacter));});
+
+            //Add tooltip script to each ability button
+            toInstantiate.AddComponent<ToolTips>();
+
+
             // If the ability assigned to the button cannot be executed due to lack of FP, disable it entirely.
             if (currentAbility.Cost > actingCharacter.Flourish)
             {
@@ -147,7 +171,7 @@ public class CombatManager : MonoBehaviour
         PartyManager.Instance.ToggleInCombat(true);
         // Clean up for new combat scenario.
         combatQueue = new CombatQueue();
-        combatQueue.Clear();
+        combatQueue.Clear();  
         // Add standard functions for start, player input, enemy AI, and end.
         PushAndCreateCombatQueueable(new CombatStart());
         foreach (BasePlayer p in party)
@@ -231,24 +255,50 @@ public class CombatManager : MonoBehaviour
             GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
             toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
             toInstantiate.GetComponent<TargetButton>().target = e.Name;
+
         }
+
+        //TEST adding in a back button
+        GameObject backButton = Instantiate(targetButton, combatMenu.transform);
+        backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
     }
+
+    /*//TEST BACK BUTTON CODE
+    public void ResetTEST()
+    {
+        //clear action queue somehow
+        combatQueue = new CombatQueue();
+        combatQueue.Clear();
+
+        ///I don't believe this is the correct command
+        InitCombatQueue(party, enemies);
+
+        
+    }
+    */
 
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
     public void AddPlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)
     {
+  
         Debug.Log("Adding player action...");
         // Create the PlayerAction queueable object for each ability.
         PlayerAction action = new PlayerAction(ability, actingCharacter, target);
         // Push the PlayerAction to the front of the queue.
         combatQueue.PriorityPush(action);
+
         // Tell DemoManager to check the queue and complete the action.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
 
     // A function used to resolve/apply effects of a PlayerAction queueable.
-    public void ResolvePlayerAction(PlayerAction action)
+    public void DoPlayerAction(PlayerAction action)
     {
+        StartCoroutine(ResolvePlayerAction(action));
+    }
+    public IEnumerator ResolvePlayerAction(PlayerAction action)
+    {
+
         // Handle flourish cost and update UI to reflect new value.
         action.actingCharacter.Flourish -= action.ability.Cost;
         Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.actingCharacter.Name);
@@ -266,22 +316,22 @@ public class CombatManager : MonoBehaviour
         {
             bool requiresAssistance = action.target.CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
             action.target.Health += action.ability.Damage;
-            Debug.Log(action.actingCharacter.Name + " heals " + action.target.Name + " for " + action.ability.Damage + " health!" );
-            if (requiresAssistance) 
-            { 
+            Debug.Log(action.actingCharacter.Name + " heals " + action.target.Name + " for " + action.ability.Damage + " health!");
+            if (requiresAssistance)
+            {
                 action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE);
-                DemoManager.Instance.hasAssistedOnce = true; 
-            }; 
+                DemoManager.Instance.hasAssistedOnce = true;
+            };
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
         {
             bool requiresAssistance = action.target.CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
             action.target.Shield += action.ability.Damage;
-            Debug.Log(action.actingCharacter.Name + " is shielding " + action.target.Name + " for " + action.ability.Damage + " damage." );
-            if (requiresAssistance) 
-            { 
+            Debug.Log(action.actingCharacter.Name + " is shielding " + action.target.Name + " for " + action.ability.Damage + " damage.");
+            if (requiresAssistance)
+            {
                 action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE);
-                DemoManager.Instance.hasAssistedOnce = true; 
+                DemoManager.Instance.hasAssistedOnce = true;
             };
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT)
@@ -300,8 +350,14 @@ public class CombatManager : MonoBehaviour
         relevantValueBars = FindValueBars(action.target.Name);
         relevantValueBars.Item1.UpdateValueBar(action.target.Health);
 
+
+        yield return new WaitForSeconds(3);
+        Debug.Log("pauuseeee");
+
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+       
+
     }
 
     // A function that finds and returns a tuple of ValueBar objects (health, flourish) 
@@ -335,9 +391,17 @@ public class CombatManager : MonoBehaviour
         return relevantBars;
     }
 
-    // A function used to calculate and push enemy actions to the queue.
-    public void TakeEnemyAction()
+    public void DoEnemyAction()
     {
+        StartCoroutine(TakeEnemyAction());
+    }
+    // A function used to calculate and push enemy actions to the queue.
+    public IEnumerator TakeEnemyAction()
+    {
+        //Handle camera switching
+        BandCamera.SetActive(false);
+        EnemyCamera.SetActive(true);
+
         Debug.Log("Calculating enemy action...");
         BaseEnemy actingCharacter = (BaseEnemy)EventManager.Instance.EventData;
         
@@ -346,7 +410,11 @@ public class CombatManager : MonoBehaviour
         BasePlayer target = null;
         if ( party.Length > 0) { target = party[UnityEngine.Random.Range(0, party.Length)]; };
         BaseAbility ability = actingCharacter.EnemyClass.Abilities[0];
-        if ( target == null ) { CheckForWinLoss(); return; } 
+        if ( target == null )
+        {
+            CheckForWinLoss();
+            //return?
+        } 
         bool isBlind = IsBlind(actingCharacter);
         if (!isBlind)
         {
@@ -357,14 +425,32 @@ public class CombatManager : MonoBehaviour
             actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.BLINDED);
         }
 
+
+        yield return new WaitForSeconds(3);
+        Debug.Log("pauuseeee");
+
         actingCharacter.OwnsTurn = false;
+
         // Tell DemoManager to check the queue and continue to next turn.
-        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+
+        //Handle camera switching
+        OverviewCamera.SetActive(false);
+        EnemyCamera.SetActive(false);
+        BandCamera.SetActive(true);
     }
 
     // A function used to calculate and push ally actions to the queue.
-    public void TakeAllyAction()
+    public void DoAllyAction()
     {
+        StartCoroutine(TakeAllyAction());
+    }
+    public IEnumerator TakeAllyAction()
+    {
+        //Handle camera switching
+        EnemyCamera.SetActive(false);
+        BandCamera.SetActive(true);
+
         Debug.Log("Calculating ally action...");
         BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
         BaseEnemy target;
@@ -377,7 +463,7 @@ public class CombatManager : MonoBehaviour
             ability = actingCharacter.PlayerClass.Abilities[0];
         } else {
             CheckForWinLoss();
-            return;
+            yield break;
         }
 
         // Apply effects of ability, log the outcome, update value bar of target.
@@ -390,10 +476,16 @@ public class CombatManager : MonoBehaviour
         CheckCombatantsHealth(target);
 
         if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); };
+
+        yield return new WaitForSeconds(3);
+        Debug.Log("pauuseeee");
         actingCharacter.OwnsTurn = false;
+
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
     }
+
+
 
     // A function used to determine if any combatants are at 0 health; i.e., downed.
     public void CheckCombatantsHealth(ITargetable target)
@@ -516,6 +608,7 @@ public class CombatManager : MonoBehaviour
 
     public void ApplyEffects(BaseEnemy actingCharacter, BasePlayer target, BaseAbility ability)
     {
+
         bool targetIsProtected = IsProtected(target);
         if (targetIsProtected && party.Length > 1) 
         {

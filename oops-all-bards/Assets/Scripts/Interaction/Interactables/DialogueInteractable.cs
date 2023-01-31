@@ -38,6 +38,9 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
             if (Input.GetKeyDown(KeyCode.F))
             {
                 Execute();
+
+                //Sarah's edit added to prevent triggering dialogue twice error
+                triggering = false;
             }
         }
     }

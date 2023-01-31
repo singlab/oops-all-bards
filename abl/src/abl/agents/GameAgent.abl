@@ -53,7 +53,7 @@ behaving_entity GameAgent {
     		id = allyAgent.getID();
     	}
     	
-    	with (persistent) subgoal lookForQuip(id);
+    	with (persistent, priority 1) subgoal lookForQuip(id);
         with (persistent) subgoal manageCombat(id);
         // with (persistent) subgoal manageNoncombat(allyAgent); 
     }

@@ -23,16 +23,27 @@ public class TavernManager : MonoBehaviour
     // Update is called once per frame
     void Start()
     {
+        //It would seem that when a new scene is loaded that these scripts must be made sure to be ON as to avoid bugs with other code
+        //Prevents camera floating bug
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = true;
+        GameObject.Find("Main Camera").GetComponent<CameraController>().enabled = true;
+
         playerModel = GameObject.FindGameObjectWithTag("Player");
         quintonModel = GameObject.Find("Quinton");
         if (DemoManager.Instance.tavernVisits == 2)
         {
+            //Prevents bad bug when going in the backrooms after the first fight
+            Destroy(GameObject.Find("QuintonQuestTrigger")); 
             StartCoroutine(DemoResolution());
         }
+
+        
     }
+    
 
     void SpawnPlayer()
     {
+
         // Instantiate chosen player model at spawn point.
         BasePlayer playerData = DataManager.Instance.PlayerData;
         GameObject toInstantiate = Instantiate(playerData.Model, playerSpawnPoint.transform.position, Quaternion.identity);
@@ -117,4 +128,6 @@ public class TavernManager : MonoBehaviour
     {
         PartyManager.Instance.partyUI = GameObject.Find("PartyUI");
     }
+
+     
 }
