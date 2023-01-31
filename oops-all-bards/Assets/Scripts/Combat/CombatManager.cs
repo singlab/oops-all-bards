@@ -259,8 +259,9 @@ public class CombatManager : MonoBehaviour
         }
 
         //TEST adding in a back button
-        GameObject backButton = Instantiate(targetButton, combatMenu.transform);
-        backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
+
+        //GameObject backButton = Instantiate(targetButton, combatMenu.transform);
+        //backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
     }
 
     /*//TEST BACK BUTTON CODE
@@ -426,7 +427,7 @@ public class CombatManager : MonoBehaviour
         }
 
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(0.2F); //pause for animation
         Debug.Log("pauuseeee");
 
         actingCharacter.OwnsTurn = false;
