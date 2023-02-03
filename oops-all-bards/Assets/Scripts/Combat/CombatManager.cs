@@ -203,6 +203,10 @@ public class CombatManager : MonoBehaviour
     // is selected, closes target menu, and then creates a PlayerAction.
     public IEnumerator SelectTarget(BaseAbility ability, BasePlayer actingCharacter)
     {
+
+        //Note: I don't think select target should if back button is pressed
+        //Cause then AddPlayerAction adds stuff to the queue
+        //Maybe here is the problem?
         ITargetable targetable = null;
         target = null;
         
@@ -210,7 +214,7 @@ public class CombatManager : MonoBehaviour
         {
             yield return null;
         }
-
+       
         foreach (BasePlayer p in party)
         {
             if (target == p.Name)
@@ -227,7 +231,17 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        AddPlayerAction(ability, actingCharacter, targetable);
+        if (target == "back")
+        {
+            Debug.Log("hey the back button prevents an action being added to queue");
+            //put reset here
+            RenderInputMenu(actingCharacter);
+
+        }
+        else
+        {
+            AddPlayerAction(ability, actingCharacter, targetable);
+        }
     }
 
     // A function used to destroy all buttons that are children of the combat menu.
@@ -261,21 +275,9 @@ public class CombatManager : MonoBehaviour
         //TEST adding in a back button
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
+        backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to "back"
+
     }
-
-    /*//TEST BACK BUTTON CODE
-    public void ResetTEST()
-    {
-        //clear action queue somehow
-        combatQueue = new CombatQueue();
-        combatQueue.Clear();
-
-        ///I don't believe this is the correct command
-        InitCombatQueue(party, enemies);
-
-        
-    }
-    */
 
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
     public void AddPlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)
