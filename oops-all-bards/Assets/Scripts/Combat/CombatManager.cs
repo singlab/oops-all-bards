@@ -181,7 +181,7 @@ public class CombatManager : MonoBehaviour
                 PushAndCreateCombatQueueable(new PlayerTurn(p));
             } else
             {
-                PushAndCreateCombatQueueable(new InfluenceAllyTurn(party[0], p));
+                PushAndCreateCombatQueueable(new AllyTurn(p));
             }
         }
         foreach (BaseEnemy e in enemies)
