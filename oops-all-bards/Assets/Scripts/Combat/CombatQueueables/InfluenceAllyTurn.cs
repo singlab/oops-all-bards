@@ -26,6 +26,7 @@ public class InfluenceAllyTurn : MonoBehaviour, ICombatQueueable
             actingCharacter.OwnsTurn = true;
             // Possibly might need to add a new event type here 
             EventManager.Instance.InvokeEvent(EventType.AwaitPlayerInput, influencedCharacter);
+            CombatManager.Instance.RenderInputMenu(influencedCharacter);
         }
         else
         {
@@ -33,8 +34,8 @@ public class InfluenceAllyTurn : MonoBehaviour, ICombatQueueable
             influencedCharacter.OwnsTurn = true;
             EventManager.Instance.InvokeEvent(EventType.AllyAI, influencedCharacter);
         }
-        
-        
+
+        done = true;
     }
 
     public bool ShouldInfluence()
