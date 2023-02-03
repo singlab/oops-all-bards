@@ -41,7 +41,7 @@ public class InfluenceAllyTurn : MonoBehaviour, ICombatQueueable
     public bool ShouldInfluence()
     {
         // This is just an example of a possible test that could be performed
-        return actingCharacter.Fame > 0;
+        return true;
     }
 
     public InfluenceAllyTurn(BasePlayer actingCharacter, BasePlayer influencedCharacter)
