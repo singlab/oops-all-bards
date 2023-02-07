@@ -216,7 +216,8 @@ public class CombatManager : MonoBehaviour
             if (target == p.Name)
             {
                 targetable = p;
-                if (ability.ID == 99) // InfluenceAllyTurn uses BasePlayer not ITargetable so it needs to be queued here instead of through AddPlayerAction
+                // InfluenceAllyTurn uses BasePlayer not ITargetable so it needs to be queued here instead of through AddPlayerAction
+                if (ability.ID == 99)
                 {
                     Debug.Log("Adding player action...");
                     combatQueue.PriorityPush(new InfluenceAllyTurn(actingCharacter, p));
