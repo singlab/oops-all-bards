@@ -216,6 +216,14 @@ public class CombatManager : MonoBehaviour
             if (target == p.Name)
             {
                 targetable = p;
+                // InfluenceAllyTurn uses BasePlayer not ITargetable so it needs to be queued here instead of through AddPlayerAction
+                if (ability.ID == 99)
+                {
+                    Debug.Log("Adding player action...");
+                    combatQueue.PriorityPush(new InfluenceAllyTurn(actingCharacter, p));
+                    EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+                    yield break;
+                }
             }
         }
 
@@ -241,13 +249,18 @@ public class CombatManager : MonoBehaviour
     }
 
     // A function used to render target buttons.
-    public void RenderTargetButtons()
+    public void RenderTargetButtons(BaseAbility ability)
     {
         foreach (BasePlayer p in party)
         {
             GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
             toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
             toInstantiate.GetComponent<TargetButton>().target = p.Name;
+        }
+        // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
+        if (ability.ID == 99)
+        {
+            return;
         }
 
         foreach (BaseEnemy e in enemies)
@@ -281,7 +294,7 @@ public class CombatManager : MonoBehaviour
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
     public void AddPlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)
     {
-  
+
         Debug.Log("Adding player action...");
         // Create the PlayerAction queueable object for each ability.
         PlayerAction action = new PlayerAction(ability, actingCharacter, target);
@@ -337,14 +350,16 @@ public class CombatManager : MonoBehaviour
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT)
         {
-            if (action.ability.ID == 4)
+            switch (action.ability.ID)
             {
-                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED));
-                Debug.Log($"{action.actingCharacter.Name} has strengthened {action.target.Name}!");
-            } else if (action.ability.ID == 5)
-            {
-                action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.BLINDED));
-                Debug.Log($"{action.actingCharacter.Name} has blinded {action.target.Name}!");
+                case 4:
+                    action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED));
+                    Debug.Log($"{action.actingCharacter.Name} has strengthened {action.target.Name}!");
+                    break;
+                case 5:
+                    action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.BLINDED));
+                    Debug.Log($"{action.actingCharacter.Name} has blinded {action.target.Name}!");
+                    break;
             }
         }
         // Handle damage/heal and update UI to reflect new value.

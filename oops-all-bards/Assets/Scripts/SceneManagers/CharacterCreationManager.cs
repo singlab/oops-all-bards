@@ -97,5 +97,7 @@ public class CharacterCreationManager : MonoBehaviour
     {
         playerData.Health = 15;
         playerData.Flourish = 10;
+        BaseAbility influence = new BaseAbility("Influence", 99, "Suggest a plan of action for an Ally. Results may vary.", BaseAbility.AbilityTypes.COMBAT, BaseAbility.CombatAbilityTypes.SUPPORT, 0, 0, 1, 1);
+        playerData.PlayerClass.Abilities.Add(influence);
     }
 }
