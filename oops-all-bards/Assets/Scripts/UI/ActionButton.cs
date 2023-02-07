@@ -10,6 +10,6 @@ public class ActionButton : MonoBehaviour
     public void Execute()
     {
         CombatManager.Instance.ClearCombatMenu();
-        CombatManager.Instance.RenderTargetButtons();
+        CombatManager.Instance.RenderTargetButtons(ability);
     }
 }
