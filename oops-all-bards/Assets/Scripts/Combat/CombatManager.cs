@@ -233,7 +233,7 @@ public class CombatManager : MonoBehaviour
 
         if (target == "back")
         {
-            Debug.Log("hey the back button prevents an action being added to queue");
+            Debug.Log("Back");
             //put reset here
             RenderInputMenu(actingCharacter);
 
@@ -274,7 +274,7 @@ public class CombatManager : MonoBehaviour
 
         //TEST adding in a back button
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
-        backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
+        backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to "back"
 
     }
