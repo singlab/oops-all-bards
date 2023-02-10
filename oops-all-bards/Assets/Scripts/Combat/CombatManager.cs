@@ -97,33 +97,36 @@ public class CombatManager : MonoBehaviour
         foreach (BasePlayer p in party)
         {
             GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
+            PortraitData portraitData = toInstantiate.GetComponent<PortraitData>();
             // Set name text
-            toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = p.Name;
+            Debug.Log("2");
+            portraitData.nameText.text = p.Name;
             // Set portraits
-            toInstantiate.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = PartyManager.Instance.GetPortraitByName(p.Name);
+            portraitData.icon.sprite = PartyManager.Instance.GetPortraitByName(p.Name);
             // Set health and flourish values and update them
-            ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
-            healthBar.maxValue = p.Health;
-            healthBar.UpdateValueBar(p.Health);
-            ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = p.Flourish;
-            flourishBar.UpdateValueBar(p.Flourish);
+            portraitData.healthBar.maxValue = p.Health;
+            portraitData.healthBar.UpdateValueBar(p.Health);
+            portraitData.flourishBar.maxValue = p.Flourish;
+            portraitData.flourishBar.UpdateValueBar(p.Flourish);
         }
 
         foreach (BaseEnemy e in enemies)
         {
             GameObject toInstantiate = Instantiate(portraitUI, enemyPortraits.transform);
+            PortraitData portraitData = toInstantiate.GetComponent<PortraitData>();
+            toInstantiate.transform.localScale = new Vector3(toInstantiate.transform.localScale.x * -1, toInstantiate.transform.localScale.y, toInstantiate.transform.localScale.z);
             // Set name text
-            toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = e.Name;
+            portraitData.nameText.text = e.Name;
+            portraitData.nameText.transform.localScale = new Vector3(-1, 1, 1);
             // Set portraits
-            toInstantiate.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = PartyManager.Instance.GetPortraitByName("Piggy");
+            portraitData.icon.sprite = PartyManager.Instance.GetPortraitByName("Piggy");
             // Set health and flourish values and update them
-            ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
-            healthBar.maxValue = e.Health;
-            healthBar.UpdateValueBar(e.Health);
-            ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = e.Flourish;
-            flourishBar.UpdateValueBar(e.Flourish);
+            portraitData.healthBar.maxValue = e.Health;
+            portraitData.healthBar.UpdateValueBar(e.Health);
+            portraitData.healthBar.transform.Find("Background").transform.Find("HealthText").transform.localScale = new Vector3(-1, 1, 1);
+            portraitData.flourishBar.maxValue = e.Flourish;
+            portraitData.flourishBar.UpdateValueBar(e.Flourish);
+            portraitData.flourishBar.transform.Find("Background").transform.Find("FlourishText").transform.localScale = new Vector3(-1, 1, 1);
             //Dont really need to see the flourish bar for enemies for any reason right now
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
@@ -315,8 +318,7 @@ public class CombatManager : MonoBehaviour
 
         // Handle flourish cost and update UI to reflect new value.
         action.actingCharacter.Flourish -= action.ability.Cost;
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.actingCharacter.Name);
-        relevantValueBars.Item2.UpdateValueBar(action.actingCharacter.Flourish);
+        FindPortrait(action.actingCharacter.Name).flourishBar.UpdateValueBar(action.actingCharacter.Flourish);
 
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.ATTACK)
         {
@@ -363,8 +365,9 @@ public class CombatManager : MonoBehaviour
             }
         }
         // Handle damage/heal and update UI to reflect new value.
-        relevantValueBars = FindValueBars(action.target.Name);
-        relevantValueBars.Item1.UpdateValueBar(action.target.Health);
+        PortraitData targetPortrait = FindPortrait(action.target.Name);
+        targetPortrait.anim.SetTrigger("takeDamage");
+        targetPortrait.healthBar.UpdateValueBar(action.target.Health);
 
 
         yield return new WaitForSeconds(3);
@@ -378,33 +381,27 @@ public class CombatManager : MonoBehaviour
 
     // A function that finds and returns a tuple of ValueBar objects (health, flourish) 
     // corresponding to a string name of a character.
-    Tuple<ValueBar, ValueBar> FindValueBars(string name)
+    PortraitData FindPortrait(string name)
     {
-        Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
+        PortraitData portrait = null;
         for (int i = 0; i < partyPortraits.transform.childCount; i++)
         {
-            Transform currentChild = partyPortraits.transform.GetChild(i);
-            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
-            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
-            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
-            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            PortraitData currentChild = partyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+            if (currentChild.nameText.text == name)
             {
-                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+                portrait = currentChild;
             }
         }
 
         for (int i = 0; i < enemyPortraits.transform.childCount; i++)
         {
-            Transform currentChild = enemyPortraits.transform.GetChild(i);
-            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
-            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
-            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
-            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            PortraitData currentChild = enemyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+            if (currentChild.nameText.text == name)
             {
-                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+                portrait = currentChild;
             }
         }
-        return relevantBars;
+        return portrait;
     }
 
     public void DoEnemyAction()
@@ -487,8 +484,9 @@ public class CombatManager : MonoBehaviour
         int modifiedDamage = isStrengthened ? (ability.Damage * 2) : ability.Damage;
         target.Health -= modifiedDamage;
         Debug.Log(actingCharacter.Name + " deals " + modifiedDamage + " damage to " + target.Name + "!");
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.Name);
-        relevantValueBars.Item1.UpdateValueBar(target.Health);
+        PortraitData targetPortrait = FindPortrait(target.Name);
+        targetPortrait.anim.SetTrigger("takeDamage");
+        targetPortrait.healthBar.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
 
         if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); };
@@ -527,9 +525,9 @@ public class CombatManager : MonoBehaviour
             // Update UI to no longer show character portrait.
             for (int i = 0; i < partyPortraits.transform.childCount; i++)
             {
-                Transform currentChild = partyPortraits.transform.GetChild(i);
-                Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
-                if (desiredChild.GetComponent<TMP_Text>().text == character.Name)
+                PortraitData currentChild = partyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+
+                if (currentChild.nameText.text == character.Name)
                 {
                     Destroy(currentChild.gameObject);
                 }
@@ -561,9 +559,9 @@ public class CombatManager : MonoBehaviour
             // Update UI to no longer show character portrait.
             for (int i = 0; i < enemyPortraits.transform.childCount; i++)
             {
-                Transform currentChild = enemyPortraits.transform.GetChild(i);
-                Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
-                if (desiredChild.GetComponent<TMP_Text>().text == character.Name)
+                PortraitData currentChild = enemyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+
+                if (currentChild.nameText.text == character.Name)
                 {
                     Destroy(currentChild.gameObject);
                 }
@@ -657,8 +655,9 @@ public class CombatManager : MonoBehaviour
             Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "!");
         }
 
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.Name);
-        relevantValueBars.Item1.UpdateValueBar(target.Health);
+        PortraitData targetPortrait = FindPortrait(target.Name);
+        targetPortrait.anim.SetTrigger("takeDamage");
+        targetPortrait.healthBar.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
     }
 
