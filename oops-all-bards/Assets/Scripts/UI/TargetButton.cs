@@ -8,6 +8,12 @@ public class TargetButton : MonoBehaviour
     public void Execute()
     {
         CombatManager.Instance.target = target;
-        CombatManager.Instance.ClearCombatMenu();
+        if (target == null)
+        {
+            Debug.Log("eyo target missing");
+        }
+        //CombatManager.Instance.ClearCombatMenu();
+        CombatManager.Instance.UI.GetComponent<CombatUI>().ClearCombatMenu();
+       
     }
 }

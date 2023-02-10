@@ -9,7 +9,12 @@ public class ActionButton : MonoBehaviour
 
     public void Execute()
     {
-        CombatManager.Instance.ClearCombatMenu();
-        CombatManager.Instance.RenderTargetButtons(ability);
+
+        //CombatManager.Instance.ClearCombatMenu();
+        CombatManager.Instance.UI.GetComponent<CombatUI>().ClearCombatMenu();
+        //CombatManager.Instance.RenderTargetButtons(ability);
+        CombatManager.Instance.UI.GetComponent<CombatUI>().RenderTargetButtons(ability);
+        Debug.Log("action button created");
+
     }
 }

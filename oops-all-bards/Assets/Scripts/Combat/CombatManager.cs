@@ -10,21 +10,27 @@ public class CombatManager : MonoBehaviour
 {
 
     private static CombatManager _instance;
-    // References to player and enemy portraits.
-    public GameObject partyPortraits;
-    public GameObject enemyPortraits;
-    // A reference to the portrait UI prefab.
-    public GameObject portraitUI;
-    //A reference to the tooltip UI
-    public CanvasGroup currentToolTip;
+    /*
+ // References to player and enemy portraits.
+     public GameObject partyPortraits;
+     public GameObject enemyPortraits;
+     // A reference to the portrait UI prefab.
+     public GameObject portraitUI;
+     //A reference to the tooltip UI
+     public CanvasGroup currentToolTip;
+     // A reference to the combat action menu.
+     public GameObject combatMenu;
+     // A reference to the combat action menu button prefab.
+     public GameObject actionButton;
+     // A reference to the target button prefab.
+     public GameObject targetButton;
+    */
+
+    //public reference to ui gameobject
+    CombatUI combatUI;
+    public GameObject UI;  
     // A reference to the combat queue.
     public CombatQueue combatQueue;
-    // A reference to the combat action menu.
-    public GameObject combatMenu;
-    // A reference to the combat action menu button prefab.
-    public GameObject actionButton;
-    // A reference to the target button prefab.
-    public GameObject targetButton;
     // A reference to the player party.
     public BasePlayer[] party;
     // A reference to the enemies.
@@ -35,11 +41,14 @@ public class CombatManager : MonoBehaviour
     public string target = null;
     public static CombatManager Instance => CombatManager._instance;
 
+
     //A reference to the virtual cameras for combat.
+    /*
     public GameObject OverviewCamera;
     public GameObject AudienceCamera;
     public GameObject BandCamera;
     public GameObject EnemyCamera;
+    */
 
     void Awake()
     {
@@ -55,13 +64,18 @@ public class CombatManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         SubscribeToEvents();
         InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
-        RenderUI();
         DemoManager.Instance.CheckQueue();
+        combatUI = UI.GetComponent<CombatUI>();
         Cursor.lockState = CursorLockMode.Confined;
         Debug.Log(Cursor.lockState);
-        OverviewCamera.SetActive(true);
+
+        combatUI.RenderUI();
+        combatUI.OverviewCamera.SetActive(true);
+       
+
         Debug.Log("I've finished starting up.");
     }
 
@@ -80,7 +94,9 @@ public class CombatManager : MonoBehaviour
 
     }
 
+
     // A function used to render all UI elements for the demo.
+    /*
     public void RenderUI()
     {
         // Render the portrait section and combat menu.
@@ -128,7 +144,7 @@ public class CombatManager : MonoBehaviour
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
     }
-
+ 
     // A function used to render a particular character's combat menu.
     public void RenderInputMenu(BasePlayer actingCharacter)
     {
@@ -160,6 +176,7 @@ public class CombatManager : MonoBehaviour
             }
         }
     }
+    */
 
     // A function used to initialize the combat queue.
     public void InitCombatQueue(BasePlayer[] party, List<BaseEnemy> enemies)
@@ -237,8 +254,9 @@ public class CombatManager : MonoBehaviour
 
         AddPlayerAction(ability, actingCharacter, targetable);
     }
-
+    /*
     // A function used to destroy all buttons that are children of the combat menu.
+
     public void ClearCombatMenu()
     {
         for (int i = 0; i < combatMenu.transform.childCount; i++)
@@ -275,19 +293,6 @@ public class CombatManager : MonoBehaviour
 
         //GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         //backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
-    }
-
-    /*//TEST BACK BUTTON CODE
-    public void ResetTEST()
-    {
-        //clear action queue somehow
-        combatQueue = new CombatQueue();
-        combatQueue.Clear();
-
-        ///I don't believe this is the correct command
-        InitCombatQueue(party, enemies);
-
-        
     }
     */
 
@@ -381,9 +386,9 @@ public class CombatManager : MonoBehaviour
     Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
-        for (int i = 0; i < partyPortraits.transform.childCount; i++)
+        for (int i = 0; i < combatUI.partyPortraits.transform.childCount; i++)
         {
-            Transform currentChild = partyPortraits.transform.GetChild(i);
+            Transform currentChild = combatUI.partyPortraits.transform.GetChild(i);
             Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
             ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
             ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
@@ -393,9 +398,9 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+        for (int i = 0; i < combatUI.enemyPortraits.transform.childCount; i++)
         {
-            Transform currentChild = enemyPortraits.transform.GetChild(i);
+            Transform currentChild = combatUI.enemyPortraits.transform.GetChild(i);
             Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
             ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
             ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
@@ -415,8 +420,8 @@ public class CombatManager : MonoBehaviour
     public IEnumerator TakeEnemyAction()
     {
         //Handle camera switching
-        BandCamera.SetActive(false);
-        EnemyCamera.SetActive(true);
+        combatUI.BandCamera.SetActive(false);
+        combatUI.EnemyCamera.SetActive(true);
 
         Debug.Log("Calculating enemy action...");
         BaseEnemy actingCharacter = (BaseEnemy)EventManager.Instance.EventData;
@@ -451,9 +456,9 @@ public class CombatManager : MonoBehaviour
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
 
         //Handle camera switching
-        OverviewCamera.SetActive(false);
-        EnemyCamera.SetActive(false);
-        BandCamera.SetActive(true);
+        combatUI.OverviewCamera.SetActive(false);
+        combatUI.EnemyCamera.SetActive(false);
+        combatUI.BandCamera.SetActive(true);
     }
 
     // A function used to calculate and push ally actions to the queue.
@@ -464,8 +469,8 @@ public class CombatManager : MonoBehaviour
     public IEnumerator TakeAllyAction()
     {
         //Handle camera switching
-        EnemyCamera.SetActive(false);
-        BandCamera.SetActive(true);
+        combatUI.EnemyCamera.SetActive(false);
+        combatUI.BandCamera.SetActive(true);
 
         Debug.Log("Calculating ally action...");
         BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
@@ -525,9 +530,11 @@ public class CombatManager : MonoBehaviour
             BasePlayer[] partyCopy = party.Where(x => x != parsedCharacter.Item1).ToArray();
             party = partyCopy;
             // Update UI to no longer show character portrait.
-            for (int i = 0; i < partyPortraits.transform.childCount; i++)
+
+            //Start HERE
+            for (int i = 0; i < combatUI.partyPortraits.transform.childCount; i++)
             {
-                Transform currentChild = partyPortraits.transform.GetChild(i);
+                Transform currentChild = combatUI.partyPortraits.transform.GetChild(i);
                 Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
                 if (desiredChild.GetComponent<TMP_Text>().text == character.Name)
                 {
@@ -559,9 +566,9 @@ public class CombatManager : MonoBehaviour
             Debug.Log("Attempting to remove " + parsedCharacter.Item2.Name);
             enemies.Remove(parsedCharacter.Item2);
             // Update UI to no longer show character portrait.
-            for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+            for (int i = 0; i < combatUI.enemyPortraits.transform.childCount; i++)
             {
-                Transform currentChild = enemyPortraits.transform.GetChild(i);
+                Transform currentChild = combatUI.enemyPortraits.transform.GetChild(i);
                 Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
                 if (desiredChild.GetComponent<TMP_Text>().text == character.Name)
                 {
