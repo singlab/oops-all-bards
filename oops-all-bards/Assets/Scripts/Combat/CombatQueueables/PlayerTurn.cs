@@ -14,9 +14,8 @@ public class PlayerTurn : MonoBehaviour, ICombatQueueable
             actingCharacter.OwnsTurn = true;
             TCPTestClient.Instance.RefreshWMEs();
             EventManager.Instance.InvokeEvent(EventType.AwaitPlayerInput, actingCharacter);
-            //CombatManager.Instance.RenderInputMenu(actingCharacter);
             CombatManager.Instance.UI.GetComponent<CombatUI>().RenderInputMenu(actingCharacter);
-           done = true;
+            done = true;
              
         
     }

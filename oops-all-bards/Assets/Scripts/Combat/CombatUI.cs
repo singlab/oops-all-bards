@@ -33,12 +33,6 @@ public class CombatUI : MonoBehaviour
     public GameObject BandCamera;
     public GameObject EnemyCamera;
 
-    /*
-    // A reference to the player party.
-    public BasePlayer[] party;
-    // A reference to the enemies.
-    public List<BaseEnemy> enemies = new List<BaseEnemy>();
-    */
 
     // Start is called before the first frame update
     void Start()
