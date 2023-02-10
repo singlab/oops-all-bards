@@ -145,7 +145,16 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        AddPlayerAction(ability, actingCharacter, targetable);
+        if (target == "back")
+        {
+            Debug.Log("Go back one screen");
+            //reset
+            combatUI.RenderInputMenu(actingCharacter);
+        }
+        else
+        {
+            AddPlayerAction(ability, actingCharacter, targetable);
+        }
     }
 
     // A function used to create a PlayerAction queueable and push it to the front of the queue.

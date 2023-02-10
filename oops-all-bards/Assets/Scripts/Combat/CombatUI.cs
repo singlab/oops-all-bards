@@ -166,7 +166,8 @@ public class CombatUI : MonoBehaviour
 
         //TEST adding in a back button
 
-        //GameObject backButton = Instantiate(targetButton, combatMenu.transform);
-        //backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
+        GameObject backButton = Instantiate(targetButton, combatMenu.transform);
+        backButton.GetComponentInChildren<TMP_Text>().text = "Back";
+        backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
     }
 }
