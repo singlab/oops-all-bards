@@ -45,9 +45,6 @@ public class CombatManager : MonoBehaviour
         InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
         DemoManager.Instance.CheckQueue();
         combatUI = UI.GetComponent<CombatUI>();
-        Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log(Cursor.lockState);
-
         combatUI.RenderUI();
         combatUI.OverviewCamera.SetActive(true);
        
@@ -181,7 +178,7 @@ public class CombatManager : MonoBehaviour
 
         // Handle flourish cost and update UI to reflect new value.
         action.actingCharacter.Flourish -= action.ability.Cost;
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(action.actingCharacter.Name);
+        Tuple<ValueBar, ValueBar> relevantValueBars = combatUI.FindValueBars(action.actingCharacter.Name);
         relevantValueBars.Item2.UpdateValueBar(action.actingCharacter.Flourish);
 
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.ATTACK)
@@ -229,7 +226,8 @@ public class CombatManager : MonoBehaviour
             }
         }
         // Handle damage/heal and update UI to reflect new value.
-        relevantValueBars = FindValueBars(action.target.Name);
+        
+        relevantValueBars = combatUI.FindValueBars(action.target.Name);
         relevantValueBars.Item1.UpdateValueBar(action.target.Health);
 
 
@@ -244,6 +242,8 @@ public class CombatManager : MonoBehaviour
 
     // A function that finds and returns a tuple of ValueBar objects (health, flourish) 
     // corresponding to a string name of a character.
+
+    /*
     Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
@@ -272,6 +272,8 @@ public class CombatManager : MonoBehaviour
         }
         return relevantBars;
     }
+    */
+
 
     public void DoEnemyAction()
     {
@@ -353,7 +355,7 @@ public class CombatManager : MonoBehaviour
         int modifiedDamage = isStrengthened ? (ability.Damage * 2) : ability.Damage;
         target.Health -= modifiedDamage;
         Debug.Log(actingCharacter.Name + " deals " + modifiedDamage + " damage to " + target.Name + "!");
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.Name);
+        Tuple<ValueBar, ValueBar> relevantValueBars = combatUI.FindValueBars(target.Name);
         relevantValueBars.Item1.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
 
@@ -525,7 +527,7 @@ public class CombatManager : MonoBehaviour
             Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "!");
         }
 
-        Tuple<ValueBar, ValueBar> relevantValueBars = FindValueBars(target.Name);
+        Tuple<ValueBar, ValueBar> relevantValueBars = combatUI.FindValueBars(target.Name);
         relevantValueBars.Item1.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
     }

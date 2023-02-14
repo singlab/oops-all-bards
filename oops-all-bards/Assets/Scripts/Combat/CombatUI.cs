@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class CombatUI : MonoBehaviour
 {
@@ -38,9 +39,11 @@ public class CombatUI : MonoBehaviour
     void Start()
     {
         combatManager = combat.GetComponent<CombatManager>();
-
         RenderUI();
         OverviewCamera.SetActive(true);
+        Cursor.lockState = CursorLockMode.Confined;
+        Debug.Log(Cursor.lockState);
+
 
     }
 
@@ -169,5 +172,34 @@ public class CombatUI : MonoBehaviour
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
+    }
+
+    public Tuple<ValueBar, ValueBar> FindValueBars(string name)
+    {
+        Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
+        for (int i = 0; i < partyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = partyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+
+        for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = enemyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+        return relevantBars;
     }
 }
