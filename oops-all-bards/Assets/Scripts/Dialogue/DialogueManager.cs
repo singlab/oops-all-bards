@@ -134,7 +134,7 @@ public class DialogueManager : MonoBehaviour
             BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
             
             CloseDialogue();
-            DemoManager.Instance.LoadScene("GigDemoCopy"); //test reg. GigDemo
+            DemoManager.Instance.LoadScene("GigDemo");
 
         }
     }

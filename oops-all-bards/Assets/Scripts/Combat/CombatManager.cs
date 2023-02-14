@@ -10,21 +10,12 @@ public class CombatManager : MonoBehaviour
 {
 
     private static CombatManager _instance;
-    // References to player and enemy portraits.
-    public GameObject partyPortraits;
-    public GameObject enemyPortraits;
-    // A reference to the portrait UI prefab.
-    public GameObject portraitUI;
-    //A reference to the tooltip UI
-    public CanvasGroup currentToolTip;
+
+    //public reference to ui gameobject
+    CombatUI combatUI;
+    public GameObject UI;  
     // A reference to the combat queue.
     public CombatQueue combatQueue;
-    // A reference to the combat action menu.
-    public GameObject combatMenu;
-    // A reference to the combat action menu button prefab.
-    public GameObject actionButton;
-    // A reference to the target button prefab.
-    public GameObject targetButton;
     // A reference to the player party.
     public BasePlayer[] party;
     // A reference to the enemies.
@@ -34,12 +25,6 @@ public class CombatManager : MonoBehaviour
     // A reference to a target name, if any.
     public string target = null;
     public static CombatManager Instance => CombatManager._instance;
-
-    //A reference to the virtual cameras for combat.
-    public GameObject OverviewCamera;
-    public GameObject AudienceCamera;
-    public GameObject BandCamera;
-    public GameObject EnemyCamera;
 
     void Awake()
     {
@@ -55,13 +40,15 @@ public class CombatManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         SubscribeToEvents();
         InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
-        RenderUI();
         DemoManager.Instance.CheckQueue();
-        Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log(Cursor.lockState);
-        OverviewCamera.SetActive(true);
+        combatUI = UI.GetComponent<CombatUI>();
+        combatUI.RenderUI();
+        combatUI.OverviewCamera.SetActive(true);
+       
+
         Debug.Log("I've finished starting up.");
     }
 
@@ -80,89 +67,6 @@ public class CombatManager : MonoBehaviour
 
     }
 
-    // A function used to render all UI elements for the demo.
-    public void RenderUI()
-    {
-        // Render the portrait section and combat menu.
-        partyPortraits.SetActive(true);
-        enemyPortraits.SetActive(true);
-        combatMenu.SetActive(true);
-
-        //Set tooltips to initially be invisible
-        currentToolTip.alpha = 0f;
-        currentToolTip.blocksRaycasts = false;
-        
-        // Instantiate portrait UI for party and enemies.
-        // Need: name, current health/flourish, max health/flourish, portrait
-        foreach (BasePlayer p in party)
-        {
-            GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
-            PortraitData portraitData = toInstantiate.GetComponent<PortraitData>();
-            // Set name text
-            Debug.Log("2");
-            portraitData.nameText.text = p.Name;
-            // Set portraits
-            portraitData.icon.sprite = PartyManager.Instance.GetPortraitByName(p.Name);
-            // Set health and flourish values and update them
-            portraitData.healthBar.maxValue = p.Health;
-            portraitData.healthBar.UpdateValueBar(p.Health);
-            portraitData.flourishBar.maxValue = p.Flourish;
-            portraitData.flourishBar.UpdateValueBar(p.Flourish);
-        }
-
-        foreach (BaseEnemy e in enemies)
-        {
-            GameObject toInstantiate = Instantiate(portraitUI, enemyPortraits.transform);
-            PortraitData portraitData = toInstantiate.GetComponent<PortraitData>();
-            toInstantiate.transform.localScale = new Vector3(toInstantiate.transform.localScale.x * -1, toInstantiate.transform.localScale.y, toInstantiate.transform.localScale.z);
-            // Set name text
-            portraitData.nameText.text = e.Name;
-            portraitData.nameText.transform.localScale = new Vector3(-1, 1, 1);
-            // Set portraits
-            portraitData.icon.sprite = PartyManager.Instance.GetPortraitByName("Piggy");
-            // Set health and flourish values and update them
-            portraitData.healthBar.maxValue = e.Health;
-            portraitData.healthBar.UpdateValueBar(e.Health);
-            portraitData.healthBar.transform.Find("Background").transform.Find("HealthText").transform.localScale = new Vector3(-1, 1, 1);
-            portraitData.flourishBar.maxValue = e.Flourish;
-            portraitData.flourishBar.UpdateValueBar(e.Flourish);
-            portraitData.flourishBar.transform.Find("Background").transform.Find("FlourishText").transform.localScale = new Vector3(-1, 1, 1);
-            //Dont really need to see the flourish bar for enemies for any reason right now
-            //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
-        }
-    }
-
-    // A function used to render a particular character's combat menu.
-    public void RenderInputMenu(BasePlayer actingCharacter)
-    {
-        // Render the UI for the input.
-        Debug.Log("Rendering input menu for " + actingCharacter.Name + " now.");
-        
-        // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
-        for (int i = 0; i < actingCharacter.PlayerClass.Abilities.Count; i++)
-        {
-            BaseAbility currentAbility = actingCharacter.PlayerClass.Abilities[i];
-            // Create prefab and update text of button.
-            GameObject toInstantiate = Instantiate(actionButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = currentAbility.Name;
-            // Assign the ability and acting character to the action button script.
-            toInstantiate.GetComponent<ActionButton>().ability = currentAbility;
-            toInstantiate.GetComponent<ActionButton>().actingCharacter = actingCharacter;
-            // // Add on click functions to the buttons to create a PlayerAction queueable.
-            toInstantiate.GetComponent<Button>().onClick.AddListener(() => 
-                {StartCoroutine(SelectTarget(currentAbility, actingCharacter));});
-
-            //Add tooltip script to each ability button
-            toInstantiate.AddComponent<ToolTips>();
-
-
-            // If the ability assigned to the button cannot be executed due to lack of FP, disable it entirely.
-            if (currentAbility.Cost > actingCharacter.Flourish)
-            {
-                toInstantiate.GetComponent<Button>().interactable = false;
-            }
-        }
-    }
 
     // A function used to initialize the combat queue.
     public void InitCombatQueue(BasePlayer[] party, List<BaseEnemy> enemies)
@@ -238,61 +142,17 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        AddPlayerAction(ability, actingCharacter, targetable);
-    }
-
-    // A function used to destroy all buttons that are children of the combat menu.
-    public void ClearCombatMenu()
-    {
-        for (int i = 0; i < combatMenu.transform.childCount; i++)
+        if (target == "back")
         {
-            GameObject toDestroy = combatMenu.transform.GetChild(i).gameObject;
-            Destroy(toDestroy);
+            Debug.Log("Go back one screen");
+            //reset
+            combatUI.RenderInputMenu(actingCharacter);
+        }
+        else
+        {
+            AddPlayerAction(ability, actingCharacter, targetable);
         }
     }
-
-    // A function used to render target buttons.
-    public void RenderTargetButtons(BaseAbility ability)
-    {
-        foreach (BasePlayer p in party)
-        {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
-            toInstantiate.GetComponent<TargetButton>().target = p.Name;
-        }
-        // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
-        if (ability.ID == 99)
-        {
-            return;
-        }
-
-        foreach (BaseEnemy e in enemies)
-        {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
-            toInstantiate.GetComponent<TargetButton>().target = e.Name;
-
-        }
-
-        //TEST adding in a back button
-
-        //GameObject backButton = Instantiate(targetButton, combatMenu.transform);
-        //backButton.GetComponentInChildren<TMP_Text>().text = "BACK";
-    }
-
-    /*//TEST BACK BUTTON CODE
-    public void ResetTEST()
-    {
-        //clear action queue somehow
-        combatQueue = new CombatQueue();
-        combatQueue.Clear();
-
-        ///I don't believe this is the correct command
-        InitCombatQueue(party, enemies);
-
-        
-    }
-    */
 
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
     public void AddPlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)
@@ -318,7 +178,7 @@ public class CombatManager : MonoBehaviour
 
         // Handle flourish cost and update UI to reflect new value.
         action.actingCharacter.Flourish -= action.ability.Cost;
-        FindPortrait(action.actingCharacter.Name).flourishBar.UpdateValueBar(action.actingCharacter.Flourish);
+        CombatUI.FindPortrait(action.actingCharacter.Name).flourishBar.UpdateValueBar(action.actingCharacter.Flourish);
 
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.ATTACK)
         {
@@ -365,7 +225,7 @@ public class CombatManager : MonoBehaviour
             }
         }
         // Handle damage/heal and update UI to reflect new value.
-        PortraitData targetPortrait = FindPortrait(action.target.Name);
+        PortraitData targetPortrait = CombatUI.FindPortrait(action.target.Name);
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(action.target.Health);
 
@@ -375,33 +235,6 @@ public class CombatManager : MonoBehaviour
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
-       
-
-    }
-
-    // A function that finds and returns a tuple of ValueBar objects (health, flourish) 
-    // corresponding to a string name of a character.
-    PortraitData FindPortrait(string name)
-    {
-        PortraitData portrait = null;
-        for (int i = 0; i < partyPortraits.transform.childCount; i++)
-        {
-            PortraitData currentChild = partyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
-            if (currentChild.nameText.text == name)
-            {
-                portrait = currentChild;
-            }
-        }
-
-        for (int i = 0; i < enemyPortraits.transform.childCount; i++)
-        {
-            PortraitData currentChild = enemyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
-            if (currentChild.nameText.text == name)
-            {
-                portrait = currentChild;
-            }
-        }
-        return portrait;
     }
 
     public void DoEnemyAction()
@@ -412,8 +245,8 @@ public class CombatManager : MonoBehaviour
     public IEnumerator TakeEnemyAction()
     {
         //Handle camera switching
-        BandCamera.SetActive(false);
-        EnemyCamera.SetActive(true);
+        combatUI.BandCamera.SetActive(false);
+        combatUI.EnemyCamera.SetActive(true);
 
         Debug.Log("Calculating enemy action...");
         BaseEnemy actingCharacter = (BaseEnemy)EventManager.Instance.EventData;
@@ -448,9 +281,9 @@ public class CombatManager : MonoBehaviour
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
 
         //Handle camera switching
-        OverviewCamera.SetActive(false);
-        EnemyCamera.SetActive(false);
-        BandCamera.SetActive(true);
+        combatUI.OverviewCamera.SetActive(false);
+        combatUI.EnemyCamera.SetActive(false);
+        combatUI.BandCamera.SetActive(true);
     }
 
     // A function used to calculate and push ally actions to the queue.
@@ -461,8 +294,8 @@ public class CombatManager : MonoBehaviour
     public IEnumerator TakeAllyAction()
     {
         //Handle camera switching
-        EnemyCamera.SetActive(false);
-        BandCamera.SetActive(true);
+        combatUI.EnemyCamera.SetActive(false);
+        combatUI.BandCamera.SetActive(true);
 
         Debug.Log("Calculating ally action...");
         BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
@@ -484,7 +317,7 @@ public class CombatManager : MonoBehaviour
         int modifiedDamage = isStrengthened ? (ability.Damage * 2) : ability.Damage;
         target.Health -= modifiedDamage;
         Debug.Log(actingCharacter.Name + " deals " + modifiedDamage + " damage to " + target.Name + "!");
-        PortraitData targetPortrait = FindPortrait(target.Name);
+        PortraitData targetPortrait = CombatUI.FindPortrait(target.Name);
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
@@ -523,9 +356,9 @@ public class CombatManager : MonoBehaviour
             BasePlayer[] partyCopy = party.Where(x => x != parsedCharacter.Item1).ToArray();
             party = partyCopy;
             // Update UI to no longer show character portrait.
-            for (int i = 0; i < partyPortraits.transform.childCount; i++)
+            for (int i = 0; i < CombatUI.Instance.partyPortraits.transform.childCount; i++)
             {
-                PortraitData currentChild = partyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+                PortraitData currentChild = CombatUI.Instance.partyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
 
                 if (currentChild.nameText.text == character.Name)
                 {
@@ -557,9 +390,9 @@ public class CombatManager : MonoBehaviour
             Debug.Log("Attempting to remove " + parsedCharacter.Item2.Name);
             enemies.Remove(parsedCharacter.Item2);
             // Update UI to no longer show character portrait.
-            for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+            for (int i = 0; i < CombatUI.Instance.enemyPortraits.transform.childCount; i++)
             {
-                PortraitData currentChild = enemyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+                PortraitData currentChild = CombatUI.Instance.enemyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
 
                 if (currentChild.nameText.text == character.Name)
                 {
@@ -655,7 +488,7 @@ public class CombatManager : MonoBehaviour
             Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "!");
         }
 
-        PortraitData targetPortrait = FindPortrait(target.Name);
+        PortraitData targetPortrait = CombatUI.FindPortrait(target.Name);
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);

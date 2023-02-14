@@ -88,7 +88,16 @@ public class ToolTips : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 descriptionDisplay.text = gameObject.GetComponent<ActionButton>().ability.Name + "\n" + "Cost: " + gameObject.GetComponent<ActionButton>().ability.Cost + "\n" + "Protects from " + gameObject.GetComponent<ActionButton>().ability.Damage + " damage" + "\n\n" + gameObject.GetComponent<ActionButton>().ability.Description;
             }
-            //CAN ADD ON FOR HEALING AND SUPPORT ABILITIES
+            //For healing abilities
+            else if (gameObject.GetComponent<ActionButton>().ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL)
+            {
+                descriptionDisplay.text = gameObject.GetComponent<ActionButton>().ability.Name + "\n" + "Cost: " + gameObject.GetComponent<ActionButton>().ability.Cost + "\n" + "Heals " + gameObject.GetComponent<ActionButton>().ability.Damage + " points" + "\n\n" + gameObject.GetComponent<ActionButton>().ability.Description;
+            }
+            //For support abilities TEXT MAY NEED UPDATE
+            else if (gameObject.GetComponent<ActionButton>().ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT)
+            {
+                descriptionDisplay.text = gameObject.GetComponent<ActionButton>().ability.Name + "\n" + "Cost: " + gameObject.GetComponent<ActionButton>().ability.Cost + "\n" + "Supports " + gameObject.GetComponent<ActionButton>().ability.Damage + " points" + "\n\n" + gameObject.GetComponent<ActionButton>().ability.Description;
+            }
         }
 
         //Make tooltips visible
