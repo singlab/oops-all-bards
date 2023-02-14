@@ -8,6 +8,8 @@ using System;
 public class CombatUI : MonoBehaviour
 {
 
+    private static CombatUI _instance;
+
     // References to player and enemy portraits.
     public GameObject partyPortraits;
     public GameObject enemyPortraits;
@@ -34,6 +36,19 @@ public class CombatUI : MonoBehaviour
     public GameObject BandCamera;
     public GameObject EnemyCamera;
 
+    public static CombatUI Instance => CombatUI._instance;
+
+    void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        } else if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +69,7 @@ public class CombatUI : MonoBehaviour
     }
 
     // A function used to render all UI elements for the demo.
-    public void RenderUI() 
+    public void RenderUI()
     {
         // Render the portrait section and combat menu.
         partyPortraits.SetActive(true);
@@ -64,39 +79,42 @@ public class CombatUI : MonoBehaviour
         //Set tooltips to initially be invisible
         currentToolTip.alpha = 0f;
         currentToolTip.blocksRaycasts = false;
-
+        
         // Instantiate portrait UI for party and enemies.
         // Need: name, current health/flourish, max health/flourish, portrait
-        foreach (BasePlayer p in combatManager.party)
+        foreach (BasePlayer p in CombatManager.Instance.party)
         {
             GameObject toInstantiate = Instantiate(portraitUI, partyPortraits.transform);
+            PortraitData portraitData = toInstantiate.GetComponent<PortraitData>();
             // Set name text
-            toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = p.Name;
+            Debug.Log("2");
+            portraitData.nameText.text = p.Name;
             // Set portraits
-            toInstantiate.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = PartyManager.Instance.GetPortraitByName(p.Name);
+            portraitData.icon.sprite = PartyManager.Instance.GetPortraitByName(p.Name);
             // Set health and flourish values and update them
-            ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
-            healthBar.maxValue = p.Health;
-            healthBar.UpdateValueBar(p.Health);
-            ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = p.Flourish;
-            flourishBar.UpdateValueBar(p.Flourish);
+            portraitData.healthBar.maxValue = p.Health;
+            portraitData.healthBar.UpdateValueBar(p.Health);
+            portraitData.flourishBar.maxValue = p.Flourish;
+            portraitData.flourishBar.UpdateValueBar(p.Flourish);
         }
 
-        foreach (BaseEnemy e in combatManager.enemies)
+        foreach (BaseEnemy e in CombatManager.Instance.enemies)
         {
             GameObject toInstantiate = Instantiate(portraitUI, enemyPortraits.transform);
+            PortraitData portraitData = toInstantiate.GetComponent<PortraitData>();
+            toInstantiate.transform.localScale = new Vector3(toInstantiate.transform.localScale.x * -1, toInstantiate.transform.localScale.y, toInstantiate.transform.localScale.z);
             // Set name text
-            toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<TMP_Text>().text = e.Name;
+            portraitData.nameText.text = e.Name;
+            portraitData.nameText.transform.localScale = new Vector3(-1, 1, 1);
             // Set portraits
-            toInstantiate.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = PartyManager.Instance.GetPortraitByName("Piggy");
+            portraitData.icon.sprite = PartyManager.Instance.GetPortraitByName("Piggy");
             // Set health and flourish values and update them
-            ValueBar healthBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).GetComponent<ValueBar>();
-            healthBar.maxValue = e.Health;
-            healthBar.UpdateValueBar(e.Health);
-            ValueBar flourishBar = toInstantiate.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).GetComponent<ValueBar>();
-            flourishBar.maxValue = e.Flourish;
-            flourishBar.UpdateValueBar(e.Flourish);
+            portraitData.healthBar.maxValue = e.Health;
+            portraitData.healthBar.UpdateValueBar(e.Health);
+            portraitData.healthBar.transform.Find("Background").transform.Find("HealthText").transform.localScale = new Vector3(-1, 1, 1);
+            portraitData.flourishBar.maxValue = e.Flourish;
+            portraitData.flourishBar.UpdateValueBar(e.Flourish);
+            portraitData.flourishBar.transform.Find("Background").transform.Find("FlourishText").transform.localScale = new Vector3(-1, 1, 1);
             //Dont really need to see the flourish bar for enemies for any reason right now
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
@@ -201,5 +219,29 @@ public class CombatUI : MonoBehaviour
             }
         }
         return relevantBars;
+    }
+
+    // A function that finds and returns a PortraitData object corresponding to a string name of a character.
+    public static PortraitData FindPortrait(string name)
+    {
+        PortraitData portrait = null;
+        for (int i = 0; i < CombatUI.Instance.partyPortraits.transform.childCount; i++)
+        {
+            PortraitData currentChild = CombatUI.Instance.partyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+            if (currentChild.nameText.text == name)
+            {
+                portrait = currentChild;
+            }
+        }
+
+        for (int i = 0; i < CombatUI.Instance.enemyPortraits.transform.childCount; i++)
+        {
+            PortraitData currentChild = CombatUI.Instance.enemyPortraits.transform.GetChild(i).GetComponent<PortraitData>();
+            if (currentChild.nameText.text == name)
+            {
+                portrait = currentChild;
+            }
+        }
+        return portrait;
     }
 }
