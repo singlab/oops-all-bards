@@ -255,7 +255,7 @@ public class CombatManager : MonoBehaviour
             ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
             if (desiredChild.GetComponent<TMP_Text>().text == name)
             {
-                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+                portrait = currentChild;
             }
         }
 
@@ -267,10 +267,10 @@ public class CombatManager : MonoBehaviour
             ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>();;
             if (desiredChild.GetComponent<TMP_Text>().text == name)
             {
-                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+                portrait = currentChild;
             }
         }
-        return relevantBars;
+        return portrait;
     }
     */
 
