@@ -45,9 +45,7 @@ public class CombatManager : MonoBehaviour
         InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
         DemoManager.Instance.CheckQueue();
         combatUI = UI.GetComponent<CombatUI>();
-        combatUI.RenderUI();
         combatUI.OverviewCamera.SetActive(true);
-       
 
         Debug.Log("I've finished starting up.");
     }
