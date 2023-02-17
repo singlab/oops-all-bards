@@ -133,8 +133,8 @@ public class CombatUI : MonoBehaviour
         PortraitData virtData = virtuosoBar.GetComponent<PortraitData>();
         
         virtData.nameText.text = "Virtuoso";
-        virtData.healthBar.maxValue = 10;
-        virtData.healthBar.UpdateValueBar(influenceAlly.;
+        virtData.healthBar.maxValue = 10;        //combatManager.
+        virtData.healthBar.UpdateValueBar(combatManager.V);
         if(virtData.transform.Find("Frame").transform.Find("Background").transform.Find("HealthBar") != null)
         {
             virtData.transform.Find("Frame").transform.Find("Background").transform.Find("FlourishBar").gameObject.SetActive(false);

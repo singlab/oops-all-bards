@@ -15,7 +15,6 @@ public class InfluenceAllyTurn : MonoBehaviour, ICombatQueueable
     public BasePlayer influencedCharacter { get; set; }
 
 
-    public InfluenceAllyTurn;
     public void Execute()
     {
         Debug.Log(actingCharacter.Name + "is attempting to influence " + influencedCharacter.Name + "'s turn.");
@@ -31,8 +30,8 @@ public class InfluenceAllyTurn : MonoBehaviour, ICombatQueueable
             CombatManager.Instance.UI.GetComponent<CombatUI>().RenderInputMenu(influencedCharacter);
 
             //Virtuoso test: should increase virtuoso value when influence succeeds
-            CombatManager.Instance.influenceAlly++;
-            Debug.Log(V + " Virtuoso");
+            CombatManager.Instance.V++;
+            Debug.Log(CombatManager.Instance.V + " Virtuoso");
         }
         else
         {

@@ -25,7 +25,8 @@ public class CombatManager : MonoBehaviour
     // A reference to a target name, if any.
     public string target = null;
 
-
+    //Virtuoso Testing
+    public int V = 1;
     public InfluenceAllyTurn influenceAlly;
 
     public static CombatManager Instance => CombatManager._instance;
