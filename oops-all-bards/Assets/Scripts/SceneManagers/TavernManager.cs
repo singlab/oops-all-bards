@@ -30,7 +30,7 @@ public class TavernManager : MonoBehaviour
 
         playerModel = GameObject.FindGameObjectWithTag("Player");
         quintonModel = GameObject.Find("Quinton");
-        if (DemoManager.Instance.tavernVisits == 2)
+        if (GameManager.Instance.tavernVisits == 2)
         {
             //Prevents bad bug when going in the backrooms after the first fight
             Destroy(GameObject.Find("QuintonQuestTrigger")); 
