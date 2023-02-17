@@ -221,7 +221,7 @@ public class InventoryItemManager : MonoBehaviour
         if (playerInventoryUI.activeSelf)
         {
             Cursor.lockState = CursorLockMode.Confined;
-            DemoManager.Instance.StartCoroutine(DemoManager.togglePlayerPause());
+            GameManager.Instance.StartCoroutine(GameManager.togglePlayerPause());
         }
         else
         {
@@ -231,7 +231,7 @@ public class InventoryItemManager : MonoBehaviour
                 equipableTabs[i].SetActive(false);
 
             }
-            DemoManager.Instance.TogglePlayerControls();
+            GameManager.Instance.TogglePlayerControls();
         }
     }
 
