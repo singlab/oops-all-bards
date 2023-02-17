@@ -24,6 +24,10 @@ public class CombatManager : MonoBehaviour
     public int rounds = 1;
     // A reference to a target name, if any.
     public string target = null;
+
+
+    public InfluenceAllyTurn influenceAlly;
+
     public static CombatManager Instance => CombatManager._instance;
 
     void Awake()
@@ -45,7 +49,6 @@ public class CombatManager : MonoBehaviour
         InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), DemoManager.Instance.GenerateEnemies());
         DemoManager.Instance.CheckQueue();
         combatUI = UI.GetComponent<CombatUI>();
-        combatUI.RenderUI();
         combatUI.OverviewCamera.SetActive(true);
        
 
@@ -225,6 +228,7 @@ public class CombatManager : MonoBehaviour
             }
         }
         // Handle damage/heal and update UI to reflect new value.
+        
         PortraitData targetPortrait = CombatUI.FindPortrait(action.target.Name);
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(action.target.Health);

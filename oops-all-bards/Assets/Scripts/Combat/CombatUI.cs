@@ -36,6 +36,12 @@ public class CombatUI : MonoBehaviour
     public GameObject BandCamera;
     public GameObject EnemyCamera;
 
+
+    //TEST
+    public ValueBar virtuosoBar;
+    public GameObject specialSpace;
+    public InfluenceAllyTurn influenceAlly;
+
     public static CombatUI Instance => CombatUI._instance;
 
     void Awake()
@@ -118,6 +124,22 @@ public class CombatUI : MonoBehaviour
             //Dont really need to see the flourish bar for enemies for any reason right now
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
+
+
+        //Test virtuoso
+        //Virtuoso test
+
+        GameObject virtuosoBar = Instantiate(portraitUI, specialSpace.transform);
+        PortraitData virtData = virtuosoBar.GetComponent<PortraitData>();
+        
+        virtData.nameText.text = "Virtuoso";
+        virtData.healthBar.maxValue = 10;
+        virtData.healthBar.UpdateValueBar(influenceAlly.;
+        if(virtData.transform.Find("Frame").transform.Find("Background").transform.Find("HealthBar") != null)
+        {
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("FlourishBar").gameObject.SetActive(false);
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").gameObject.SetActive(false);
+        }
     }
 
     // Render the UI for the input.
@@ -185,7 +207,7 @@ public class CombatUI : MonoBehaviour
 
         }
 
-        //TEST adding in a back button
+        //Back button
 
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
@@ -201,6 +223,7 @@ public class CombatUI : MonoBehaviour
             Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
             ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
             ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+
             if (desiredChild.GetComponent<TMP_Text>().text == name)
             {
                 relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
@@ -218,6 +241,18 @@ public class CombatUI : MonoBehaviour
                 relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
             }
         }
+
+        //Virtuoso test
+        Transform currentVirt = partyPortraits.transform.GetChild(1);
+        Transform desiredVirt = currentVirt.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+        ValueBar flourishB = currentVirt.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+        ValueBar virtuosoBar = currentVirt.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+
+        if (desiredVirt.GetComponent<TMP_Text>().text == name)
+        {
+            relevantBars = new Tuple<ValueBar, ValueBar>(virtuosoBar, flourishB);
+        }
+
         return relevantBars;
     }
 
