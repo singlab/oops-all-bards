@@ -41,6 +41,8 @@ public class CombatUI : MonoBehaviour
     public ValueBar virtuosoBar;
     public GameObject specialSpace;
     public InfluenceAllyTurn influenceAlly;
+    public int V = 0;
+
 
     public static CombatUI Instance => CombatUI._instance;
 
@@ -85,7 +87,22 @@ public class CombatUI : MonoBehaviour
         //Set tooltips to initially be invisible
         currentToolTip.alpha = 0f;
         currentToolTip.blocksRaycasts = false;
-        
+
+        //Test virtuoso
+        //Virtuoso test
+
+        GameObject virtuosoBar = Instantiate(portraitUI, specialSpace.transform);
+        PortraitData virtData = virtuosoBar.GetComponent<PortraitData>();
+
+        virtData.nameText.text = "Virtuoso";
+        virtData.healthBar.maxValue = 10;  //test   
+        virtData.healthBar.UpdateValueBar(V); ///I believe that the issue starts here
+        if (virtData.transform.Find("Frame").transform.Find("Background").transform.Find("HealthBar") != null)
+        {
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("FlourishBar").gameObject.SetActive(false);
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").gameObject.SetActive(false);
+        }
+
         // Instantiate portrait UI for party and enemies.
         // Need: name, current health/flourish, max health/flourish, portrait
         foreach (BasePlayer p in CombatManager.Instance.party)
@@ -102,6 +119,8 @@ public class CombatUI : MonoBehaviour
             portraitData.healthBar.UpdateValueBar(p.Health);
             portraitData.flourishBar.maxValue = p.Flourish;
             portraitData.flourishBar.UpdateValueBar(p.Flourish);
+
+
         }
 
         foreach (BaseEnemy e in CombatManager.Instance.enemies)
@@ -126,20 +145,7 @@ public class CombatUI : MonoBehaviour
         }
 
 
-        //Test virtuoso
-        //Virtuoso test
-
-        GameObject virtuosoBar = Instantiate(portraitUI, specialSpace.transform);
-        PortraitData virtData = virtuosoBar.GetComponent<PortraitData>();
-        
-        virtData.nameText.text = "Virtuoso";
-        virtData.healthBar.maxValue = 10;        //combatManager.
-        virtData.healthBar.UpdateValueBar(combatManager.V);
-        if(virtData.transform.Find("Frame").transform.Find("Background").transform.Find("HealthBar") != null)
-        {
-            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("FlourishBar").gameObject.SetActive(false);
-            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").gameObject.SetActive(false);
-        }
+       
     }
 
     // Render the UI for the input.
@@ -147,6 +153,7 @@ public class CombatUI : MonoBehaviour
     {
         // Render the UI for the input.
         Debug.Log("Rendering input menu for " + actingCharacter.Name + " now.");
+        Debug.Log(V + " Virtuoso");
 
         // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
         for (int i = 0; i < actingCharacter.PlayerClass.Abilities.Count; i++)
@@ -242,17 +249,7 @@ public class CombatUI : MonoBehaviour
             }
         }
 
-        //Virtuoso test
-        Transform currentVirt = partyPortraits.transform.GetChild(1);
-        Transform desiredVirt = currentVirt.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
-        ValueBar flourishB = currentVirt.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
-        ValueBar virtuosoBar = currentVirt.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
-
-        if (desiredVirt.GetComponent<TMP_Text>().text == name)
-        {
-            relevantBars = new Tuple<ValueBar, ValueBar>(virtuosoBar, flourishB);
-        }
-
+        
         return relevantBars;
     }
 

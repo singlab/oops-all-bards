@@ -18,20 +18,25 @@ public class InfluenceAllyTurn : MonoBehaviour, ICombatQueueable
     public void Execute()
     {
         Debug.Log(actingCharacter.Name + "is attempting to influence " + influencedCharacter.Name + "'s turn.");
-        
+
         TCPTestClient.Instance.RefreshWMEs();
 
         if(ShouldInfluence())
         {
             // If check succeeds,
             actingCharacter.OwnsTurn = true;
+            if(actingCharacter.OwnsTurn)
+            {
+                //Virtuoso test: should increase virtuoso value when influence succeeds
+                CombatUI.Instance.V++;
+
+            }
+
             // Possibly might need to add a new event type here 
             EventManager.Instance.InvokeEvent(EventType.AwaitPlayerInput, influencedCharacter);
             CombatManager.Instance.UI.GetComponent<CombatUI>().RenderInputMenu(influencedCharacter);
 
-            //Virtuoso test: should increase virtuoso value when influence succeeds
-            CombatManager.Instance.V++;
-            Debug.Log(CombatManager.Instance.V + " Virtuoso");
+            
         }
         else
         {
