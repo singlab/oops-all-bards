@@ -82,7 +82,7 @@ public class DemoManager : MonoBehaviour
         fader.FadeToLevel(sceneName);
     }
 
-    public List<BaseEnemy> GenerateEnemies()
+    public List<BaseEnemy> GenerateDemoEnemies()
     {
         List<BaseEnemy> enemies = new List<BaseEnemy>();
         BaseEnemy enemy = new BaseEnemy("Devotee", 10, 5, 0, jsonReader.baseClasses.GetRandomClass());
@@ -91,6 +91,7 @@ public class DemoManager : MonoBehaviour
         enemies.Add(enemy);
         return enemies;
     }
+    
 
     public void RecruitQuinton()
     {
