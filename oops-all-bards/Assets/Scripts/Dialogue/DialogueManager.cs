@@ -45,7 +45,7 @@ public class DialogueManager : MonoBehaviour
     public void ToggleDialogueUI()
     {
         dialogueUI.SetActive(!dialogueUI.activeSelf);
-
+        dialogueUI.GetComponent<Animator>().Play("dialogueBox");
     }
 
     public void StartDialogue(int dialogueID)
@@ -147,7 +147,9 @@ public class DialogueManager : MonoBehaviour
         questUI.SetActive(true);
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueIndex);
         dialogue.Exhausted = true;
-        ToggleDialogueUI();
+        Animator anim = dialogueUI.GetComponent<Animator>();
+        dialogueUI.GetComponent<Animator>().Play("dialogueBoxClose");
+        //Invoke("ToggleDialogueUI", anim.GetCurrentAnimatorClipInfo(0).Length);
         DemoManager.Instance.TogglePlayerControls();
 
     }
