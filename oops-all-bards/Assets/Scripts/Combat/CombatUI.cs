@@ -37,8 +37,8 @@ public class CombatUI : MonoBehaviour
     public GameObject EnemyCamera;
 
 
-    //TEST
-    public ValueBar virtuosoBar;
+    //Reference to Virtuoso items
+    public PortraitData virtData;
     public GameObject specialSpace;
     public InfluenceAllyTurn influenceAlly;
     public int V = 0;
@@ -88,15 +88,12 @@ public class CombatUI : MonoBehaviour
         currentToolTip.alpha = 0f;
         currentToolTip.blocksRaycasts = false;
 
-        //Test virtuoso
-        //Virtuoso test
-
+        //Instantiate Virtuoso Bar
         GameObject virtuosoBar = Instantiate(portraitUI, specialSpace.transform);
-        PortraitData virtData = virtuosoBar.GetComponent<PortraitData>();
+        virtData = virtuosoBar.GetComponent<PortraitData>();
 
         virtData.nameText.text = "Virtuoso";
-        virtData.healthBar.maxValue = 10;  //test   
-        virtData.healthBar.UpdateValueBar(V); ///I believe that the issue starts here
+        virtData.healthBar.maxValue = 3;  //need to figure out how to limit this in ui  
         if (virtData.transform.Find("Frame").transform.Find("Background").transform.Find("HealthBar") != null)
         {
             virtData.transform.Find("Frame").transform.Find("Background").transform.Find("FlourishBar").gameObject.SetActive(false);

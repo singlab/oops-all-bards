@@ -25,10 +25,6 @@ public class CombatManager : MonoBehaviour
     // A reference to a target name, if any.
     public string target = null;
 
-    //Virtuoso Testing
-    public InfluenceAllyTurn influenceAlly;
-    public int V = 0;
-
     public static CombatManager Instance => CombatManager._instance;
 
     void Awake()
@@ -234,6 +230,8 @@ public class CombatManager : MonoBehaviour
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(action.target.Health);
 
+        //Update UI to reflect current Virtuoso value
+        CombatUI.Instance.virtData.healthBar.UpdateValueBar(combatUI.V); 
 
         yield return new WaitForSeconds(3);
         Debug.Log("pauuseeee");
