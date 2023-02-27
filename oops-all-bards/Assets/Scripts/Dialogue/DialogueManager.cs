@@ -57,7 +57,7 @@ public class DialogueManager : MonoBehaviour
         questUI.SetActive(false);
         nodeIndex = 0;
         Debug.Log("Starting dialogue.");
-        DemoManager.Instance.TogglePlayerControls();
+        GameManager.Instance.TogglePlayerControls();
         Debug.Log("toggle pause in dialogue");
         dialogueIndex = dialogueID;
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueID);

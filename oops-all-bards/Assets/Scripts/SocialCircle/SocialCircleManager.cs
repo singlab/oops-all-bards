@@ -49,7 +49,7 @@ public class SocialCircleManager : MonoBehaviour
 
         //lock movement and camera while in menu
         Cursor.lockState = CursorLockMode.Confined;
-        DemoManager.Instance.StartCoroutine(DemoManager.togglePlayerPause());
+        GameManager.Instance.StartCoroutine(GameManager.togglePlayerPause());
         
     }
 
@@ -59,7 +59,7 @@ public class SocialCircleManager : MonoBehaviour
         characterSocialCircleUI.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
-        DemoManager.Instance.TogglePlayerControls();
+        GameManager.Instance.TogglePlayerControls();
     }
 
         public void RenderSocialCircleUI()
