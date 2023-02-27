@@ -150,7 +150,7 @@ public class DialogueManager : MonoBehaviour
         Animator anim = dialogueUI.GetComponent<Animator>();
         dialogueUI.GetComponent<Animator>().Play("dialogueBoxClose");
         //Invoke("ToggleDialogueUI", anim.GetCurrentAnimatorClipInfo(0).Length);
-        DemoManager.Instance.TogglePlayerControls();
+        GameManager.Instance.TogglePlayerControls();
 
     }
 
