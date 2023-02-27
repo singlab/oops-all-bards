@@ -192,35 +192,6 @@ public class CombatUI : MonoBehaviour
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
     }
 
-    public Tuple<ValueBar, ValueBar> FindValueBars(string name)
-    {
-        Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
-        for (int i = 0; i < partyPortraits.transform.childCount; i++)
-        {
-            Transform currentChild = partyPortraits.transform.GetChild(i);
-            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
-            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
-            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
-            if (desiredChild.GetComponent<TMP_Text>().text == name)
-            {
-                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
-            }
-        }
-
-        for (int i = 0; i < enemyPortraits.transform.childCount; i++)
-        {
-            Transform currentChild = enemyPortraits.transform.GetChild(i);
-            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
-            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
-            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
-            if (desiredChild.GetComponent<TMP_Text>().text == name)
-            {
-                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
-            }
-        }
-        return relevantBars;
-    }
-
     // A function that finds and returns a PortraitData object corresponding to a string name of a character.
     public static PortraitData FindPortrait(string name)
     {
