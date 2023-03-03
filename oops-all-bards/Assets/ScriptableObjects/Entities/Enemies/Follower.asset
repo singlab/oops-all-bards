@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90f3fa8abc27f74ea9033c6e8260649, type: 3}
   m_Name: Follower
   m_EditorClassIdentifier: 
-  enemyName: 
-  enemyModel: {fileID: 0}
-  description: 
-  health: 0
-  flourish: 0
+  enemyName: Follower
+  enemyModel: {fileID: 101078, guid: ee184764e771a3e4abd5783e82f1e128, type: 3}
+  description: An example
+  health: 30
+  flourish: 6
   shield: 0

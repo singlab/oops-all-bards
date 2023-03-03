@@ -17,7 +17,7 @@ public class EnemyFactory : MonoBehaviour
     [SerializeField]
     private List<EnemyData> enemyDataList;
 
-    /* Locations of where to spawn the enemy models (current max is 2) */
+    /* Locations of where to spawn the enemy models (current max is 3) */
     [SerializeField]
     private List<Transform> enemyTransforms;
 
