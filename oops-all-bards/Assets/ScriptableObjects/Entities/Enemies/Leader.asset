@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Leader
   enemyModel: {fileID: 154742, guid: 83905b55894130240b8d1a2922bf2198, type: 3}
-  description: 
+  description: An example Enemy SO
   health: 20
   flourish: 5
   shield: 0
