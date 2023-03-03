@@ -73,7 +73,7 @@ public class CombatUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // A function used to render all UI elements for the demo.
@@ -142,11 +142,11 @@ public class CombatUI : MonoBehaviour
         }
 
 
-       
+
     }
 
     // Render the UI for the input.
-    public void RenderInputMenu(BasePlayer actingCharacter) 
+    public void RenderInputMenu(BasePlayer actingCharacter)
     {
         // Render the UI for the input.
         Debug.Log("Rendering input menu for " + actingCharacter.Name + " now.");
@@ -164,7 +164,7 @@ public class CombatUI : MonoBehaviour
             toInstantiate.GetComponent<ActionButton>().actingCharacter = actingCharacter;
             // // Add on click functions to the buttons to create a PlayerAction queueable.
             toInstantiate.GetComponent<Button>().onClick.AddListener(() =>
-            { StartCoroutine(combatManager.SelectTarget(currentAbility, actingCharacter)); }); 
+            { StartCoroutine(combatManager.SelectTarget(currentAbility, actingCharacter)); });
 
             //Add tooltip script to each ability button
             toInstantiate.AddComponent<ToolTips>();
@@ -191,31 +191,51 @@ public class CombatUI : MonoBehaviour
     // A function used to render target buttons.
     public void RenderTargetButtons(BaseAbility ability)
     {
-        foreach (BasePlayer p in combatManager.party)
+
+        //Enemy target should not appear if ability is defending or influencing
+        //Note: this should theoretically exclude supportive support abilities, but right now that classification includes offensive support abilities
+        //Thus enemies will currently now show when targeting for support abilites for now
+        if (ability.ID != 99 && ability.CombatType != BaseAbility.CombatAbilityTypes.HEAL && ability.CombatType != BaseAbility.CombatAbilityTypes.DEFEND && ability.CombatType != BaseAbility.CombatAbilityTypes.SUPPORT)
         {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
-            toInstantiate.GetComponent<TargetButton>().target = p.Name;
+            foreach (BaseEnemy e in combatManager.enemies)
+            {
+                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
+                toInstantiate.GetComponent<TargetButton>().target = e.Name;
+                
+            }
+        }
+        else if (ability.ID != 99 && (ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL || ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND || ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT))
+        {
+            foreach (BasePlayer p in combatManager.party)
+            {
+                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
+                toInstantiate.GetComponent<TargetButton>().target = p.Name;
+            }
         }
         // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
-        if (ability.ID == 99)
+        else if(ability.ID == 99)
         {
-            return;
+            foreach (BasePlayer p in combatManager.party)
+            {
+                if (p.ID != 0)
+                {
+                    GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                    toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
+                    toInstantiate.GetComponent<TargetButton>().target = p.Name;
+                }
+            }
         }
+        
+        
 
-        foreach (BaseEnemy e in combatManager.enemies)
-        {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
-            toInstantiate.GetComponent<TargetButton>().target = e.Name;
-
-        }
-
-        //Back button
-
+      
+        //Back button must be instantiated after enemy target buttons else there is an ordering issue with the ui display
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
+
     }
 
     public Tuple<ValueBar, ValueBar> FindValueBars(string name)
