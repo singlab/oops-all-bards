@@ -9,6 +9,7 @@ public class EnemyFactory : MonoBehaviour
     private static EnemyFactory _instance;
     public static EnemyFactory Instance => EnemyFactory._instance;
 
+    /* List of all the possible enemy models to spawn */
     [SerializeField]
     private List<GameObject> enemyModelPrefabs;
 
@@ -16,6 +17,7 @@ public class EnemyFactory : MonoBehaviour
     [SerializeField]
     private List<EnemyData> enemyDataList;
 
+    /* Locations of where to spawn the enemy models (current max is 2) */
     [SerializeField]
     private List<Transform> enemyTransforms;
 
