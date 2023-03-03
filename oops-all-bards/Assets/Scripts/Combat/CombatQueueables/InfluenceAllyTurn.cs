@@ -28,7 +28,7 @@ public class InfluenceAllyTurn : MonoBehaviour, ICombatQueueable
             if(actingCharacter.OwnsTurn)
             {
                 //Virtuoso test: should increase virtuoso value when influence succeeds
-                CombatUI.Instance.V++;
+                CombatUI.Instance.V += 1;
 
             }
 

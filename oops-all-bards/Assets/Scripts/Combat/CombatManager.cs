@@ -231,8 +231,10 @@ public class CombatManager : MonoBehaviour
         targetPortrait.healthBar.UpdateValueBar(action.target.Health);
 
         //Update UI to reflect current Virtuoso value
-        CombatUI.Instance.virtData.healthBar.UpdateValueBar(combatUI.V); 
-
+        if (combatUI.V < CombatUI.Instance.virtData.healthBar.maxValue + 1)
+        {
+            CombatUI.Instance.virtData.healthBar.UpdateValueBar(combatUI.V);
+        }
         yield return new WaitForSeconds(3);
         Debug.Log("pauuseeee");
 
