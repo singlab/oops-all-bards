@@ -50,9 +50,18 @@ MonoBehaviour:
   - {fileID: 169604, guid: 507f5dc602b42c549a32a51aa9236bb1, type: 3}
   - {fileID: 183992, guid: 5e2584a852ef63142b40e217afbf01bc, type: 3}
   - {fileID: 193144, guid: c4f65cc2474b3f1438e9c9389c03822b, type: 3}
+  enemyDataList:
+  - {fileID: 11400000, guid: fea20b433af93f14493e7d4a6ce76a48, type: 2}
+  - {fileID: 11400000, guid: 3c8699dcc31f7634383eddfbd4a9e34b, type: 2}
   enemyTransforms:
   - {fileID: 0}
   - {fileID: 0}
   runtimeAnimatorController: {fileID: 9100000, guid: 1a11c41fa98154a4ebfc7b664182fb10,
     type: 2}
   enemyNumber: 0
+  enemyNames:
+  - Devotee
+  - Fanatic
+  - Advocate
+  - Follower
+  - Recruit
