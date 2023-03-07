@@ -24,6 +24,7 @@ public class CombatManager : MonoBehaviour
     public int rounds = 1;
     // A reference to a target name, if any.
     public string target = null;
+
     public static CombatManager Instance => CombatManager._instance;
 
     void Awake()
@@ -223,11 +224,16 @@ public class CombatManager : MonoBehaviour
             }
         }
         // Handle damage/heal and update UI to reflect new value.
+        
         PortraitData targetPortrait = CombatUI.FindPortrait(action.target.Name);
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(action.target.Health);
 
-
+        //Update UI to reflect current Virtuoso value
+        if (combatUI.V < CombatUI.Instance.virtData.healthBar.maxValue + 1)
+        {
+            CombatUI.Instance.virtData.healthBar.UpdateValueBar(combatUI.V);
+        }
         yield return new WaitForSeconds(3);
         Debug.Log("pauuseeee");
 

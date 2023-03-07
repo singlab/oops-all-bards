@@ -36,6 +36,14 @@ public class CombatUI : MonoBehaviour
     public GameObject BandCamera;
     public GameObject EnemyCamera;
 
+
+    //Reference to Virtuoso items
+    public PortraitData virtData;
+    public GameObject specialSpace;
+    public InfluenceAllyTurn influenceAlly;
+    public int V = 0;
+
+
     public static CombatUI Instance => CombatUI._instance;
 
     void Awake()
@@ -65,7 +73,7 @@ public class CombatUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // A function used to render all UI elements for the demo.
@@ -79,7 +87,19 @@ public class CombatUI : MonoBehaviour
         //Set tooltips to initially be invisible
         currentToolTip.alpha = 0f;
         currentToolTip.blocksRaycasts = false;
-        
+
+        //Instantiate Virtuoso Bar
+        GameObject virtuosoBar = Instantiate(portraitUI, specialSpace.transform);
+        virtData = virtuosoBar.GetComponent<PortraitData>();
+
+        virtData.nameText.text = "Virtuoso";
+        virtData.healthBar.maxValue = 3;  //need to figure out how to limit this in ui  
+        if (virtData.transform.Find("Frame").transform.Find("Background").transform.Find("HealthBar") != null)
+        {
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("FlourishBar").gameObject.SetActive(false);
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").gameObject.SetActive(false);
+        }
+
         // Instantiate portrait UI for party and enemies.
         // Need: name, current health/flourish, max health/flourish, portrait
         foreach (BasePlayer p in CombatManager.Instance.party)
@@ -96,6 +116,8 @@ public class CombatUI : MonoBehaviour
             portraitData.healthBar.UpdateValueBar(p.Health);
             portraitData.flourishBar.maxValue = p.Flourish;
             portraitData.flourishBar.UpdateValueBar(p.Flourish);
+
+
         }
 
         foreach (BaseEnemy e in CombatManager.Instance.enemies)
@@ -118,13 +140,17 @@ public class CombatUI : MonoBehaviour
             //Dont really need to see the flourish bar for enemies for any reason right now
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
+
+
+
     }
 
     // Render the UI for the input.
-    public void RenderInputMenu(BasePlayer actingCharacter) 
+    public void RenderInputMenu(BasePlayer actingCharacter)
     {
         // Render the UI for the input.
         Debug.Log("Rendering input menu for " + actingCharacter.Name + " now.");
+        Debug.Log(V + " Virtuoso");
 
         // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
         for (int i = 0; i < actingCharacter.PlayerClass.Abilities.Count; i++)
@@ -138,7 +164,7 @@ public class CombatUI : MonoBehaviour
             toInstantiate.GetComponent<ActionButton>().actingCharacter = actingCharacter;
             // // Add on click functions to the buttons to create a PlayerAction queueable.
             toInstantiate.GetComponent<Button>().onClick.AddListener(() =>
-            { StartCoroutine(combatManager.SelectTarget(currentAbility, actingCharacter)); }); 
+            { StartCoroutine(combatManager.SelectTarget(currentAbility, actingCharacter)); });
 
             //Add tooltip script to each ability button
             toInstantiate.AddComponent<ToolTips>();
@@ -165,31 +191,83 @@ public class CombatUI : MonoBehaviour
     // A function used to render target buttons.
     public void RenderTargetButtons(BaseAbility ability)
     {
-        foreach (BasePlayer p in combatManager.party)
+
+        //Enemy target should not appear if ability is defending or influencing
+        //Note: this should theoretically exclude supportive support abilities, but right now that classification includes offensive support abilities
+        //Thus enemies will currently now show when targeting for support abilites for now
+        if (ability.ID != 99 && ability.CombatType != BaseAbility.CombatAbilityTypes.HEAL && ability.CombatType != BaseAbility.CombatAbilityTypes.DEFEND && ability.CombatType != BaseAbility.CombatAbilityTypes.SUPPORT)
         {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
-            toInstantiate.GetComponent<TargetButton>().target = p.Name;
+            foreach (BaseEnemy e in combatManager.enemies)
+            {
+                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
+                toInstantiate.GetComponent<TargetButton>().target = e.Name;
+                
+            }
+        }
+        else if (ability.ID != 99 && (ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL || ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND || ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT))
+        {
+            foreach (BasePlayer p in combatManager.party)
+            {
+                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
+                toInstantiate.GetComponent<TargetButton>().target = p.Name;
+            }
         }
         // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
-        if (ability.ID == 99)
+        else if(ability.ID == 99)
         {
-            return;
+            foreach (BasePlayer p in combatManager.party)
+            {
+                if (p.ID != 0)
+                {
+                    GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                    toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
+                    toInstantiate.GetComponent<TargetButton>().target = p.Name;
+                }
+            }
         }
+        
+        
 
-        foreach (BaseEnemy e in combatManager.enemies)
-        {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
-            toInstantiate.GetComponent<TargetButton>().target = e.Name;
-
-        }
-
-        //TEST adding in a back button
-
+      
+        //Back button must be instantiated after enemy target buttons else there is an ordering issue with the ui display
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
+
+    }
+
+    public Tuple<ValueBar, ValueBar> FindValueBars(string name)
+    {
+        Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
+        for (int i = 0; i < partyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = partyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+
+        for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = enemyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+
+        
+        return relevantBars;
     }
 
     // A function that finds and returns a PortraitData object corresponding to a string name of a character.

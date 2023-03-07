@@ -458,6 +458,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dc22a45447552f4a969eeeb2ba17544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nameText: {fileID: 0}
+  icon: {fileID: 0}
+  healthBar: {fileID: 0}
+  flourishBar: {fileID: 0}
+  anim: {fileID: 0}
 --- !u!1 &3767627692152780244
 GameObject:
   m_ObjectHideFlags: 0
