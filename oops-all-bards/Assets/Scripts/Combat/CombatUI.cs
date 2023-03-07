@@ -31,6 +31,12 @@ public class CombatUI : MonoBehaviour
     CombatManager combatManager;
     public GameObject combat;
 
+    //Reference to Virtuoso items
+    public PortraitData virtData;
+    public GameObject specialSpace;
+    public InfluenceAllyTurn influenceAlly;
+    public int V = 0;
+
     //A reference to the virtual cameras for combat.
     public CinemachineVirtualCamera OverviewCamera;
     public CinemachineVirtualCamera AudienceCamera;
