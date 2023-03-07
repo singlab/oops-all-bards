@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Cinemachine;
 
 public class CombatUI : MonoBehaviour
 {
@@ -31,10 +32,10 @@ public class CombatUI : MonoBehaviour
     public GameObject combat;
 
     //A reference to the virtual cameras for combat.
-    public GameObject OverviewCamera;
-    public GameObject AudienceCamera;
-    public GameObject BandCamera;
-    public GameObject EnemyCamera;
+    public CinemachineVirtualCamera OverviewCamera;
+    public CinemachineVirtualCamera AudienceCamera;
+    public CinemachineVirtualCamera BandCamera;
+    public CinemachineVirtualCamera EnemyCamera;
 
     public static CombatUI Instance => CombatUI._instance;
 
@@ -55,7 +56,7 @@ public class CombatUI : MonoBehaviour
     {
         combatManager = combat.GetComponent<CombatManager>();
         RenderUI();
-        OverviewCamera.SetActive(true);
+        OverviewCamera.enabled = true;
         Cursor.lockState = CursorLockMode.Confined;
         Debug.Log(Cursor.lockState);
 
@@ -125,6 +126,7 @@ public class CombatUI : MonoBehaviour
     {
         // Render the UI for the input.
         Debug.Log("Rendering input menu for " + actingCharacter.Name + " now.");
+        SetActiveCamera(OverviewCamera);
 
         // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
         for (int i = 0; i < actingCharacter.PlayerClass.Abilities.Count; i++)
@@ -165,28 +167,29 @@ public class CombatUI : MonoBehaviour
     // A function used to render target buttons.
     public void RenderTargetButtons(BaseAbility ability)
     {
-        foreach (BasePlayer p in combatManager.party)
-        {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
-            toInstantiate.GetComponent<TargetButton>().target = p.Name;
-        }
         // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
-        if (ability.ID == 99)
+        if (ability.ID == 99 || ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT || ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL || ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
         {
-            return;
+            foreach (BasePlayer p in combatManager.party)
+            {
+                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
+                toInstantiate.GetComponent<TargetButton>().target = p.Name;
+            }
         }
 
-        foreach (BaseEnemy e in combatManager.enemies)
+        else
         {
-            GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-            toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
-            toInstantiate.GetComponent<TargetButton>().target = e.Name;
+            foreach (BaseEnemy e in combatManager.enemies)
+            {
+                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
+                toInstantiate.GetComponent<TargetButton>().target = e.Name;
 
+            }
         }
 
         //TEST adding in a back button
-
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
@@ -214,5 +217,23 @@ public class CombatUI : MonoBehaviour
             }
         }
         return portrait;
+    }
+
+    public void ResetCamera()
+    {
+        OverviewCamera.m_LookAt = null;
+        BandCamera.m_LookAt = null;
+        EnemyCamera.m_LookAt = null;
+        AudienceCamera.m_LookAt = null;
+    }
+
+    public void SetActiveCamera(CinemachineVirtualCamera camera)
+    {
+        ResetCamera();
+        OverviewCamera.enabled = false;
+        BandCamera.enabled = false;
+        EnemyCamera.enabled = false;
+        AudienceCamera.enabled = false;
+        camera.enabled = true;
     }
 }
