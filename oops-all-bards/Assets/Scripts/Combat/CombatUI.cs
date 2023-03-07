@@ -66,7 +66,7 @@ public class CombatUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // A function used to render all UI elements for the demo.
@@ -80,7 +80,19 @@ public class CombatUI : MonoBehaviour
         //Set tooltips to initially be invisible
         currentToolTip.alpha = 0f;
         currentToolTip.blocksRaycasts = false;
-        
+
+        //Instantiate Virtuoso Bar
+        GameObject virtuosoBar = Instantiate(portraitUI, specialSpace.transform);
+        virtData = virtuosoBar.GetComponent<PortraitData>();
+
+        virtData.nameText.text = "Virtuoso";
+        virtData.healthBar.maxValue = 3;  //need to figure out how to limit this in ui  
+        if (virtData.transform.Find("Frame").transform.Find("Background").transform.Find("HealthBar") != null)
+        {
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("FlourishBar").gameObject.SetActive(false);
+            virtData.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").gameObject.SetActive(false);
+        }
+
         // Instantiate portrait UI for party and enemies.
         // Need: name, current health/flourish, max health/flourish, portrait
         foreach (BasePlayer p in CombatManager.Instance.party)
@@ -97,6 +109,8 @@ public class CombatUI : MonoBehaviour
             portraitData.healthBar.UpdateValueBar(p.Health);
             portraitData.flourishBar.maxValue = p.Flourish;
             portraitData.flourishBar.UpdateValueBar(p.Flourish);
+
+
         }
 
         foreach (BaseEnemy e in CombatManager.Instance.enemies)
@@ -119,14 +133,18 @@ public class CombatUI : MonoBehaviour
             //Dont really need to see the flourish bar for enemies for any reason right now
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
+
+
+
     }
 
     // Render the UI for the input.
-    public void RenderInputMenu(BasePlayer actingCharacter) 
+    public void RenderInputMenu(BasePlayer actingCharacter)
     {
         // Render the UI for the input.
         Debug.Log("Rendering input menu for " + actingCharacter.Name + " now.");
         SetActiveCamera(OverviewCamera);
+        Debug.Log(V + " Virtuoso");
 
         // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
         for (int i = 0; i < actingCharacter.PlayerClass.Abilities.Count; i++)
@@ -140,7 +158,7 @@ public class CombatUI : MonoBehaviour
             toInstantiate.GetComponent<ActionButton>().actingCharacter = actingCharacter;
             // // Add on click functions to the buttons to create a PlayerAction queueable.
             toInstantiate.GetComponent<Button>().onClick.AddListener(() =>
-            { StartCoroutine(combatManager.SelectTarget(currentAbility, actingCharacter)); }); 
+            { StartCoroutine(combatManager.SelectTarget(currentAbility, actingCharacter)); });
 
             //Add tooltip script to each ability button
             toInstantiate.AddComponent<ToolTips>();
@@ -193,6 +211,39 @@ public class CombatUI : MonoBehaviour
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
+
+    }
+
+    public Tuple<ValueBar, ValueBar> FindValueBars(string name)
+    {
+        Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
+        for (int i = 0; i < partyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = partyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+
+        for (int i = 0; i < enemyPortraits.transform.childCount; i++)
+        {
+            Transform currentChild = enemyPortraits.transform.GetChild(i);
+            Transform desiredChild = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(3);
+            ValueBar healthBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(1).gameObject.GetComponent<ValueBar>();
+            ValueBar flourishBar = currentChild.transform.GetChild(0).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<ValueBar>(); ;
+            if (desiredChild.GetComponent<TMP_Text>().text == name)
+            {
+                relevantBars = new Tuple<ValueBar, ValueBar>(healthBar, flourishBar);
+            }
+        }
+
+        
+        return relevantBars;
     }
 
     // A function that finds and returns a PortraitData object corresponding to a string name of a character.
