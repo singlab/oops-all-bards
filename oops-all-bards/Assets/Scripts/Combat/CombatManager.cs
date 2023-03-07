@@ -182,10 +182,12 @@ public class CombatManager : MonoBehaviour
         combatUI.SetActiveCamera(combatUI.BandCamera);
         if (action.target is BasePlayer)
         {
+            combatUI.SetActiveCamera(combatUI.BandCamera);
             combatUI.BandCamera.m_LookAt = ((BasePlayer)action.target).BattleModel.transform;
         }
         else if (action.target is BaseEnemy)
         {
+            combatUI.SetActiveCamera(combatUI.EnemyCamera);
             combatUI.EnemyCamera.m_LookAt = ((BaseEnemy)action.target).BattleModel.transform;
         }
         yield return new WaitForSeconds(3f);
