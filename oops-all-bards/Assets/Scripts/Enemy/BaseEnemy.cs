@@ -12,6 +12,7 @@ public class BaseEnemy : ITargetable
     private BaseClass enemyClass;
     private bool ownsTurn;
     private List<CombatStatus> combatStatuses = new List<CombatStatus>();
+    GameObject battleModel;
 
     public BaseEnemy(string name, int health, int flourish, int shield, BaseClass enemyClass)
     {
@@ -56,6 +57,12 @@ public class BaseEnemy : ITargetable
     {
         get { return this.ownsTurn; }
         set { this.ownsTurn = value; }
+    }
+
+    public GameObject BattleModel
+    {
+        get { return this.battleModel; }
+        set { this.battleModel = value; }
     }
 
     public override List<CombatStatus> CombatStatuses

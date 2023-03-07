@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Cinemachine;
 
 public class CombatUI : MonoBehaviour
 {
@@ -30,19 +31,17 @@ public class CombatUI : MonoBehaviour
     CombatManager combatManager;
     public GameObject combat;
 
-    //A reference to the virtual cameras for combat.
-    public GameObject OverviewCamera;
-    public GameObject AudienceCamera;
-    public GameObject BandCamera;
-    public GameObject EnemyCamera;
-
-
     //Reference to Virtuoso items
     public PortraitData virtData;
     public GameObject specialSpace;
     public InfluenceAllyTurn influenceAlly;
     public int V = 0;
 
+    //A reference to the virtual cameras for combat.
+    public CinemachineVirtualCamera OverviewCamera;
+    public CinemachineVirtualCamera AudienceCamera;
+    public CinemachineVirtualCamera BandCamera;
+    public CinemachineVirtualCamera EnemyCamera;
 
     public static CombatUI Instance => CombatUI._instance;
 
@@ -63,7 +62,7 @@ public class CombatUI : MonoBehaviour
     {
         combatManager = combat.GetComponent<CombatManager>();
         RenderUI();
-        OverviewCamera.SetActive(true);
+        OverviewCamera.enabled = true;
         Cursor.lockState = CursorLockMode.Confined;
         Debug.Log(Cursor.lockState);
 
@@ -150,6 +149,7 @@ public class CombatUI : MonoBehaviour
     {
         // Render the UI for the input.
         Debug.Log("Rendering input menu for " + actingCharacter.Name + " now.");
+        SetActiveCamera(OverviewCamera);
         Debug.Log(V + " Virtuoso");
 
         // For however many abilities the player has, create action button prefabs and place them as children of combat menu.
@@ -191,21 +191,8 @@ public class CombatUI : MonoBehaviour
     // A function used to render target buttons.
     public void RenderTargetButtons(BaseAbility ability)
     {
-
-        //Enemy target should not appear if ability is defending or influencing
-        //Note: this should theoretically exclude supportive support abilities, but right now that classification includes offensive support abilities
-        //Thus enemies will currently now show when targeting for support abilites for now
-        if (ability.ID != 99 && ability.CombatType != BaseAbility.CombatAbilityTypes.HEAL && ability.CombatType != BaseAbility.CombatAbilityTypes.DEFEND && ability.CombatType != BaseAbility.CombatAbilityTypes.SUPPORT)
-        {
-            foreach (BaseEnemy e in combatManager.enemies)
-            {
-                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-                toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
-                toInstantiate.GetComponent<TargetButton>().target = e.Name;
-                
-            }
-        }
-        else if (ability.ID != 99 && (ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL || ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND || ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT))
+        // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
+        if (ability.ID == 99 || ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT || ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL || ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
         {
             foreach (BasePlayer p in combatManager.party)
             {
@@ -214,24 +201,19 @@ public class CombatUI : MonoBehaviour
                 toInstantiate.GetComponent<TargetButton>().target = p.Name;
             }
         }
-        // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
-        else if(ability.ID == 99)
+
+        else
         {
-            foreach (BasePlayer p in combatManager.party)
+            foreach (BaseEnemy e in combatManager.enemies)
             {
-                if (p.ID != 0)
-                {
-                    GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
-                    toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
-                    toInstantiate.GetComponent<TargetButton>().target = p.Name;
-                }
+                GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                toInstantiate.GetComponentInChildren<TMP_Text>().text = e.Name;
+                toInstantiate.GetComponent<TargetButton>().target = e.Name;
+
             }
         }
-        
-        
 
-      
-        //Back button must be instantiated after enemy target buttons else there is an ordering issue with the ui display
+        //TEST adding in a back button
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
@@ -292,5 +274,23 @@ public class CombatUI : MonoBehaviour
             }
         }
         return portrait;
+    }
+
+    public void ResetCamera()
+    {
+        OverviewCamera.m_LookAt = null;
+        BandCamera.m_LookAt = null;
+        EnemyCamera.m_LookAt = null;
+        AudienceCamera.m_LookAt = null;
+    }
+
+    public void SetActiveCamera(CinemachineVirtualCamera camera)
+    {
+        ResetCamera();
+        OverviewCamera.enabled = false;
+        BandCamera.enabled = false;
+        EnemyCamera.enabled = false;
+        AudienceCamera.enabled = false;
+        camera.enabled = true;
     }
 }

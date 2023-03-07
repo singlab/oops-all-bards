@@ -19,6 +19,7 @@ public class BasePlayer : ITargetable
     [SerializeField] private bool ownsTurn;
     [SerializeField] private List<CombatStatus> combatStatuses = new List<CombatStatus>();
     [SerializeField] private GameObject model;
+    [SerializeField] private GameObject battleModel;
 
     public BasePlayer()
     {
@@ -36,6 +37,7 @@ public class BasePlayer : ITargetable
         this.ownsTurn = false;
         this.combatStatuses = new List<CombatStatus>();
         this.model = null;
+        this.battleModel = null;
     }
 
     public BasePlayer(string name, int id, int health, int flourish, int shield, BaseClass playerClass, int fame, int gold, List<BaseItem> equipment, List<BaseItem> inventory, GameObject model)
@@ -137,6 +139,12 @@ public class BasePlayer : ITargetable
     {
         get { return this.model; }
         set { this.model = value; }
+    }
+
+    public GameObject BattleModel
+    {
+        get { return this.battleModel; }
+        set { this.battleModel = value; }
     }
 
     public override void RemoveCombatStatus(CombatStatus.CombatStatusTypes type)

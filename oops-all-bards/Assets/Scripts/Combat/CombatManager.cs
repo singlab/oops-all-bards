@@ -12,12 +12,12 @@ public class CombatManager : MonoBehaviour
     private static CombatManager _instance;
 
     //public reference to ui gameobject
-    CombatUI combatUI;
+    public CombatUI combatUI;
     public GameObject UI;  
     // A reference to the combat queue.
     public CombatQueue combatQueue;
     // A reference to the player party.
-    public BasePlayer[] party;
+    public List<BasePlayer> party = new List<BasePlayer>();
     // A reference to the enemies.
     public List<BaseEnemy> enemies = new List<BaseEnemy>();
     // A counter for the number of rounds combat has lasted for.
@@ -43,10 +43,10 @@ public class CombatManager : MonoBehaviour
     {
 
         SubscribeToEvents();
-        InitCombatQueue(PartyManager.Instance.currentParty.ToArray(), EnemyFactory.Instance.GenerateRandomEnemies(2));
+        InitCombatQueue(PartyManager.Instance.currentParty, EnemyFactory.Instance.GenerateRandomEnemies(2));
         GameManager.Instance.CheckQueue();
         combatUI = UI.GetComponent<CombatUI>();
-        combatUI.OverviewCamera.SetActive(true);
+        combatUI.SetActiveCamera(combatUI.OverviewCamera);
 
         Debug.Log("I've finished starting up.");
     }
@@ -68,7 +68,7 @@ public class CombatManager : MonoBehaviour
 
 
     // A function used to initialize the combat queue.
-    public void InitCombatQueue(BasePlayer[] party, List<BaseEnemy> enemies)
+    public void InitCombatQueue(List<BasePlayer> party, List<BaseEnemy> enemies)
     {
         // Set private references to party and enemies.
         this.party = party;
@@ -89,9 +89,11 @@ public class CombatManager : MonoBehaviour
             {
                 PushAndCreateCombatQueueable(new AllyTurn(p));
             }
+            p.BattleModel = GetModelByID(p.ID);
         }
         foreach (BaseEnemy e in enemies)
         {
+            e.BattleModel = GetModelByName(e.Name);
             PushAndCreateCombatQueueable(new EnemyTurn(e));
         }
         // Flag the DemoManager to begin checking queue.
@@ -122,14 +124,6 @@ public class CombatManager : MonoBehaviour
             if (target == p.Name)
             {
                 targetable = p;
-                // InfluenceAllyTurn uses BasePlayer not ITargetable so it needs to be queued here instead of through AddPlayerAction
-                if (ability.ID == 99)
-                {
-                    Debug.Log("Adding player action...");
-                    combatQueue.PriorityPush(new InfluenceAllyTurn(actingCharacter, p));
-                    EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
-                    yield break;
-                }
             }
         }
 
@@ -145,10 +139,12 @@ public class CombatManager : MonoBehaviour
         {
             Debug.Log("Go back one screen");
             //reset
+            combatUI.SetActiveCamera(combatUI.OverviewCamera);
             combatUI.RenderInputMenu(actingCharacter);
         }
         else
         {
+            combatUI.SetActiveCamera(combatUI.OverviewCamera);
             AddPlayerAction(ability, actingCharacter, targetable);
         }
     }
@@ -156,15 +152,23 @@ public class CombatManager : MonoBehaviour
     // A function used to create a PlayerAction queueable and push it to the front of the queue.
     public void AddPlayerAction(BaseAbility ability, BasePlayer actingCharacter, ITargetable target)
     {
+        if (ability.ID == 99)
+        {
+            Debug.Log("Adding player action...");
+            combatQueue.PriorityPush(new InfluenceAllyTurn(actingCharacter, (BasePlayer)target));
+            EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+        }
 
-        Debug.Log("Adding player action...");
-        // Create the PlayerAction queueable object for each ability.
-        PlayerAction action = new PlayerAction(ability, actingCharacter, target);
-        // Push the PlayerAction to the front of the queue.
-        combatQueue.PriorityPush(action);
-
-        // Tell DemoManager to check the queue and complete the action.
-        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+        else
+        {
+            Debug.Log("Adding player action...");
+            // Create the PlayerAction queueable object for each ability.
+            PlayerAction action = new PlayerAction(ability, actingCharacter, target);
+            // Push the PlayerAction to the front of the queue.
+            combatQueue.PriorityPush(action);
+            // Tell DemoManager to check the queue and complete the action.
+            EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+        }
     }
 
     // A function used to resolve/apply effects of a PlayerAction queueable.
@@ -174,6 +178,20 @@ public class CombatManager : MonoBehaviour
     }
     public IEnumerator ResolvePlayerAction(PlayerAction action)
     {
+        // Adjust camera, pause for animations, update game state 
+        // TODO: Change from WaitForSeconds length to acting characters action animation length
+        combatUI.SetActiveCamera(combatUI.BandCamera);
+        if (action.target is BasePlayer)
+        {
+            combatUI.SetActiveCamera(combatUI.BandCamera);
+            combatUI.BandCamera.m_LookAt = ((BasePlayer)action.target).BattleModel.transform;
+        }
+        else if (action.target is BaseEnemy)
+        {
+            combatUI.SetActiveCamera(combatUI.EnemyCamera);
+            combatUI.EnemyCamera.m_LookAt = ((BaseEnemy)action.target).BattleModel.transform;
+        }
+        yield return new WaitForSeconds(3f);
 
         // Handle flourish cost and update UI to reflect new value.
         action.actingCharacter.Flourish -= action.ability.Cost;
@@ -233,9 +251,10 @@ public class CombatManager : MonoBehaviour
         if (combatUI.V < CombatUI.Instance.virtData.healthBar.maxValue + 1)
         {
             CombatUI.Instance.virtData.healthBar.UpdateValueBar(combatUI.V);
-        }
-        yield return new WaitForSeconds(3);
-        Debug.Log("pauuseeee");
+        }        
+        // TODO: Change from WaitForSeconds length to target characters take damage animation length
+        yield return new WaitForSeconds(2);
+        //Debug.Log("pauuseeee");
 
         // Tell DemoManager to check the queue and continue to next turn.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
@@ -249,8 +268,8 @@ public class CombatManager : MonoBehaviour
     public IEnumerator TakeEnemyAction()
     {
         //Handle camera switching
-        combatUI.BandCamera.SetActive(false);
-        combatUI.EnemyCamera.SetActive(true);
+        //combatUI.BandCamera.SetActive(false);
+        //combatUI.EnemyCamera.SetActive(true);
 
         Debug.Log("Calculating enemy action...");
         BaseEnemy actingCharacter = (BaseEnemy)EventManager.Instance.EventData;
@@ -258,13 +277,21 @@ public class CombatManager : MonoBehaviour
         // TODO: This AI is very simple. Should change to be more interesting.
         // Choose random party member and use Attack ability.
         BasePlayer target = null;
-        if ( party.Length > 0) { target = party[UnityEngine.Random.Range(0, party.Length)]; };
+        if ( party.Count > 0) { target = party[UnityEngine.Random.Range(0, party.Count)]; };
         BaseAbility ability = actingCharacter.EnemyClass.Abilities[0];
         if ( target == null )
         {
             CheckForWinLoss();
             //return?
-        } 
+        }
+
+        // Adjust camera, pause for animations, update game state 
+        // TODO: Change from WaitForSeconds length to acting characters action animation length
+        combatUI.SetActiveCamera(combatUI.BandCamera);
+        combatUI.BandCamera.m_LookAt = target.BattleModel.transform;
+
+        yield return new WaitForSeconds(3f);
+
         bool isBlind = IsBlind(actingCharacter);
         if (!isBlind)
         {
@@ -276,8 +303,9 @@ public class CombatManager : MonoBehaviour
         }
 
 
-        yield return new WaitForSeconds(0.2F); //pause for animation
-        Debug.Log("pauuseeee");
+        // TODO: Change from WaitForSeconds length to target characters take damage animation length
+        yield return new WaitForSeconds(2);
+        //Debug.Log("pauuseeee");
 
         actingCharacter.OwnsTurn = false;
 
@@ -285,9 +313,9 @@ public class CombatManager : MonoBehaviour
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
 
         //Handle camera switching
-        combatUI.OverviewCamera.SetActive(false);
-        combatUI.EnemyCamera.SetActive(false);
-        combatUI.BandCamera.SetActive(true);
+        //combatUI.OverviewCamera.SetActive(false);
+        //combatUI.EnemyCamera.SetActive(false);
+        //combatUI.BandCamera.SetActive(true);
     }
 
     // A function used to calculate and push ally actions to the queue.
@@ -298,8 +326,8 @@ public class CombatManager : MonoBehaviour
     public IEnumerator TakeAllyAction()
     {
         //Handle camera switching
-        combatUI.EnemyCamera.SetActive(false);
-        combatUI.BandCamera.SetActive(true);
+        //combatUI.EnemyCamera.SetActive(false);
+        //combatUI.BandCamera.SetActive(true);
 
         Debug.Log("Calculating ally action...");
         BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
@@ -316,6 +344,12 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
+        // Adjust camera, pause for animations, update game state 
+        // TODO: Change from WaitForSeconds length to acting characters action animation length
+        combatUI.SetActiveCamera(combatUI.EnemyCamera);
+        combatUI.EnemyCamera.m_LookAt = target.BattleModel.transform;
+        yield return new WaitForSeconds(3f);
+
         // Apply effects of ability, log the outcome, update value bar of target.
         bool isStrengthened = IsStrengthened(actingCharacter);
         int modifiedDamage = isStrengthened ? (ability.Damage * 2) : ability.Damage;
@@ -328,8 +362,9 @@ public class CombatManager : MonoBehaviour
 
         if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); };
 
-        yield return new WaitForSeconds(3);
-        Debug.Log("pauuseeee");
+        // TODO: Change from WaitForSeconds length to target characters take damage animation length
+        yield return new WaitForSeconds(2);
+        //Debug.Log("pauuseeee");
         actingCharacter.OwnsTurn = false;
 
         // Tell DemoManager to check the queue and continue to next turn.
@@ -352,12 +387,13 @@ public class CombatManager : MonoBehaviour
     public void RemoveCharacterFromCombat(ITargetable character)
     {
         ICombatQueueable[] array = combatQueue.queue.ToArray();
-        Tuple<BasePlayer, BaseEnemy> parsedCharacter = ParseTargetable(character);
+        ITargetable parsedCharacter = ParseTargetable(character);
         ApplyDeathAnimation(parsedCharacter);
         // Remove instance of character from appropriate list and ensure no turns in the queue belong to the downed character.
-        if (parsedCharacter.Item1 != null)
+        if (parsedCharacter is BasePlayer)
         {
-            BasePlayer[] partyCopy = party.Where(x => x != parsedCharacter.Item1).ToArray();
+            List<BasePlayer> partyCopy = new List<BasePlayer>();
+            partyCopy.AddRange(party.Where(x => x != parsedCharacter));
             party = partyCopy;
             // Update UI to no longer show character portrait.
             for (int i = 0; i < CombatUI.Instance.partyPortraits.transform.childCount; i++)
@@ -369,7 +405,7 @@ public class CombatManager : MonoBehaviour
                     Destroy(currentChild.gameObject);
                 }
             }
-            if (parsedCharacter.Item1.ID == 0)
+            if (((BasePlayer)parsedCharacter).ID == 0)
             {
                 foreach (ICombatQueueable q in array)
                 {
@@ -389,10 +425,10 @@ public class CombatManager : MonoBehaviour
                 }
             }
         }
-        if (parsedCharacter.Item2 != null)
+        if (parsedCharacter is BaseEnemy)
         {
-            Debug.Log("Attempting to remove " + parsedCharacter.Item2.Name);
-            enemies.Remove(parsedCharacter.Item2);
+            Debug.Log("Attempting to remove " + parsedCharacter.Name);
+            enemies.Remove((BaseEnemy)parsedCharacter);
             // Update UI to no longer show character portrait.
             for (int i = 0; i < CombatUI.Instance.enemyPortraits.transform.childCount; i++)
             {
@@ -409,7 +445,7 @@ public class CombatManager : MonoBehaviour
                 if (q.GetType() == typeof(EnemyTurn))
                 {
                     EnemyTurn t = (EnemyTurn)q;
-                    if (t.actingCharacter == parsedCharacter.Item2)
+                    if (t.actingCharacter == parsedCharacter)
                     {
                         combatQueue.Remove(q);
                     }
@@ -423,7 +459,7 @@ public class CombatManager : MonoBehaviour
     // A function used to determine a win/loss of combat.
     public void CheckForWinLoss() 
     {
-        if (party.Length == 0)
+        if (party.Count == 0)
         {
             Debug.Log("Player has lost!");
             EventManager.Instance.InvokeEvent(EventType.CombatLoss, null);
@@ -437,21 +473,21 @@ public class CombatManager : MonoBehaviour
 
     // A helper function used to return a Tuple<BasePlayer, BaseEnemy> from an ITargetable object.
     // TODO: This is pretty hacky. Find a better solution.
-    public Tuple<BasePlayer, BaseEnemy> ParseTargetable(ITargetable character)
+    public ITargetable ParseTargetable(ITargetable character)
     {
-        Tuple<BasePlayer, BaseEnemy> output = new Tuple<BasePlayer, BaseEnemy>(null, null);
+        ITargetable output = null;
         foreach (BasePlayer p in party)
         {
             if (p.Name == character.Name)
             {
-                output = new Tuple<BasePlayer, BaseEnemy>(p, null);
+                output = p;
             }
         }
         foreach (BaseEnemy e in enemies)
         {
             if (e.Name == character.Name)
             {
-                output = new Tuple<BasePlayer, BaseEnemy>(null, e);
+                output = e;
             }
         }
         return output;
@@ -461,7 +497,7 @@ public class CombatManager : MonoBehaviour
     {
 
         bool targetIsProtected = IsProtected(target);
-        if (targetIsProtected && party.Length > 1) 
+        if (targetIsProtected && party.Count > 1) 
         {
             Debug.Log(target.Name + " has a PROTECTED status effect"); 
             target.RemoveCombatStatus(CombatStatus.CombatStatusTypes.PROTECTED);
@@ -552,16 +588,16 @@ public class CombatManager : MonoBehaviour
         return result.First();
     }
 
-    private void ApplyDeathAnimation(Tuple<BasePlayer, BaseEnemy> parsedCharacter)
+    private void ApplyDeathAnimation(ITargetable parsedCharacter)
     {
         GameObject model = null;
-        if (parsedCharacter.Item1 != null)
+        if (parsedCharacter is BasePlayer)
         {
-            model = GetModelByID(parsedCharacter.Item1.ID);
+            model = ((BasePlayer)parsedCharacter).BattleModel;
         }
-        if (parsedCharacter.Item2 != null)
+        if (parsedCharacter is BaseEnemy)
         {
-            model = GetModelByName(parsedCharacter.Item2.Name);
+            model = ((BaseEnemy)parsedCharacter).BattleModel;
         }
 
         Animator animator = model.GetComponent<Animator>();
