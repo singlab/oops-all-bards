@@ -16,6 +16,7 @@ public class AllyWME
     [SerializeField] public int health;
     [SerializeField] public int flourish;
     [SerializeField] public int shield;
+    [SerializeField] public int elan;
     [SerializeField] public int[] abilityIDs;
     [SerializeField] public int[] abilityCosts;
     [SerializeField] public string[] abilityTypes;
@@ -38,6 +39,7 @@ public class AllyWME
         this.health = player.Health;
         this.flourish = player.Flourish;
         this.shield = player.Shield;
+        this.elan = player.Elan;
         // Handle ability data
         this.abilityIDs = new int[player.PlayerClass.Abilities.Count];
         this.abilityCosts = new int[player.PlayerClass.Abilities.Count];

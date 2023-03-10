@@ -193,6 +193,15 @@ public class CombatManager : MonoBehaviour
         }
         yield return new WaitForSeconds(3f);
 
+        // If the attack misses, skip this turn
+        if(!AttackHits(action.target))
+        {
+            Debug.Log(action.target.Name + " dodges!");
+            // Tell GameManager to check the queue and continue to next turn.
+            EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
+            yield return new WaitForSeconds(2);
+        }
+
         // Handle flourish cost and update UI to reflect new value.
         action.actingCharacter.Flourish -= action.ability.Cost;
         CombatUI.FindPortrait(action.actingCharacter.Name).flourishBar.UpdateValueBar(action.actingCharacter.Flourish);
@@ -293,7 +302,8 @@ public class CombatManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         bool isBlind = IsBlind(actingCharacter);
-        if (!isBlind)
+        bool attackHits = AttackHits(target);
+        if (!isBlind && attackHits)
         {
             ApplyEffects(actingCharacter, target, ability);
         } else 
@@ -532,6 +542,15 @@ public class CombatManager : MonoBehaviour
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
+    }
+
+    bool AttackHits(ITargetable target)
+    {
+        int threshold = 100 - target.Elan;
+        Debug.Log("Threshold: " + threshold);
+        int randomInt = UnityEngine.Random.Range(1, 101);
+        Debug.Log("Random Int: " + randomInt);
+        return (randomInt < threshold);
     }
 
     private bool IsBlind(ITargetable actingCharacter)
