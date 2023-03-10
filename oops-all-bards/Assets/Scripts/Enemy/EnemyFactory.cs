@@ -76,10 +76,11 @@ public class EnemyFactory : MonoBehaviour
         // Generate random health (-5 to 0 that of the player)
         int flourish = Random.Range(player.Flourish - 5, player.Flourish);
         int shield = 0;
+        int elan = Random.Range(0, 21);
 
         string enemyName = GenerateUniqueEnemyName();
 
-        return new BaseEnemy(enemyName, health, flourish, shield, jsonReader.baseClasses.GetRandomClass());
+        return new BaseEnemy(enemyName, health, flourish, shield, elan, jsonReader.baseClasses.GetRandomClass());
     }
 
 
@@ -138,7 +139,7 @@ public class EnemyFactory : MonoBehaviour
 
     public BaseEnemy GenerateEnemyFromObject(EnemyData enemyData)
     {
-        return new BaseEnemy(enemyData.EnemyName, enemyData.Health, enemyData.Flourish, enemyData.Shield, jsonReader.baseClasses.GetRandomClass());
+        return new BaseEnemy(enemyData.EnemyName, enemyData.Health, enemyData.Flourish, enemyData.Shield, enemyData.Elan, jsonReader.baseClasses.GetRandomClass());
     }
 
     /* Helper function that generates a unique enemy name */
