@@ -14,7 +14,6 @@ public class TavernManager : MonoBehaviour
     void Awake()
     {
         SpawnPlayer();
-        AudioManager.Instance.ChangeTrack(1);
         CheckDialogueUI();
         CheckPartyUI();
         TCPTestClient.Instance.RefreshWMEs();
@@ -23,6 +22,8 @@ public class TavernManager : MonoBehaviour
     // Update is called once per frame
     void Start()
     {
+
+        AudioManager.Instance.PlayMusicTrack("thehauntedhearth");
         //It would seem that when a new scene is loaded that these scripts must be made sure to be ON as to avoid bugs with other code
         //Prevents camera floating bug
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = true;
