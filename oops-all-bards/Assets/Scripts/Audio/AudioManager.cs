@@ -165,6 +165,23 @@ public class AudioManager : MonoBehaviour
 
         track.audioSource.Stop();
     }
+
+    public static void PlaySFX(string title)
+    {
+        Instance.PlaySoundEffect(title);
+    }
+    public static void StopSFX(string title)
+    {
+        Instance.StopSoundEffect(title);
+    }
+    public static void PlayMusic(string title)
+    {
+        Instance.PlayMusicTrack(title);
+    }
+    public static void StopMusic(string title)
+    {
+        Instance.StopMusicTrack(title);
+    }
 }
 
 [System.Serializable]
