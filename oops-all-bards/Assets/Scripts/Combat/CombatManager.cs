@@ -45,7 +45,7 @@ public class CombatManager : MonoBehaviour
         SubscribeToEvents();
         InitCombatQueue(PartyManager.Instance.currentParty, EnemyFactory.Instance.GenerateRandomEnemies(2));
         GameManager.Instance.CheckQueue();
-        combatUI = UI.GetComponent<CombatUI>();
+        combatUI = CombatUI.Instance;
         combatUI.SetActiveCamera(combatUI.OverviewCamera);
 
         Debug.Log("I've finished starting up.");
@@ -96,6 +96,8 @@ public class CombatManager : MonoBehaviour
             e.BattleModel = GetModelByName(e.Name);
             PushAndCreateCombatQueueable(new EnemyTurn(e));
         }
+        //set up combat ui when combat queue is initialized for the first time
+        if (rounds == 1) CombatUI.Instance.RenderUI();
         // Flag the DemoManager to begin checking queue.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
