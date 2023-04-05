@@ -26,6 +26,12 @@ public class CombatUI : MonoBehaviour
     public GameObject actionButton;
     // A reference to the target button prefab.
     public GameObject targetButton;
+    // Icon holders for queue display
+    public GameObject iconHolder;
+    // Queue display UI
+    public GameObject timeline;
+    // Queue display
+    public List<GameObject> queueDisplay;
 
     //public reference to combat gameobject
     CombatManager combatManager;
@@ -60,12 +66,13 @@ public class CombatUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        combatManager = combat.GetComponent<CombatManager>();
+        /**queueDisplay = new List<GameObject>();
+        //combatManager = combat.GetComponent<CombatManager>();
         RenderUI();
         OverviewCamera.enabled = true;
         Cursor.lockState = CursorLockMode.Confined;
         Debug.Log(Cursor.lockState);
-
+        **/
 
     }
 
@@ -78,6 +85,13 @@ public class CombatUI : MonoBehaviour
     // A function used to render all UI elements for the demo.
     public void RenderUI()
     {
+        queueDisplay = new List<GameObject>();
+        combatManager = CombatManager.Instance;
+        //RenderUI();
+        OverviewCamera.enabled = true;
+        Cursor.lockState = CursorLockMode.Confined;
+        Debug.Log(Cursor.lockState);
+
         // Render the portrait section and combat menu.
         partyPortraits.SetActive(true);
         enemyPortraits.SetActive(true);
@@ -115,8 +129,6 @@ public class CombatUI : MonoBehaviour
             portraitData.healthBar.UpdateValueBar(p.Health);
             portraitData.flourishBar.maxValue = p.Flourish;
             portraitData.flourishBar.UpdateValueBar(p.Flourish);
-
-
         }
 
         foreach (BaseEnemy e in CombatManager.Instance.enemies)
@@ -140,7 +152,7 @@ public class CombatUI : MonoBehaviour
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
 
-
+        Debug.Log("ui ready");
 
     }
 
@@ -220,7 +232,36 @@ public class CombatUI : MonoBehaviour
 
     }
 
-    public Tuple<ValueBar, ValueBar> FindValueBars(string name)
+    // Displays icons of acting characters in combat queue, updated by checkqueue event type
+    public void RenderQueue()
+    {
+        foreach(GameObject obj in queueDisplay)
+        {
+            Destroy(obj);
+        }
+        queueDisplay.Clear();
+        ICombatQueueable[] items = CombatManager.Instance.combatQueue.queue.ToArray();
+        foreach (ICombatQueueable item in items)
+        {
+            GameObject holder = Instantiate(iconHolder, transform.position, Quaternion.identity, timeline.transform);
+            Image icon = holder.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").GetComponent<Image>();
+            if (item is AllyTurn)
+            {
+                icon.sprite = FindPortrait(((AllyTurn)item).actingCharacter.Name).icon.sprite;
+            }
+            else if (item is EnemyTurn)
+            {
+                icon.sprite = FindPortrait(((EnemyTurn)item).actingCharacter.Name).icon.sprite;
+            }
+            else if (item is PlayerTurn)
+            {
+                icon.sprite = FindPortrait(((PlayerTurn)item).actingCharacter.Name).icon.sprite;
+            }
+            queueDisplay.Add(holder);
+        }
+    }
+
+    /**public Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
         for (int i = 0; i < partyPortraits.transform.childCount; i++)
@@ -250,7 +291,7 @@ public class CombatUI : MonoBehaviour
 
         
         return relevantBars;
-    }
+    }**/
 
     // A function that finds and returns a PortraitData object corresponding to a string name of a character.
     public static PortraitData FindPortrait(string name)
