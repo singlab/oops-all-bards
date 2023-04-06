@@ -96,8 +96,12 @@ public class CombatManager : MonoBehaviour
             e.BattleModel = GetModelByName(e.Name);
             PushAndCreateCombatQueueable(new EnemyTurn(e));
         }
-        //set up combat ui when combat queue is initialized for the first time
-        if (rounds == 1) CombatUI.Instance.RenderUI();
+        // Set up combat ui when combat queue is initialized for the first time
+        if (rounds == 1)
+        {
+            CombatUI.Instance.RenderUI();
+        }
+        CombatUI.Instance.RenderQueue();
         // Flag the DemoManager to begin checking queue.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }

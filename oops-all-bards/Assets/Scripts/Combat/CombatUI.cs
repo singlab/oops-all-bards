@@ -31,7 +31,19 @@ public class CombatUI : MonoBehaviour
     // Queue display UI
     public GameObject timeline;
     // Queue display
-    public List<GameObject> queueDisplay;
+    public List<IconHolder> queueDisplay;
+
+    public struct IconHolder
+    {
+        public GameObject iconHolder;
+        public ICombatQueueable combatQueueable;
+
+        public IconHolder(GameObject iconHolder, ICombatQueueable combatQueueable)
+        {
+            this.iconHolder = iconHolder;
+            this.combatQueueable = combatQueueable;
+        }
+    }
 
     //public reference to combat gameobject
     CombatManager combatManager;
@@ -85,7 +97,7 @@ public class CombatUI : MonoBehaviour
     // A function used to render all UI elements for the demo.
     public void RenderUI()
     {
-        queueDisplay = new List<GameObject>();
+        queueDisplay = new List<IconHolder>();
         combatManager = CombatManager.Instance;
         //RenderUI();
         OverviewCamera.enabled = true;
@@ -232,35 +244,68 @@ public class CombatUI : MonoBehaviour
 
     }
 
+    // Helper function for Queue rendering, gets icon from portrait data of acting character
+    public GameObject GetIconForQueueable(ICombatQueueable item)
+    {
+        GameObject holder = Instantiate(iconHolder, transform.position, Quaternion.identity, timeline.transform);
+        Image icon = holder.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").GetComponent<Image>();
+        if (item is AllyTurn)
+        {
+            icon.sprite = FindPortrait(((AllyTurn)item).actingCharacter.Name).icon.sprite;
+        }
+        else if (item is EnemyTurn)
+        {
+            icon.sprite = FindPortrait(((EnemyTurn)item).actingCharacter.Name).icon.sprite;
+        }
+        else if (item is PlayerTurn)
+        {
+            icon.sprite = FindPortrait(((PlayerTurn)item).actingCharacter.Name).icon.sprite;
+        }
+        return holder;
+    }
     // Displays icons of acting characters in combat queue, updated by checkqueue event type
     public void RenderQueue()
     {
-        foreach(GameObject obj in queueDisplay)
+        foreach(IconHolder iconHolder in queueDisplay)
         {
-            Destroy(obj);
+            Destroy(iconHolder.iconHolder);
         }
         queueDisplay.Clear();
         ICombatQueueable[] items = CombatManager.Instance.combatQueue.queue.ToArray();
         foreach (ICombatQueueable item in items)
         {
-            GameObject holder = Instantiate(iconHolder, transform.position, Quaternion.identity, timeline.transform);
-            Image icon = holder.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").GetComponent<Image>();
-            if (item is AllyTurn)
-            {
-                icon.sprite = FindPortrait(((AllyTurn)item).actingCharacter.Name).icon.sprite;
-            }
-            else if (item is EnemyTurn)
-            {
-                icon.sprite = FindPortrait(((EnemyTurn)item).actingCharacter.Name).icon.sprite;
-            }
-            else if (item is PlayerTurn)
-            {
-                icon.sprite = FindPortrait(((PlayerTurn)item).actingCharacter.Name).icon.sprite;
-            }
-            queueDisplay.Add(holder);
+            GameObject holder = GetIconForQueueable(item);
+            queueDisplay.Add(new IconHolder(holder, item));
         }
     }
-
+    public void RenderPush(ICombatQueueable item)
+    {
+        GameObject holder = GetIconForQueueable(item);
+        queueDisplay.Add(new IconHolder(holder, item));
+    }
+    public void RenderPriorityPush(ICombatQueueable item)
+    {
+        GameObject holder = GetIconForQueueable(item);
+        queueDisplay.Insert(0, new IconHolder(holder, item));
+    }
+    public void RenderPop()
+    {
+        queueDisplay[0].iconHolder.GetComponent<Animator>().Play("removeTimelineIcon");
+        queueDisplay.RemoveAt(0);
+    }
+    public void RenderRemove(ICombatQueueable item)
+    {
+        List<IconHolder> temp = queueDisplay;
+        for(int i = 0; i < temp.Count; i++)
+        {
+            if (item == temp[i].combatQueueable)
+            {
+                queueDisplay[i].iconHolder.GetComponent<Animator>().Play("removeTimelineIcon");
+                queueDisplay.RemoveAt(i);
+            }
+        }
+    }
+    
     /**public Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);

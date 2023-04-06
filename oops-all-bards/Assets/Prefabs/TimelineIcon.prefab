@@ -162,6 +162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 104316021711764176}
   - component: {fileID: 5172152005575474370}
+  - component: {fileID: 216116063659028534}
   m_Layer: 5
   m_Name: TimelineIcon
   m_TagString: Untagged
@@ -200,7 +201,7 @@ Animator:
   m_GameObject: {fileID: 3000056039481101793}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 56d4805f30b44414580977f870fd45b6, type: 2}
+  m_Controller: {fileID: 9100000, guid: 47fdc6c8da180c24780611630e4f7cbc, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -210,6 +211,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &216116063659028534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3000056039481101793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7367d7c1d04c64408efadf99c8d3b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3864792860796418996
 GameObject:
   m_ObjectHideFlags: 0

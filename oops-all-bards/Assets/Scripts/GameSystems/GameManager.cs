@@ -87,6 +87,10 @@ public class GameManager : MonoBehaviour
         {
             ICombatQueueable cq = CombatManager.Instance.combatQueue.Pop();
             cq.Execute();
+            if (CombatManager.Instance.combatQueue.queue.Count < CombatUI.Instance.queueDisplay.Count)
+            {
+                CombatUI.Instance.RenderPop();
+            }
         }
         else
         {
@@ -94,8 +98,6 @@ public class GameManager : MonoBehaviour
             CombatManager.Instance.rounds += 1;
             CombatManager.Instance.InitCombatQueue(CombatManager.Instance.party, CombatManager.Instance.enemies);
         }
-        // Update the combat queue ui
-        CombatUI.Instance.RenderQueue();
     }
 
     // A function that enables player input when it is the player's turn in the combat queue.
