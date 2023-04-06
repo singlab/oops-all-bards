@@ -8396,7 +8396,6 @@ MonoBehaviour:
   iconHolder: {fileID: 3000056039481101793, guid: 09b3f361362e96a439cd13262dbb314d,
     type: 3}
   timeline: {fileID: 88028951}
-  queueDisplay: []
   combat: {fileID: 1125771819}
   virtData: {fileID: 0}
   specialSpace: {fileID: 733365395}
