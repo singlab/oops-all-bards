@@ -32,6 +32,10 @@ public class CombatUI : MonoBehaviour
     public GameObject timeline;
     // Queue display
     public List<IconHolder> queueDisplay;
+    // Object that holds the Combat log
+    public GameObject combatLog;
+    // Combat log text object
+    public TextMeshProUGUI textHUD;
 
     public struct IconHolder
     {
@@ -266,7 +270,7 @@ public class CombatUI : MonoBehaviour
     // Displays icons of acting characters in combat queue, updated by checkqueue event type
     public void RenderQueue()
     {
-        foreach(IconHolder iconHolder in queueDisplay)
+        foreach (IconHolder iconHolder in queueDisplay)
         {
             Destroy(iconHolder.iconHolder);
         }
@@ -296,7 +300,7 @@ public class CombatUI : MonoBehaviour
     public void RenderRemove(ICombatQueueable item)
     {
         List<IconHolder> temp = queueDisplay;
-        for(int i = 0; i < temp.Count; i++)
+        for (int i = 0; i < temp.Count; i++)
         {
             if (item == temp[i].combatQueueable)
             {
@@ -305,7 +309,7 @@ public class CombatUI : MonoBehaviour
             }
         }
     }
-    
+
     /**public Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
@@ -378,5 +382,19 @@ public class CombatUI : MonoBehaviour
         EnemyCamera.enabled = false;
         AudienceCamera.enabled = false;
         camera.enabled = true;
+    }
+
+    public void UpdateCombatLog(string text)
+    {
+        TextMeshProUGUI textItem = Instantiate(textHUD, combatLog.transform).GetComponent<TextMeshProUGUI>();
+        textItem.text = text;
+    }
+
+    public void ResetCombatLog()
+    {
+        for (int i = 0; i < combatLog.transform.childCount; i++)
+        {
+            Destroy(combatLog.transform.GetChild(i).gameObject);
+        }
     }
 }

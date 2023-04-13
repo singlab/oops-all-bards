@@ -47,7 +47,7 @@ public class CombatManager : MonoBehaviour
         GameManager.Instance.CheckQueue();
         combatUI = CombatUI.Instance;
         combatUI.SetActiveCamera(combatUI.OverviewCamera);
-
+        CombatUI.Instance.UpdateCombatLog("I've finished starting up.");
         Debug.Log("I've finished starting up.");
     }
 
@@ -102,6 +102,7 @@ public class CombatManager : MonoBehaviour
             CombatUI.Instance.RenderUI();
         }
         CombatUI.Instance.RenderQueue();
+        CombatUI.Instance.ResetCombatLog();
         // Flag the DemoManager to begin checking queue.
         EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
@@ -203,6 +204,7 @@ public class CombatManager : MonoBehaviour
         if(!AttackHits(action.target))
         {
             Debug.Log(action.target.Name + " dodges!");
+            CombatUI.Instance.UpdateCombatLog(action.target.Name + " dodges!");
             // Tell GameManager to check the queue and continue to next turn.
             EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
             yield return new WaitForSeconds(2);
@@ -217,7 +219,8 @@ public class CombatManager : MonoBehaviour
             bool isStrengthened = IsStrengthened(action.actingCharacter);
             int modifiedDamage = isStrengthened ? (action.ability.Damage * 2) : action.ability.Damage;
             action.target.Health -= modifiedDamage;
-            Debug.Log(action.actingCharacter.Name + " deals " + modifiedDamage + " damage to " + action.target.Name + ".");
+            Debug.Log(action.actingCharacter.Name + " deals " + modifiedDamage + " damage to " + action.target.Name + "."); 
+            CombatUI.Instance.UpdateCombatLog(action.actingCharacter.Name + " deals " + modifiedDamage + " damage to " + action.target.Name + ".");
             CheckCombatantsHealth(action.target);
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL)
@@ -225,6 +228,7 @@ public class CombatManager : MonoBehaviour
             bool requiresAssistance = action.target.CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
             action.target.Health += action.ability.Damage;
             Debug.Log(action.actingCharacter.Name + " heals " + action.target.Name + " for " + action.ability.Damage + " health!");
+            CombatUI.Instance.UpdateCombatLog(action.actingCharacter.Name + " heals " + action.target.Name + " for " + action.ability.Damage + " health!");
             if (requiresAssistance)
             {
                 action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE);
@@ -236,6 +240,7 @@ public class CombatManager : MonoBehaviour
             bool requiresAssistance = action.target.CiFData.HasStatusType(Status.StatusTypes.REQUIRES_ASSISTANCE);
             action.target.Shield += action.ability.Damage;
             Debug.Log(action.actingCharacter.Name + " is shielding " + action.target.Name + " for " + action.ability.Damage + " damage.");
+            CombatUI.Instance.UpdateCombatLog(action.actingCharacter.Name + " is shielding " + action.target.Name + " for " + action.ability.Damage + " damage.");
             if (requiresAssistance)
             {
                 action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE);
@@ -249,10 +254,12 @@ public class CombatManager : MonoBehaviour
                 case 4:
                     action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED));
                     Debug.Log($"{action.actingCharacter.Name} has strengthened {action.target.Name}!");
+                    CombatUI.Instance.UpdateCombatLog($"{action.actingCharacter.Name} has strengthened {action.target.Name}!");
                     break;
                 case 5:
                     action.target.CombatStatuses.Add(new CombatStatus(CombatStatus.CombatStatusTypes.BLINDED));
                     Debug.Log($"{action.actingCharacter.Name} has blinded {action.target.Name}!");
+                    CombatUI.Instance.UpdateCombatLog($"{action.actingCharacter.Name} has blinded {action.target.Name}!");
                     break;
             }
         }
@@ -315,6 +322,7 @@ public class CombatManager : MonoBehaviour
         } else 
         {
             Debug.Log($"{actingCharacter.Name} tried to attack {target.Name}, but missed!");
+            CombatUI.Instance.UpdateCombatLog($"{actingCharacter.Name} tried to attack {target.Name}, but missed!");
             actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.BLINDED);
         }
 
@@ -371,6 +379,7 @@ public class CombatManager : MonoBehaviour
         int modifiedDamage = isStrengthened ? (ability.Damage * 2) : ability.Damage;
         target.Health -= modifiedDamage;
         Debug.Log(actingCharacter.Name + " deals " + modifiedDamage + " damage to " + target.Name + "!");
+        CombatUI.Instance.UpdateCombatLog(actingCharacter.Name + " deals " + modifiedDamage + " damage to " + target.Name + "!");
         PortraitData targetPortrait = CombatUI.FindPortrait(target.Name);
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(target.Health);
@@ -395,6 +404,7 @@ public class CombatManager : MonoBehaviour
         if (target.Health <= 0)
         {
             Debug.Log(target.Name + " was downed in the gig!");
+            CombatUI.Instance.UpdateCombatLog(target.Name + " was downed in the gig!");
             RemoveCharacterFromCombat(target);
         }
     }
@@ -515,12 +525,15 @@ public class CombatManager : MonoBehaviour
         bool targetIsProtected = IsProtected(target);
         if (targetIsProtected && party.Count > 1) 
         {
-            Debug.Log(target.Name + " has a PROTECTED status effect"); 
+            Debug.Log(target.Name + " has a PROTECTED status effect");
+            CombatUI.Instance.UpdateCombatLog(target.Name + " has a PROTECTED status effect"); 
             target.RemoveCombatStatus(CombatStatus.CombatStatusTypes.PROTECTED);
             ITargetable newTarget = AcquireProtectingTarget();
             Debug.Log(newTarget.Name + " has a PROTECTING status effect");
+            CombatUI.Instance.UpdateCombatLog(newTarget.Name + " has a PROTECTING status effect");
             newTarget.RemoveCombatStatus(CombatStatus.CombatStatusTypes.PROTECTING);
             Debug.Log(actingCharacter.Name + " tried attacking " + target.Name + ", but " + newTarget.Name + " protected them!");
+            CombatUI.Instance.UpdateCombatLog(actingCharacter.Name + " tried attacking " + target.Name + ", but " + newTarget.Name + " protected them!");
             target = (BasePlayer)newTarget;
         }
 
@@ -531,17 +544,20 @@ public class CombatManager : MonoBehaviour
             {
                 target.Shield -= ability.Damage;
                 Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "'s shield!");
+                CombatUI.Instance.UpdateCombatLog(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "'s shield!");
             } else 
             {
                 int overflow = ability.Damage - target.Shield;
                 target.Shield = 0;
                 target.Health -= overflow;
                 Debug.Log(actingCharacter.Name + " destroys " + target.Name + "'s shield, and deals " + overflow + " damage to " + target.Name + "!");
+                CombatUI.Instance.UpdateCombatLog(actingCharacter.Name + " destroys " + target.Name + "'s shield, and deals " + overflow + " damage to " + target.Name + "!");
             }
         } else 
         {
             target.Health -= ability.Damage;
             Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "!");
+            CombatUI.Instance.UpdateCombatLog(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "!");
         }
 
         PortraitData targetPortrait = CombatUI.FindPortrait(target.Name);
