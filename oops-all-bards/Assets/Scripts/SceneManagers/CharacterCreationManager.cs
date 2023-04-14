@@ -75,7 +75,7 @@ public class CharacterCreationManager : MonoBehaviour
         DataManager.Instance.SavePlayerData();
         //SceneManager.LoadScene("TavernDemo"); 
 
-        fader.FadeToLevel("TavernDemo");
+        fader.FadeToLevel("TavernDemo"); //TAVERNDEMO
     }
 
     void SetPlayerModel(GameObject model)
