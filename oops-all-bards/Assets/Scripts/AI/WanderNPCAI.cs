@@ -5,33 +5,18 @@ using UnityEngine.AI;
 
 public class WanderNPCAI : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed = 1f;
-
-    [SerializeField]
-    private float rotationSpeed = 75f;
 
     private bool isWandering = false;
 
     private const string idleAnimation = "Idle";
     private const string walkAnimation = "Walk";
 
-    private int rotationTimeMin = 1;
-    private int rotationTimeMax = 4;
-
-    private int rotationWaitMin = 1;
-    private int rotationWaitMax = 4;
-
-    private int walkWaitMin = 1;
-    private int walkWaitMax = 5;
-
-    private int walkTimeMin = 1;
-    private int walkTimeMax = 5;
-
     private enum State { Wandering, RotatingLeft, RotatingRight, Walking, Idle };
     private State state;
 
     private Animator animator;
+
+    [SerializeField] private NPCData npcData;
 
     private void Awake()
     {
@@ -50,17 +35,17 @@ public class WanderNPCAI : MonoBehaviour
         if (state == State.RotatingRight)
         {
             animator.Play(idleAnimation);
-            transform.Rotate(transform.up * Time.deltaTime * rotationSpeed);
+            transform.Rotate(transform.up * Time.deltaTime * npcData.rotationSpeed);
         }
         else if (state == State.RotatingLeft)
         {
             animator.Play(idleAnimation);
-            transform.Rotate(transform.up * Time.deltaTime * -rotationSpeed);
+            transform.Rotate(transform.up * Time.deltaTime * -npcData.rotationSpeed);
         }
         else if (state == State.Walking)
         {
             animator.Play(walkAnimation);
-            transform.position += transform.forward * moveSpeed * Time.deltaTime;
+            transform.position += transform.forward * npcData.moveSpeed * Time.deltaTime;
         }
         else if (state == State.Idle)
         {
@@ -70,10 +55,10 @@ public class WanderNPCAI : MonoBehaviour
 
     IEnumerator Wander()
     {
-        int rotTime = Random.Range(rotationTimeMin, rotationTimeMax);
-        int rotateWait = Random.Range(rotationWaitMin, rotationWaitMax);
-        int walkWait = Random.Range(walkWaitMin, walkWaitMax);
-        int walkTime = Random.Range(walkTimeMin, walkTimeMax);
+        int rotTime = Random.Range(npcData.rotationTimeMin, npcData.rotationTimeMax);
+        int rotateWait = Random.Range(npcData.rotationWaitMin, npcData.rotationWaitMax);
+        int walkWait = Random.Range(npcData.walkWaitMin, npcData.walkWaitMax);
+        int walkTime = Random.Range(npcData.walkTimeMin, npcData.walkTimeMax);
         int rotateLorR = Random.Range(1, 2);
 
         isWandering = true;

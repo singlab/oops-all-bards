@@ -9272,8 +9272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8086d1547f2648489cdd2ea5c227d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  rotationSpeed: 100
+  npcData: {fileID: 11400000, guid: e1ae49115c387834a9b40376ec7946f3, type: 2}
 --- !u!1001 &456221329
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15465,8 +15464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8086d1547f2648489cdd2ea5c227d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  rotationSpeed: 100
+  npcData: {fileID: 11400000, guid: e1ae49115c387834a9b40376ec7946f3, type: 2}
 --- !u!1 &691978362
 GameObject:
   m_ObjectHideFlags: 0
@@ -16264,8 +16262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8086d1547f2648489cdd2ea5c227d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  rotationSpeed: 100
+  npcData: {fileID: 11400000, guid: e1ae49115c387834a9b40376ec7946f3, type: 2}
 --- !u!1001 &720926505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31520,8 +31517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8086d1547f2648489cdd2ea5c227d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  rotationSpeed: 100
+  npcData: {fileID: 11400000, guid: e1ae49115c387834a9b40376ec7946f3, type: 2}
 --- !u!195 &1422213906
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -45445,8 +45441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8086d1547f2648489cdd2ea5c227d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  rotationSpeed: 100
+  npcData: {fileID: 11400000, guid: e1ae49115c387834a9b40376ec7946f3, type: 2}
 --- !u!195 &2092745065
 NavMeshAgent:
   m_ObjectHideFlags: 0

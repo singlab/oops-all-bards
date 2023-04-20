@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f93b2ad8d976cd6459957cb850c3309a, type: 3}
+  m_Name: DefaultNPC
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
+  rotationSpeed: 100
+  rotationTimeMin: 1
+  rotationTimeMax: 1
+  rotationWaitMin: 1
+  rotationWaitMax: 5
+  walkTimeMin: 1
+  walkTimeMax: 2
+  walkWaitMin: 1
+  walkWaitMax: 5
