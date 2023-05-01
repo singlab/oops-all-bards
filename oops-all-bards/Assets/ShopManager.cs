@@ -33,15 +33,13 @@ public class ShopManager : MonoBehaviour
         {
             ShopItemButtonData obj = Instantiate(shopButton, scrollRect.content).GetComponent<ShopItemButtonData>();
 
-            // a reference to player is probably already stored somewhere but I cant find it :P
-            Debug.Log($"datamngr {DataManager.Instance.PlayerData}");
             obj.player = DataManager.Instance.PlayerData;
             obj.shop = this;
-            ItemData itemData = ItemData.GetItem(item.name);
-            obj.text.text = $"{itemData.name} - {item.cost}";
-            if (itemData.icon != null)
+            BaseItem itemData = BaseItem.GetItem(item.name);
+            obj.text.text = $"{itemData.DisplayName} - {item.cost}";
+            if (itemData.Icon != null)
             {
-                obj.icon.sprite = itemData.icon;
+                obj.icon.sprite = itemData.Icon;
             }
             obj.item = itemData;
             obj.cost = item.cost;

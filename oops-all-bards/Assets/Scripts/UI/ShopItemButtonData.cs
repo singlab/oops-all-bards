@@ -8,23 +8,17 @@ public class ShopItemButtonData : MonoBehaviour
 {
     public TextMeshProUGUI text;
     public Image icon;
-    public ItemData item;
+    public BaseItem item;
     public int cost;
     public Button button;
 
     public ShopManager shop;
     public BasePlayer player;
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-
-    }
-
     void Awake()
     {
         text = GetComponentInChildren<TextMeshProUGUI>();
-        icon = GetComponentInChildren<Image>();
+        icon = transform.Find("Icon").GetComponent<Image>();
         button = GetComponent<Button>();
     }
 

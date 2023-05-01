@@ -34816,7 +34816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shop:
-  - name: greenHerb
+  - name: greenherb
     cost: 5
   - name: stick
     cost: 0
