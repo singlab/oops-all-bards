@@ -45,7 +45,7 @@ public class TCPServer {
     		}
     	}.start();
 		
-		int port = 5000;
+		int port = 8000;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 
             System.out.println("Server is listening on port " + port);
