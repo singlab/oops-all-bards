@@ -87,6 +87,10 @@ public class GameManager : MonoBehaviour
         {
             ICombatQueueable cq = CombatManager.Instance.combatQueue.Pop();
             cq.Execute();
+            if (CombatManager.Instance.combatQueue.queue.Count < CombatUI.Instance.queueDisplay.Count)
+            {
+                CombatUI.Instance.RenderPop();
+            }
         }
         else
         {

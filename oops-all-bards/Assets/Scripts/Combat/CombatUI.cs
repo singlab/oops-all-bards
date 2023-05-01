@@ -26,6 +26,28 @@ public class CombatUI : MonoBehaviour
     public GameObject actionButton;
     // A reference to the target button prefab.
     public GameObject targetButton;
+    // Icon holders for queue display
+    public GameObject iconHolder;
+    // Queue display UI
+    public GameObject timeline;
+    // Queue display
+    public List<IconHolder> queueDisplay;
+    // Object that holds the Combat log
+    public GameObject combatLog;
+    // Combat log text object
+    public TextMeshProUGUI textHUD;
+
+    public struct IconHolder
+    {
+        public GameObject iconHolder;
+        public ICombatQueueable combatQueueable;
+
+        public IconHolder(GameObject iconHolder, ICombatQueueable combatQueueable)
+        {
+            this.iconHolder = iconHolder;
+            this.combatQueueable = combatQueueable;
+        }
+    }
 
     //public reference to combat gameobject
     CombatManager combatManager;
@@ -60,12 +82,13 @@ public class CombatUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        combatManager = combat.GetComponent<CombatManager>();
+        /**queueDisplay = new List<GameObject>();
+        //combatManager = combat.GetComponent<CombatManager>();
         RenderUI();
         OverviewCamera.enabled = true;
         Cursor.lockState = CursorLockMode.Confined;
         Debug.Log(Cursor.lockState);
-
+        **/
 
     }
 
@@ -78,6 +101,13 @@ public class CombatUI : MonoBehaviour
     // A function used to render all UI elements for the demo.
     public void RenderUI()
     {
+        queueDisplay = new List<IconHolder>();
+        combatManager = CombatManager.Instance;
+        //RenderUI();
+        OverviewCamera.enabled = true;
+        Cursor.lockState = CursorLockMode.Confined;
+        Debug.Log(Cursor.lockState);
+
         // Render the portrait section and combat menu.
         partyPortraits.SetActive(true);
         enemyPortraits.SetActive(true);
@@ -115,8 +145,6 @@ public class CombatUI : MonoBehaviour
             portraitData.healthBar.UpdateValueBar(p.Health);
             portraitData.flourishBar.maxValue = p.Flourish;
             portraitData.flourishBar.UpdateValueBar(p.Flourish);
-
-
         }
 
         foreach (BaseEnemy e in CombatManager.Instance.enemies)
@@ -140,7 +168,7 @@ public class CombatUI : MonoBehaviour
             //flourishBar.gameObject.SetActive(false); //Turns off flourish bar display for enemies
         }
 
-
+        Debug.Log("ui ready");
 
     }
 
@@ -220,7 +248,69 @@ public class CombatUI : MonoBehaviour
 
     }
 
-    public Tuple<ValueBar, ValueBar> FindValueBars(string name)
+    // Helper function for Queue rendering, gets icon from portrait data of acting character
+    public GameObject GetIconForQueueable(ICombatQueueable item)
+    {
+        GameObject holder = Instantiate(iconHolder, transform.position, Quaternion.identity, timeline.transform);
+        Image icon = holder.transform.Find("Frame").transform.Find("Background").transform.Find("Icon").GetComponent<Image>();
+        if (item is AllyTurn)
+        {
+            icon.sprite = FindPortrait(((AllyTurn)item).actingCharacter.Name).icon.sprite;
+        }
+        else if (item is EnemyTurn)
+        {
+            icon.sprite = FindPortrait(((EnemyTurn)item).actingCharacter.Name).icon.sprite;
+        }
+        else if (item is PlayerTurn)
+        {
+            icon.sprite = FindPortrait(((PlayerTurn)item).actingCharacter.Name).icon.sprite;
+        }
+        return holder;
+    }
+    // Displays icons of acting characters in combat queue, updated by checkqueue event type
+    public void RenderQueue()
+    {
+        foreach (IconHolder iconHolder in queueDisplay)
+        {
+            Destroy(iconHolder.iconHolder);
+        }
+        queueDisplay.Clear();
+        ICombatQueueable[] items = CombatManager.Instance.combatQueue.queue.ToArray();
+        foreach (ICombatQueueable item in items)
+        {
+            GameObject holder = GetIconForQueueable(item);
+            queueDisplay.Add(new IconHolder(holder, item));
+        }
+    }
+    public void RenderPush(ICombatQueueable item)
+    {
+        GameObject holder = GetIconForQueueable(item);
+        queueDisplay.Add(new IconHolder(holder, item));
+    }
+    public void RenderPriorityPush(ICombatQueueable item)
+    {
+        GameObject holder = GetIconForQueueable(item);
+        queueDisplay.Insert(0, new IconHolder(holder, item));
+    }
+    public void RenderPop()
+    {
+        queueDisplay[0].iconHolder.GetComponent<Animator>().Play("removeTimelineIcon");
+        queueDisplay.RemoveAt(0);
+    }
+    public void RenderRemove(ICombatQueueable item)
+    {
+        List<IconHolder> temp = queueDisplay;
+        for (int i = 0; i < temp.Count; i++)
+        {
+            if (item == temp[i].combatQueueable)
+            {
+                queueDisplay[i].iconHolder.GetComponent<Animator>().Play("removeTimelineIcon");
+                queueDisplay.RemoveAt(i);
+            }
+        }
+    }
+
+    /**public Tuple<ValueBar, ValueBar> FindValueBars(string name)
     {
         Tuple<ValueBar, ValueBar> relevantBars = new Tuple<ValueBar, ValueBar>(null, null);
         for (int i = 0; i < partyPortraits.transform.childCount; i++)
@@ -250,7 +340,7 @@ public class CombatUI : MonoBehaviour
 
         
         return relevantBars;
-    }
+    }**/
 
     // A function that finds and returns a PortraitData object corresponding to a string name of a character.
     public static PortraitData FindPortrait(string name)
@@ -292,5 +382,19 @@ public class CombatUI : MonoBehaviour
         EnemyCamera.enabled = false;
         AudienceCamera.enabled = false;
         camera.enabled = true;
+    }
+
+    public void UpdateCombatLog(string text)
+    {
+        TextMeshProUGUI textItem = Instantiate(textHUD, combatLog.transform).GetComponent<TextMeshProUGUI>();
+        textItem.text = text;
+    }
+
+    public void ResetCombatLog()
+    {
+        for (int i = 0; i < combatLog.transform.childCount; i++)
+        {
+            Destroy(combatLog.transform.GetChild(i).gameObject);
+        }
     }
 }
