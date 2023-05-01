@@ -38,9 +38,8 @@ public class TavernManager : MonoBehaviour
             StartCoroutine(DemoResolution());
         }
 
-        
     }
-    
+
 
     void SpawnPlayer()
     {
@@ -59,6 +58,8 @@ public class TavernManager : MonoBehaviour
         a.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Controllers/Player");
         // Add player tag.
         toInstantiate.tag = "Player";
+        Cursor.lockState = CursorLockMode.Locked; //testing
+
     }
 
     void CheckDialogueUI()
