@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class ShopInteractable : MonoBehaviour, IInteractable
 {
-    bool triggering;
+    public bool triggering;
 
     [SerializeField]
     public ShopItem[] shop;

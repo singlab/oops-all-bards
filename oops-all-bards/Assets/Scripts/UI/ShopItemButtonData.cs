@@ -39,4 +39,13 @@ public class ShopItemButtonData : MonoBehaviour
             button.enabled = true;
         }
     }
+
+    public void DisplayTooltip()
+    {
+        shop.tooltip.text = item.Description;
+    }
+    public void RemoveTooltip()
+    {
+        shop.tooltip.text = "";
+    }
 }

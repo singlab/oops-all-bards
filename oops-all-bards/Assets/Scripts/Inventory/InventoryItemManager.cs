@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class InventoryItemManager : MonoBehaviour
@@ -110,9 +111,7 @@ public class InventoryItemManager : MonoBehaviour
             GameObject toInstantiate = Instantiate(inventoryTile, inventoryItemsContainer.transform.position, Quaternion.identity);
             invSpaces[i] = toInstantiate;
             toInstantiate.transform.SetParent(inventoryItemsContainer.transform, false); 
-
         }
-        
     }
     /////////////////
 
@@ -232,6 +231,12 @@ public class InventoryItemManager : MonoBehaviour
 
             }
             GameManager.Instance.TogglePlayerControls();
+        }
+
+        for (int i = 0; i < DataManager.Instance.PlayerData.Inventory.Count; i++)
+        {
+            Debug.Log(DataManager.Instance.PlayerData.Inventory[i].DisplayName);
+            invSpaces[i].transform.Find("Frame").transform.Find("Background").GetComponent<Image>().sprite = DataManager.Instance.PlayerData.Inventory[i].Icon;
         }
     }
 
