@@ -34,7 +34,7 @@ public class ShopItemButtonData : MonoBehaviour
     public void UpdateAvailability()
     {
         button.enabled = false;
-        if (player.Gold >= cost)
+        if (player.Gold >= cost && player.Inventory.Count < 32)
         {
             button.enabled = true;
         }

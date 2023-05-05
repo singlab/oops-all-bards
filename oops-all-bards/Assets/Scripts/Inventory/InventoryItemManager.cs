@@ -6,8 +6,8 @@ using TMPro;
 
 public class InventoryItemManager : MonoBehaviour
 {
-    private static InventoryItemManager _instance;
-    public static InventoryItemManager Instance => InventoryItemManager._instance;
+    //private static InventoryItemManager _instance;
+    //public static InventoryItemManager Instance => InventoryItemManager._instance;
 
     [SerializeField] private GameObject[] tabs;
     [SerializeField] private GameObject[] equipableTabs; //test
@@ -29,7 +29,7 @@ public class InventoryItemManager : MonoBehaviour
 
     void Awake()
     {
-        if (_instance == null)
+        /*if (_instance == null)
         {
             _instance = this;
         }
@@ -37,13 +37,28 @@ public class InventoryItemManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);*/
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Persisting item manmager sets these variables in inspector and are lost on scene switch ...
+        // ... there is 100% a better way to do this but this will do for now
+        // Even lazier fix how about lets just not make this a singleton?
+        /*invNum = GameObject.Find("InvSizeCounter");
+        playerInventoryUI = GameObject.Find("InventoryUI"); 
+        inventoryItemsContainer = GameObject.Find("InventoryItems");
+        ingredientsContainer = GameObject.Find("IngredientsContainer");
+        recipiesContainer = GameObject.Find("RecipiesContainer");
+        tabs[0] = GameObject.Find("InventoryContainer");
+        tabs[1] = GameObject.Find("CharacterInventoryContainer");
+        tabs[2] = GameObject.Find("CraftsInventoryContainer");
+        equipableTabs[0] = GameObject.Find("WeaponGearUI");
+        equipableTabs[1] = GameObject.Find("HeadGearUI");
+        equipableTabs[2] = GameObject.Find("BodyGearUI");
+        equipableTabs[3] = GameObject.Find("FeetGearUI");*/
+
         //Fill in item inventory with empty inventory slots
         fillInventoryGrid();
         inventoryNumber();
@@ -52,14 +67,18 @@ public class InventoryItemManager : MonoBehaviour
 
         fillCraftingRecipiesGrid();
         fillCraftingIngredientsGrid();
-        
+
+        playerInventoryUI.SetActive(false);
+        tabs[1].SetActive(false);
+        tabs[2].SetActive(false);
     }
 
-     void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.I)) //test key
         {
             toggleInventoryUI();
+            if (playerInventoryUI.activeSelf) UpdateInventory();
         }
     }
 
@@ -96,14 +115,6 @@ public class InventoryItemManager : MonoBehaviour
     {
         //Set size of inventory
         invSpaces = new GameObject[32];
-
-        //Check if null
-        if (inventoryItemsContainer == null)
-        {
-            inventoryItemsContainer = GameObject.Find("InventoryItems");
-            
-        }
-
 
         for (int i = 0; i < invSpaces.Length; i++)
         {
@@ -160,12 +171,6 @@ public class InventoryItemManager : MonoBehaviour
         //Set size of inventory
         ingredientSpaces = new GameObject[5];
 
-        //Check if null
-        if (ingredientsContainer == null)
-        {
-            ingredientsContainer = GameObject.Find("IngredientsContainer");
-        }
-
         //Fill ingredients section with empty boxes
         for (int i = 0; i < ingredientSpaces.Length; i++)
         {
@@ -185,12 +190,6 @@ public class InventoryItemManager : MonoBehaviour
 
         //Set size of inventory
         recipeSpaces = new GameObject[5];
-
-        //Check if null
-        if (recipiesContainer == null)
-        {
-            recipiesContainer = GameObject.Find("RecipiesContainer");
-        }
 
         //Fill ingredients section with empty boxes
         for (int i = 0; i < recipeSpaces.Length; i++)
@@ -232,18 +231,22 @@ public class InventoryItemManager : MonoBehaviour
             }
             GameManager.Instance.TogglePlayerControls();
         }
-
-        for (int i = 0; i < DataManager.Instance.PlayerData.Inventory.Count; i++)
-        {
-            Debug.Log(DataManager.Instance.PlayerData.Inventory[i].DisplayName);
-            invSpaces[i].transform.Find("Frame").transform.Find("Background").GetComponent<Image>().sprite = DataManager.Instance.PlayerData.Inventory[i].Icon;
-        }
     }
 
     public void inventoryNumber()
     {
         //used to manipulate inventory counter in bottom right cornerw
-        invNum.GetComponent<TMP_Text>().text = "0/" + invSpaces.Length;
+        invNum.GetComponent<TMP_Text>().text = $"{DataManager.Instance.PlayerData.Inventory.Count.ToString()}/{invSpaces.Length}";
 
+    }
+
+    public void UpdateInventory()
+    {
+        for (int i = 0; i < DataManager.Instance.PlayerData.Inventory.Count; i++)
+        {
+            Debug.Log(DataManager.Instance.PlayerData.Inventory[i].DisplayName);
+            invSpaces[i].transform.Find("Frame").transform.Find("Background").GetComponent<Image>().sprite = DataManager.Instance.PlayerData.Inventory[i].Icon;
+        }
+        inventoryNumber();
     }
 }

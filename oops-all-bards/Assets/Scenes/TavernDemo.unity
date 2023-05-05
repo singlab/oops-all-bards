@@ -6956,6 +6956,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1330318053}
+        m_TargetAssemblyTypeName: InventoryItemManager, Assembly-CSharp
+        m_MethodName: UpdateInventory
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &341193818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10218,10 +10230,10 @@ RectTransform:
   m_Father: {fileID: 1866224139}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 338, y: -137}
-  m_SizeDelta: {x: 584, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &475854200
 MonoBehaviour:
@@ -12131,7 +12143,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &553242599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13411,7 +13423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &611831665
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15798,7 +15810,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &691978363
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24449,7 +24461,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1069779109
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25107,7 +25119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1102990200
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26447,7 +26459,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1149496158
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35319,6 +35331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83cea2478581eb743b91aa91a5af7e9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggering: 0
   shop:
   - name: greenherb
     cost: 5
@@ -45676,7 +45689,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2022226132
 RectTransform:
   m_ObjectHideFlags: 0
