@@ -121,7 +121,10 @@ public class InventoryItemManager : MonoBehaviour
             //Fill the inventory with spaces for items to be stored
             GameObject toInstantiate = Instantiate(inventoryTile, inventoryItemsContainer.transform.position, Quaternion.identity);
             invSpaces[i] = toInstantiate;
-            toInstantiate.transform.SetParent(inventoryItemsContainer.transform, false); 
+            toInstantiate.transform.SetParent(inventoryItemsContainer.transform, false);
+            InventoryTile tile = toInstantiate.GetComponent<InventoryTile>();
+            tile.manager = this;
+            tile.item = null;
         }
     }
     /////////////////
@@ -240,13 +243,36 @@ public class InventoryItemManager : MonoBehaviour
 
     }
 
+    // update the inventory to display the correct items
     public void UpdateInventory()
     {
         for (int i = 0; i < DataManager.Instance.PlayerData.Inventory.Count; i++)
         {
-            Debug.Log(DataManager.Instance.PlayerData.Inventory[i].DisplayName);
+            //Debug.Log(DataManager.Instance.PlayerData.Inventory[i].DisplayName);
             invSpaces[i].transform.Find("Frame").transform.Find("Background").GetComponent<Image>().sprite = DataManager.Instance.PlayerData.Inventory[i].Icon;
+            invSpaces[i].GetComponent<InventoryTile>().item = DataManager.Instance.PlayerData.Inventory[i];
+            invSpaces[i].transform.Find("Frame").GetComponent<Image>().color = Color.white;
+            if (DataManager.Instance.PlayerData.Equipment.Contains(invSpaces[i].GetComponent<InventoryTile>().item))
+            {
+                invSpaces[i].transform.Find("Frame").GetComponent<Image>().color = Color.red;
+            }
+        }
+        for (int i = DataManager.Instance.PlayerData.Inventory.Count; i < 32; i++)
+        {
+            //Debug.Log(DataManager.Instance.PlayerData.Inventory[i].DisplayName);
+            invSpaces[i].transform.Find("Frame").transform.Find("Background").GetComponent<Image>().sprite = null;
+            invSpaces[i].GetComponent<InventoryTile>().item = null;
+            invSpaces[i].transform.Find("Frame").GetComponent<Image>().color = Color.white;
         }
         inventoryNumber();
+        DisableItemOptions();
+    }
+
+    public void DisableItemOptions()
+    {
+        foreach(GameObject invTlie in invSpaces)
+        {
+            invTlie.GetComponent<InventoryTile>().OnDeselect();
+        }
     }
 }
