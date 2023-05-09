@@ -40,7 +40,7 @@ public class InventoryTile : MonoBehaviour
         use.SetActive(true);
         equip.SetActive(true);
         trash.SetActive(true);
-        unequip.SetActive(true);
+        unequip.SetActive(false);
 
         if (item.Type != BaseItem.ItemTypes.POTABLES)
         {
@@ -50,17 +50,14 @@ public class InventoryTile : MonoBehaviour
         {
             equip.SetActive(false);
         }
-
         if (DataManager.Instance.PlayerData.Equipment.Contains(item))
         {
             trash.SetActive(false);
-        }
-        else
-        {
-            unequip.SetActive(false);
+            equip.SetActive(false);
+            unequip.SetActive(true);
         }
 
-        text.text = item.Description;
+        text.text = $"{item.DisplayName}\n{item.Description}";
     }
 
     public void OnDeselect()
@@ -79,6 +76,7 @@ public class InventoryTile : MonoBehaviour
     public void Equip()
     {
         DataManager.Instance.PlayerData.Equipment.Add(item);
+        manager.UpdateInventory();
     }
 
     public void Trash()
@@ -91,5 +89,6 @@ public class InventoryTile : MonoBehaviour
     {
         // unequip item effect here
         DataManager.Instance.PlayerData.Equipment.Remove(item);
+        manager.UpdateInventory();
     }
 }

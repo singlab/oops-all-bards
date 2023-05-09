@@ -313,13 +313,16 @@ public class InventoryItemManager : MonoBehaviour
     public void UpdateCraftingTooltip(BaseItem item)
     {
         recipeTooltip.SetActive(true);
-        recipeTooltip.transform.Find("Image").GetComponent<Image>().sprite = item.Icon;
+        CraftTooltip tooltip = recipeTooltip.GetComponent<CraftTooltip>();
+        tooltip.image.sprite = item.Icon;
         string recipe = "";
         foreach (BaseItem recipeItem in item.Recipe)
         {
             recipe += recipeItem.DisplayName + ", ";
         }
         recipe.Substring(recipe.Length - 3);
-        recipeTooltip.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = $"To Craft: {item.Description}\n\n{recipe}";
+        tooltip.text.text = $"To Craft: {item.Description}\n\n{recipe}";
+        tooltip.item = item;
+        tooltip.manager = this;
     }
 }
