@@ -11,7 +11,7 @@ public class BaseItem
     [SerializeField] private ItemTypes type;
     [SerializeField] private int value;
     [SerializeField] private Sprite icon;
-    [SerializeField] private string[] recipe;
+    [SerializeField] private List<BaseItem> recipe;
 
     public enum ItemTypes
     {
@@ -20,7 +20,7 @@ public class BaseItem
         POTABLES
     }
 
-    public BaseItem(string name, string displayName, string description, ItemTypes type, int value, string[] recipe)
+    public BaseItem(string name, string displayName, string description, ItemTypes type, int value, List<BaseItem> recipe)
     {
         this.name = name;
         this.displayName = displayName;
@@ -65,6 +65,12 @@ public class BaseItem
     {
         get { return this.icon; }
         set { this.icon = value; }
+    }
+
+    public List<BaseItem> Recipe
+    {
+        get { return this.recipe; }
+        set { this.recipe = value; }
     }
 
     public static BaseItem GetItem(string id)

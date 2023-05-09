@@ -42,7 +42,7 @@ public class ShopItemButtonData : MonoBehaviour
 
     public void DisplayTooltip()
     {
-        shop.tooltip.text = item.Description;
+        shop.tooltip.text = $"{item.DisplayName}\n{item.Description}";
     }
     public void RemoveTooltip()
     {

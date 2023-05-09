@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -15,8 +16,9 @@ public class InventoryItemManager : MonoBehaviour
     public GameObject playerInventoryUI;
     public GameObject inventoryTile;
     public GameObject inventoryItemsContainer;
-    public GameObject ingredientsContainer;
-    public GameObject recipiesContainer;
+    public GameObject recipeContainer;
+    public GameObject recipeTooltip;
+    public GameObject recipeButton;
 
     public GameObject invNum;
 
@@ -172,8 +174,9 @@ public class InventoryItemManager : MonoBehaviour
     public void fillCraftingIngredientsGrid()
     {
         //Set size of inventory
-        ingredientSpaces = new GameObject[5];
-
+        //ingredientSpaces = new GameObject[5];
+        
+        /**
         //Fill ingredients section with empty boxes
         for (int i = 0; i < ingredientSpaces.Length; i++)
         {
@@ -184,7 +187,7 @@ public class InventoryItemManager : MonoBehaviour
             ingredientSpaces[i] = toInstantiate;
             toInstantiate.transform.SetParent(ingredientsContainer.transform, false); //test
         }
-
+        **/
         
     }
 
@@ -192,8 +195,9 @@ public class InventoryItemManager : MonoBehaviour
     {
 
         //Set size of inventory
-        recipeSpaces = new GameObject[5];
+        //recipeSpaces = new GameObject[5];
 
+        /**
         //Fill ingredients section with empty boxes
         for (int i = 0; i < recipeSpaces.Length; i++)
         {
@@ -209,10 +213,8 @@ public class InventoryItemManager : MonoBehaviour
             recipeSpaces[i] = toInstantiate;
             toInstantiate.transform.SetParent(recipiesContainer.transform, false);
         }
-
+        **/
     }
-
-    /////////////////
 
     public void toggleInventoryUI()
     {
@@ -223,6 +225,7 @@ public class InventoryItemManager : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Confined;
             GameManager.Instance.StartCoroutine(GameManager.togglePlayerPause());
+            tabSwitch(tabs[0]);
         }
         else
         {
@@ -274,5 +277,49 @@ public class InventoryItemManager : MonoBehaviour
         {
             invTlie.GetComponent<InventoryTile>().OnDeselect();
         }
+    }
+
+    public void UpdateCraftingTab()
+    {
+        foreach(Transform child in recipeContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach(BaseItem item in ItemData.items)
+        {
+            if (item.Recipe == null) continue;
+
+            List<BaseItem> recipe = new List<BaseItem>();
+            recipe.AddRange(item.Recipe);
+
+            foreach (BaseItem inventoryItem in DataManager.Instance.PlayerData.Inventory)
+            {
+                if (recipe.Contains(inventoryItem))
+                {
+                    recipe.Remove(inventoryItem);
+                }
+            }
+            if (!recipe.Any())
+            {
+                GameObject button = Instantiate(recipeButton, recipeContainer.transform);
+                CraftItemButton buttonData = button.GetComponent<CraftItemButton>();
+                buttonData.item = item;
+                buttonData.text.text = item.DisplayName;
+                buttonData.manager = this;
+            }
+        }
+        recipeTooltip.SetActive(false);
+    }
+    public void UpdateCraftingTooltip(BaseItem item)
+    {
+        recipeTooltip.SetActive(true);
+        recipeTooltip.transform.Find("Image").GetComponent<Image>().sprite = item.Icon;
+        string recipe = "";
+        foreach (BaseItem recipeItem in item.Recipe)
+        {
+            recipe += recipeItem.DisplayName + ", ";
+        }
+        recipe.Substring(recipe.Length - 3);
+        recipeTooltip.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = $"To Craft: {item.Description}\n\n{recipe}";
     }
 }

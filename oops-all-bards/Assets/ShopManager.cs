@@ -56,7 +56,7 @@ public class ShopManager : MonoBehaviour
     public void DisplayShop()
     {
         Cursor.lockState = CursorLockMode.Confined;
-        GameManager.Instance.TogglePlayerControls();
+        GameManager.Instance.StartCoroutine(GameManager.togglePlayerPause());
         transform.SetParent(panel, false);
     }
 
