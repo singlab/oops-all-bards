@@ -203,20 +203,17 @@ public class CombatUI : MonoBehaviour
             {
                 toInstantiate.GetComponent<Button>().interactable = false;
             }
-           
 
 
-
-            //TODO: If the player is dead or there are no allies left disable influence button
+            //If there are no allies left disable influence button
             if (currentAbility.Name == "Influence" && combatManager.party.Count < 2)
             {
                 toInstantiate.GetComponent<Button>().interactable = false;
 
             }
-            
+
         }
     }
-
     // A function used to destroy all buttons that are children of the combat menu.
     public void ClearCombatMenu()
     {
