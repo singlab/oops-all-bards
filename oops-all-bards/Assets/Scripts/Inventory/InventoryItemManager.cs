@@ -294,18 +294,21 @@ public class InventoryItemManager : MonoBehaviour
 
             foreach (BaseItem inventoryItem in DataManager.Instance.PlayerData.Inventory)
             {
-                if (recipe.Contains(inventoryItem))
+                // Debug.Log($"{BaseItem.GetItem(inventoryItem.Name).Name} in recipe: {recipe.Contains(BaseItem.GetItem(inventoryItem.Name))}");
+                if (recipe.Contains(BaseItem.GetItem(inventoryItem.Name)))
                 {
-                    recipe.Remove(inventoryItem);
+                    recipe.Remove(BaseItem.GetItem(inventoryItem.Name));
                 }
-            }
-            if (!recipe.Any())
-            {
-                GameObject button = Instantiate(recipeButton, recipeContainer.transform);
-                CraftItemButton buttonData = button.GetComponent<CraftItemButton>();
-                buttonData.item = item;
-                buttonData.text.text = item.DisplayName;
-                buttonData.manager = this;
+                // Debug.Log($"Recipe available: {!recipe.Any()}");
+                if (!recipe.Any())
+                {
+                    GameObject button = Instantiate(recipeButton, recipeContainer.transform);
+                    CraftItemButton buttonData = button.GetComponent<CraftItemButton>();
+                    buttonData.item = item;
+                    buttonData.text.text = item.DisplayName;
+                    buttonData.manager = this;
+                    break;
+                }
             }
         }
         recipeTooltip.SetActive(false);

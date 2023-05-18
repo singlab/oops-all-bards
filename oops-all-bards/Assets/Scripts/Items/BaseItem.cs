@@ -31,6 +31,17 @@ public class BaseItem
         this.recipe = recipe;
     }
 
+    public BaseItem(BaseItem item)
+    {
+        this.name = item.name;
+        this.displayName = item.displayName;
+        this.description = item.description;
+        this.type = item.type;
+        this.value = item.value;
+        this.icon = item.icon;
+        this.recipe = item.recipe;
+    }
+
     public string Name
     {
         get { return this.name; }

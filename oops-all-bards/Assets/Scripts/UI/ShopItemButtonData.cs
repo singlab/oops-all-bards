@@ -25,7 +25,7 @@ public class ShopItemButtonData : MonoBehaviour
     public void PurchaseItem()
     {
         //on click for button
-        player.Inventory.Add(item);
+        player.Inventory.Add(new BaseItem(item));
         player.Gold -= cost;
         shop.UpdateShop();
 

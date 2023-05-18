@@ -21,9 +21,16 @@ public class CraftTooltip : MonoBehaviour
     {
         foreach(BaseItem item in item.Recipe)
         {
-            DataManager.Instance.PlayerData.Inventory.Remove(item);
+            foreach (BaseItem inventoryItem in DataManager.Instance.PlayerData.Inventory)
+            {
+                if (BaseItem.GetItem(inventoryItem.Name) == item)
+                {
+                    DataManager.Instance.PlayerData.Inventory.Remove(inventoryItem);
+                    break;
+                }
+            }
         }
-        DataManager.Instance.PlayerData.Inventory.Add(this.item);
+        DataManager.Instance.PlayerData.Inventory.Add(new BaseItem(this.item));
         manager.UpdateCraftingTab();
         manager.recipeTooltip.SetActive(false);
     }
