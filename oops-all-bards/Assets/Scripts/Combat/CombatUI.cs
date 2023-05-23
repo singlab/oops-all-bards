@@ -203,9 +203,17 @@ public class CombatUI : MonoBehaviour
             {
                 toInstantiate.GetComponent<Button>().interactable = false;
             }
+
+
+            //If there are no allies left disable influence button
+            if (currentAbility.Name == "Influence" && combatManager.party.Count < 2)
+            {
+                toInstantiate.GetComponent<Button>().interactable = false;
+
+            }
+
         }
     }
-
     // A function used to destroy all buttons that are children of the combat menu.
     public void ClearCombatMenu()
     {
@@ -219,15 +227,31 @@ public class CombatUI : MonoBehaviour
     // A function used to render target buttons.
     public void RenderTargetButtons(BaseAbility ability)
     {
-        // Only render ally target buttons if influence is selected, can change to ability.CombatTypes.SUPPORT if we want player to only be able to support allies.
-        if (ability.ID == 99 || ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT || ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL || ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
+        // Only render ally target buttons if influence is selected
+        if (ability.ID == 99)
         {
             foreach (BasePlayer p in combatManager.party)
             {
+                if (p.ID == 0) continue; //prevents player from being able to influence self
+                
+                    GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
+                    toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
+                    toInstantiate.GetComponent<TargetButton>().target = p.Name;
+            }
+        }
+        //only render ally buttons for support, defend, and heal abilities
+        else if (ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT || ability.CombatType == BaseAbility.CombatAbilityTypes.HEAL || ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
+        {
+
+            foreach (BasePlayer p in combatManager.party)
+            {
+
                 GameObject toInstantiate = Instantiate(targetButton, combatMenu.transform);
                 toInstantiate.GetComponentInChildren<TMP_Text>().text = p.Name;
                 toInstantiate.GetComponent<TargetButton>().target = p.Name;
+
             }
+
         }
 
         else
@@ -241,7 +265,7 @@ public class CombatUI : MonoBehaviour
             }
         }
 
-        //TEST adding in a back button
+        //Code for back button
         GameObject backButton = Instantiate(targetButton, combatMenu.transform);
         backButton.GetComponentInChildren<TMP_Text>().text = "Back";
         backButton.GetComponent<TargetButton>().target = "back"; //target is now equal to back
