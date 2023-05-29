@@ -186,7 +186,6 @@ public class CombatManager : MonoBehaviour
     public IEnumerator ResolvePlayerAction(PlayerAction action)
     {
         // Adjust camera, pause for animations, update game state 
-        // TODO: Change from WaitForSeconds length to acting characters action animation length
         combatUI.SetActiveCamera(combatUI.BandCamera);
         if (action.target is BasePlayer)
         {
@@ -198,7 +197,15 @@ public class CombatManager : MonoBehaviour
             combatUI.SetActiveCamera(combatUI.EnemyCamera);
             combatUI.EnemyCamera.m_LookAt = ((BaseEnemy)action.target).BattleModel.transform;
         }
-        yield return new WaitForSeconds(3f);
+
+        // play animations if action has one
+        if (action.ability.AbilityAnimationClip != null)
+        {
+            action.actingCharacter.Anim.Play(action.ability.AbilityAnimationClip);
+            yield return new WaitForSeconds(action.actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
+            action.target.Anim.Play(action.ability.AbilityReactionAnimationClip);
+        }
+        else yield return new WaitForSeconds(3f);
 
         // If the attack misses, skip this turn
         if(!AttackHits(action.target))
@@ -312,7 +319,14 @@ public class CombatManager : MonoBehaviour
         combatUI.SetActiveCamera(combatUI.BandCamera);
         combatUI.BandCamera.m_LookAt = target.BattleModel.transform;
 
-        yield return new WaitForSeconds(3f);
+        // play animations if action has one
+        if (ability.AbilityAnimationClip != null)
+        {
+            actingCharacter.Anim.Play(ability.AbilityAnimationClip);
+            yield return new WaitForSeconds(actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
+            target.Anim.Play(ability.AbilityReactionAnimationClip);
+        }
+        else yield return new WaitForSeconds(3f);
 
         bool isBlind = IsBlind(actingCharacter);
         bool attackHits = AttackHits(target);
@@ -372,7 +386,15 @@ public class CombatManager : MonoBehaviour
         // TODO: Change from WaitForSeconds length to acting characters action animation length
         combatUI.SetActiveCamera(combatUI.EnemyCamera);
         combatUI.EnemyCamera.m_LookAt = target.BattleModel.transform;
-        yield return new WaitForSeconds(3f);
+
+        // play animations if action has one
+        if (ability.AbilityAnimationClip != null)
+        {
+            actingCharacter.Anim.Play(ability.AbilityAnimationClip);
+            yield return new WaitForSeconds(actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
+            target.Anim.Play(ability.AbilityReactionAnimationClip);
+        }
+        else yield return new WaitForSeconds(3f);
 
         // Apply effects of ability, log the outcome, update value bar of target.
         bool isStrengthened = IsStrengthened(actingCharacter);

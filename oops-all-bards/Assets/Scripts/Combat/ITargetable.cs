@@ -12,6 +12,7 @@ public class ITargetable
     private int elan;
     private List<CombatStatus> combatStatuses = new List<CombatStatus>();
     private CiFData cifData = new CiFData();
+    private Animator anim;
 
     public virtual string Name
     {
@@ -53,6 +54,12 @@ public class ITargetable
     {
         get { return this.cifData; }
         set { this.cifData = value; }
+    }
+
+    public virtual Animator Anim
+    {
+        get { return this.anim; }
+        set { this.anim = value; }
     }
 
     public virtual void RemoveCombatStatus(CombatStatus.CombatStatusTypes type)
