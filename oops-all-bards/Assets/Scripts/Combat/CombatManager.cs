@@ -90,10 +90,14 @@ public class CombatManager : MonoBehaviour
                 PushAndCreateCombatQueueable(new AllyTurn(p));
             }
             p.BattleModel = GetModelByID(p.ID);
+            p.Anim = p.BattleModel.GetComponent<Animator>();
+            p.Animan = p.BattleModel.GetComponent<CombatAnimationManager>();
         }
         foreach (BaseEnemy e in enemies)
         {
             e.BattleModel = GetModelByName(e.Name);
+            e.Anim = e.BattleModel.GetComponent<Animator>();
+            e.Animan = e.BattleModel.GetComponent<CombatAnimationManager>();
             PushAndCreateCombatQueueable(new EnemyTurn(e));
         }
         // Set up combat ui when combat queue is initialized for the first time
@@ -201,9 +205,9 @@ public class CombatManager : MonoBehaviour
         // play animations if action has one
         if (action.ability.AbilityAnimationClip != null)
         {
+            action.actingCharacter.Animan.ReceiveAnimationRequirements(action.ability.AbilityAnimationParticles, action.ability.AbilitySFX);
             action.actingCharacter.Anim.Play(action.ability.AbilityAnimationClip);
             yield return new WaitForSeconds(action.actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
-            action.target.Anim.Play(action.ability.AbilityReactionAnimationClip);
         }
         else yield return new WaitForSeconds(3f);
 
@@ -280,9 +284,14 @@ public class CombatManager : MonoBehaviour
         if (combatUI.V < CombatUI.Instance.virtData.healthBar.maxValue + 1)
         {
             CombatUI.Instance.virtData.healthBar.UpdateValueBar(combatUI.V);
-        }        
-        // TODO: Change from WaitForSeconds length to target characters take damage animation length
-        yield return new WaitForSeconds(2);
+        }
+
+        if (action.ability.AbilityAnimationClip != null && action.target.Health > 0)
+        {
+            action.target.Anim.Play(action.ability.AbilityReactionAnimationClip);
+            yield return new WaitForSeconds(action.target.Anim.GetCurrentAnimatorClipInfo(0).Length);
+        }
+        else yield return new WaitForSeconds(2);
         //Debug.Log("pauuseeee");
 
         // Tell DemoManager to check the queue and continue to next turn.
@@ -320,11 +329,11 @@ public class CombatManager : MonoBehaviour
         combatUI.BandCamera.m_LookAt = target.BattleModel.transform;
 
         // play animations if action has one
-        if (ability.AbilityAnimationClip != null && ability.AbilityReactionAnimationClip != null)
+        if (ability.AbilityAnimationClip != null)
         {
+            actingCharacter.Animan.ReceiveAnimationRequirements(ability.AbilityAnimationParticles, ability.AbilitySFX);
             actingCharacter.Anim.Play(ability.AbilityAnimationClip);
             yield return new WaitForSeconds(actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
-            target.Anim.Play(ability.AbilityReactionAnimationClip);
         }
         else yield return new WaitForSeconds(3f);
 
@@ -340,8 +349,9 @@ public class CombatManager : MonoBehaviour
             actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.BLINDED);
         }
 
-        if (ability.AbilityReactionAnimationClip != null)
+        if (ability.AbilityAnimationClip != null && target.Health > 0)
         {
+            target.Anim.Play(ability.AbilityReactionAnimationClip);
             yield return new WaitForSeconds(target.Anim.GetCurrentAnimatorClipInfo(0).Length);
         }
         else yield return new WaitForSeconds(2);
@@ -389,11 +399,11 @@ public class CombatManager : MonoBehaviour
         combatUI.EnemyCamera.m_LookAt = target.BattleModel.transform;
 
         // play animations if action has one
-        if (ability.AbilityAnimationClip != null && ability.AbilityReactionAnimationClip != null)
+        if (ability.AbilityAnimationClip != null)
         {
+            actingCharacter.Animan.ReceiveAnimationRequirements(ability.AbilityAnimationParticles, ability.AbilitySFX);
             actingCharacter.Anim.Play(ability.AbilityAnimationClip);
             yield return new WaitForSeconds(actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
-            target.Anim.Play(ability.AbilityReactionAnimationClip);
         }
         else yield return new WaitForSeconds(3f);
 
@@ -410,8 +420,9 @@ public class CombatManager : MonoBehaviour
 
         if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); };
 
-        if (ability.AbilityReactionAnimationClip != null)
+        if (ability.AbilityAnimationClip != null && target.Health > 0)
         {
+            target.Anim.Play(ability.AbilityReactionAnimationClip);
             yield return new WaitForSeconds(target.Anim.GetCurrentAnimatorClipInfo(0).Length);
         }
         else yield return new WaitForSeconds(2);

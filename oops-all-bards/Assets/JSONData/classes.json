@@ -58,7 +58,7 @@
                     "abilityAnimationClip": "genericAttack",
                     "abilityReactionAnimationClip": "genericTakeDamage",
                     "abilityAnimationParticles": [ "genericAttackSwing", "genericAttackImpect" ],
-                    "abilityAnimayionSFX":  ["genericAttackSwing"]
+                    "abilitySFX":  ["pianoattack1"]
                 },
                 {
                     "name": "Defend",
@@ -216,7 +216,11 @@
                     "damage": 3,
                     "cost": 0,
                     "currentRank": 1,
-                    "maxRank": 5
+                    "maxRank": 5,
+                    "abilityAnimationClip": "genericAttack",
+                    "abilityReactionAnimationClip": "genericTakeDamage",
+                    "abilityAnimationParticles": [ "genericAttackSwing", "genericAttackImpect" ],
+                    "abilitySFX": [ "pianoattack1" ]
                 },
                 {
                     "name": "Defend",
