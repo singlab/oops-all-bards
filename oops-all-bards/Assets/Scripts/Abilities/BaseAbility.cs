@@ -19,7 +19,9 @@ public class BaseAbility
 	[Tooltip("Name of animator clip target character of ability should play")]
 	[SerializeField] private string abilityReactionAnimationClip;
 	[Tooltip("Array of particle prefabs to be spawned and played during animation")]
-	[SerializeField] private GameObject[] abilityAnimationParticles;
+	[SerializeField] private string[] abilityAnimationParticles;
+	[Tooltip("Array of sound effects to be played during animation")]
+	[SerializeField] private string[] abilitySFX;
 
 	public enum AbilityTypes
 	{
@@ -115,9 +117,15 @@ public class BaseAbility
 		set { this.abilityReactionAnimationClip = value; }
 	}
 
-	public GameObject[] AbilityAnimationParticles
+	public string[] AbilityAnimationParticles
     {
 		get { return this.abilityAnimationParticles; }
         set { this.abilityAnimationParticles = value; }
+    }
+	
+	public string[] AbilitySFX
+    {
+		get { return this.abilitySFX; }
+		set { this.abilitySFX = value; }
     }
 }

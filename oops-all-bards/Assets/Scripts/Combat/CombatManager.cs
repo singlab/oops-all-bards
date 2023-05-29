@@ -320,7 +320,7 @@ public class CombatManager : MonoBehaviour
         combatUI.BandCamera.m_LookAt = target.BattleModel.transform;
 
         // play animations if action has one
-        if (ability.AbilityAnimationClip != null)
+        if (ability.AbilityAnimationClip != null && ability.AbilityReactionAnimationClip != null)
         {
             actingCharacter.Anim.Play(ability.AbilityAnimationClip);
             yield return new WaitForSeconds(actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
@@ -340,10 +340,11 @@ public class CombatManager : MonoBehaviour
             actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.BLINDED);
         }
 
-
-        // TODO: Change from WaitForSeconds length to target characters take damage animation length
-        yield return new WaitForSeconds(2);
-        //Debug.Log("pauuseeee");
+        if (ability.AbilityReactionAnimationClip != null)
+        {
+            yield return new WaitForSeconds(target.Anim.GetCurrentAnimatorClipInfo(0).Length);
+        }
+        else yield return new WaitForSeconds(2);
 
         actingCharacter.OwnsTurn = false;
 
@@ -388,7 +389,7 @@ public class CombatManager : MonoBehaviour
         combatUI.EnemyCamera.m_LookAt = target.BattleModel.transform;
 
         // play animations if action has one
-        if (ability.AbilityAnimationClip != null)
+        if (ability.AbilityAnimationClip != null && ability.AbilityReactionAnimationClip != null)
         {
             actingCharacter.Anim.Play(ability.AbilityAnimationClip);
             yield return new WaitForSeconds(actingCharacter.Anim.GetCurrentAnimatorClipInfo(0).Length);
@@ -409,9 +410,11 @@ public class CombatManager : MonoBehaviour
 
         if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); };
 
-        // TODO: Change from WaitForSeconds length to target characters take damage animation length
-        yield return new WaitForSeconds(2);
-        //Debug.Log("pauuseeee");
+        if (ability.AbilityReactionAnimationClip != null)
+        {
+            yield return new WaitForSeconds(target.Anim.GetCurrentAnimatorClipInfo(0).Length);
+        }
+        else yield return new WaitForSeconds(2);
         actingCharacter.OwnsTurn = false;
 
         // Tell DemoManager to check the queue and continue to next turn.
