@@ -12,6 +12,8 @@ public class DialogueUIData : MonoBehaviour
     public GameObject nodeContentOrganizer;
     void Awake()
     {
+        Debug.Log(gameObject.name);//TEST
+
         portrait = transform.Find("PortraitPanel").transform.Find("Portrait").GetComponent<Image>();
         speakerName = transform.Find("PortraitPanel").Find("Name").GetComponent<TMP_Text>();
         nodeText = transform.Find("TextPanel").transform.Find("UsableSpace").Find("NodeText").GetComponent<TMP_Text>();

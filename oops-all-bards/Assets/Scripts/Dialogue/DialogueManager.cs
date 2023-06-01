@@ -39,6 +39,8 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(gameObject.name);//TEST
+
         //jsonReader.quips.DebugQuips();
     }
 

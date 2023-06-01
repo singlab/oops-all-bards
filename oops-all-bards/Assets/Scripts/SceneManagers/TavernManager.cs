@@ -119,8 +119,9 @@ public class TavernManager : MonoBehaviour
 
     public void AssignDialogueUIToManager()
     {
-        DialogueManager.Instance.dialogueUI = GameObject.Find("DialogueUI");
-        DialogueUIData data = DialogueManager.Instance.dialogueUI.GetComponent<DialogueUIData>();
+       // DialogueManager.Instance.dialogueUI = GameObject.Find("Canvas/Panel/DialogueUI");
+        DialogueUIData data = GameObject.Find("Canvas/Panel/DialogueUI").GetComponent<DialogueUIData>();
+        Debug.Log(data.speakerName);
         DialogueManager.Instance.portrait = data.portrait;
         DialogueManager.Instance.speakerName = data.speakerName;
         DialogueManager.Instance.nodeText = data.nodeText;
