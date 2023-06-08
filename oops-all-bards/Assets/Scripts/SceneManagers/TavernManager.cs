@@ -14,9 +14,13 @@ public class TavernManager : MonoBehaviour
     void Awake()
     {
         SpawnPlayer();
+        Debug.Log("spawned");
         CheckDialogueUI();
+        Debug.Log("checkdialogue");
         CheckPartyUI();
+        Debug.Log("checkparty");
         TCPTestClient.Instance.RefreshWMEs();
+        Debug.Log("refreshdawme");
     }
 
     // Update is called once per frame
@@ -119,13 +123,17 @@ public class TavernManager : MonoBehaviour
 
     public void AssignDialogueUIToManager()
     {
-       // DialogueManager.Instance.dialogueUI = GameObject.Find("Canvas/Panel/DialogueUI");
-        DialogueUIData data = GameObject.Find("Canvas/Panel/DialogueUI").GetComponent<DialogueUIData>();
-        Debug.Log(data.speakerName);
+        // DialogueManager.Instance.dialogueUI = GameObject.Find("Canvas/Panel/DialogueUI");
+        //DialogueUIData data = GameObject.Find("Canvas/Panel/DialogueUI").GetComponent<DialogueUIData>();
+        DialogueUIData data = GameObject.Find("Canvas").transform.Find("Panel").transform.Find("DialogueUI").GetComponent<DialogueUIData>();
         DialogueManager.Instance.portrait = data.portrait;
+        Debug.Log("got portrait");
         DialogueManager.Instance.speakerName = data.speakerName;
+        Debug.Log("got name");
         DialogueManager.Instance.nodeText = data.nodeText;
+        Debug.Log("got node text");
         DialogueManager.Instance.nodeContentOrganizer = data.nodeContentOrganizer;
+        Debug.Log("got content organizer");
     }
 
     public void AssignPartyUIToManager()
