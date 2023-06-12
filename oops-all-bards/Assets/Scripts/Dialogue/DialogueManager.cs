@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using System.Linq;
 
@@ -20,6 +21,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text speakerName;
     public GameObject nodeResponsePrefab;
     public GameObject textBubblePrefab;
+    public GameObject questUI;
 
     // Singleton pattern
     void Awake()
@@ -27,7 +29,8 @@ public class DialogueManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-        } else if (_instance != null)
+        }
+        else if (_instance != null)
         {
             Destroy(gameObject);
         }
@@ -42,13 +45,20 @@ public class DialogueManager : MonoBehaviour
     public void ToggleDialogueUI()
     {
         dialogueUI.SetActive(!dialogueUI.activeSelf);
+        dialogueUI.GetComponent<Animator>().Play("dialogueBox");
     }
 
     public void StartDialogue(int dialogueID)
     {
+        //Unlocks cursor when dialogue is active
+        Cursor.lockState = CursorLockMode.Confined;
+        //turn QuestUI off when dialogue is active
+        questUI = GameObject.Find("QuestUI");
+        questUI.SetActive(false);
         nodeIndex = 0;
         Debug.Log("Starting dialogue.");
-        DemoManager.Instance.TogglePlayerControls();
+        GameManager.Instance.TogglePlayerControls();
+        Debug.Log("toggle pause in dialogue");
         dialogueIndex = dialogueID;
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueID);
         RenderDialogueUI(dialogue);
@@ -71,14 +81,25 @@ public class DialogueManager : MonoBehaviour
         {
             NodeResponse response = node.NodeResponses[i];
             GameObject toInstantiate = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform.position, Quaternion.identity);
-            toInstantiate.transform.SetParent(nodeContentOrganizer.transform);
             toInstantiate.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
-            toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); } );
+            toInstantiate.transform.SetParent(nodeContentOrganizer.transform, false); //test
+
+            toInstantiate.AddComponent<DialogueHighlight>(); //Used in order to change text color when highlighting over response
+            toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { NextNode(response.NextNode); });
             if (response.Then != null)
             {
                 Debug.Log($"{response.Then}");
-                toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { Invoke(response.Then, 0); } );
+                toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { Invoke(response.Then, 0); });
             }
+
+            /*
+            //testing for fixing UI scaling issue
+            RectTransform testing = (RectTransform)nodeContentOrganizer.transform;
+            toInstantiate.GetComponent<RectTransform>().sizeDelta = new Vector2((testing.rect.width * 3), testing.rect.height);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(toInstantiate.GetComponent<RectTransform>());
+            */
+
+
         }
     }
 
@@ -97,27 +118,40 @@ public class DialogueManager : MonoBehaviour
             nodeIndex = index;
             DialogueNode currentNode = jsonReader.dialogues.GetDialogue(dialogueIndex).DialogueNodes[nodeIndex];
             RenderCurrentNode(currentNode);
-        } else if (index == -1)
+        }
+        else if (index == -1)
         {
             CloseDialogue();
-        } else if (index == -2)
+        }
+        else if (index == -2)
         {
             CloseDialogue();
             DemoManager.Instance.RecruitQuinton();
             GameObject.Find("Quinton").GetComponent<NPCMovement>().SendQuintonToBackroom();
-        } else
+        }
+        else
         {
+            BasePlayer quinton = jsonReader.allies.GetBasePlayerByID(1);
+            
             CloseDialogue();
             DemoManager.Instance.LoadScene("GigDemo");
+
         }
     }
 
     private void CloseDialogue()
     {
+        //locks cursor while inactive
+        Cursor.lockState = CursorLockMode.Locked;
+        //turn QuestUI back on when dialogue is closed
+        questUI.SetActive(true);
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueIndex);
         dialogue.Exhausted = true;
-        ToggleDialogueUI();
-        DemoManager.Instance.TogglePlayerControls();
+        Animator anim = dialogueUI.GetComponent<Animator>();
+        dialogueUI.GetComponent<Animator>().Play("dialogueBoxClose");
+        //Invoke("ToggleDialogueUI", anim.GetCurrentAnimatorClipInfo(0).Length);
+        GameManager.Instance.TogglePlayerControls();
+
     }
 
     // Spawn a text bubble prefab above the given character's gameobject with the given text.
@@ -183,7 +217,8 @@ public class DialogueManager : MonoBehaviour
                 }
             }
             model = CombatManager.Instance.GetModelByID(actingCharacter);
-        } else if (!inCombat && (inCombat == PartyManager.Instance.inCombat))
+        }
+        else if (!inCombat && (inCombat == PartyManager.Instance.inCombat))
         {
             Debug.Log("We're not in combat.");
             foreach (Status s in ac.CiFData.Statuses)
@@ -203,13 +238,17 @@ public class DialogueManager : MonoBehaviour
                 }
             }
             model = PartyManager.Instance.GetModelByID(actingCharacter);
-        } else
+        }
+        else
         {
             return;
         }
-        
+
         Debug.Log(relevantQuips.Count);
         chosenQuip = relevantQuips[Random.Range(0, relevantQuips.Count - 1)];
         SpawnTextBubble(model, chosenQuip.Text);
     }
+
+
+    
 }

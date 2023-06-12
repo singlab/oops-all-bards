@@ -8,6 +8,7 @@ public class TargetButton : MonoBehaviour
     public void Execute()
     {
         CombatManager.Instance.target = target;
-        CombatManager.Instance.ClearCombatMenu();
+        CombatManager.Instance.UI.GetComponent<CombatUI>().ClearCombatMenu();
+       
     }
 }

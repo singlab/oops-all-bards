@@ -65,6 +65,7 @@ public class PartyManager : MonoBehaviour
     public void TogglePartyUI()
     {
         partyUI.SetActive(!partyUI.activeSelf);
+        GameManager.Instance.TogglePlayerControls();
     }
 
     private void RenderPartyUI()
@@ -72,19 +73,26 @@ public class PartyManager : MonoBehaviour
         ClearPartyUI();
 
         Transform container = partyUI.transform.GetChild(0).Find("PartyMembers");
+        
         foreach (BasePlayer p in currentParty)
         {
             GameObject toInstantiate = Instantiate(partyMemberPrefab, container.position, Quaternion.identity);
             toInstantiate.transform.SetParent(container);
+
+            // Set scale to one
+            toInstantiate.transform.localScale = Vector3.one;
+
             Transform partyMember = toInstantiate.transform.Find("PartyMember");
             partyMember.GetChild(0).Find("Portrait").gameObject.GetComponent<Image>().sprite = GetPortraitByName(p.Name);
             partyMember.Find("Name").gameObject.GetComponent<TMP_Text>().text = p.Name;
+
 
             Transform traits = toInstantiate.transform.Find("Traits");
             foreach (Trait t in p.CiFData.Traits)
             {
                 GameObject text = Instantiate(tsaText, traits.position, Quaternion.identity);
                 text.transform.SetParent(traits);
+                text.transform.localScale = Vector3.one;
                 text.GetComponent<TMP_Text>().text = t.Type.ToString();
             }
 
@@ -93,6 +101,7 @@ public class PartyManager : MonoBehaviour
             {
                 GameObject text = Instantiate(tsaText, statuses.position, Quaternion.identity);
                 text.transform.SetParent(statuses);
+                text.transform.localScale = Vector3.one;
                 text.GetComponent<TMP_Text>().text = s.Type.ToString();
             }
 
@@ -101,6 +110,7 @@ public class PartyManager : MonoBehaviour
             {
                 GameObject text = Instantiate(tsaText, affinities.position, Quaternion.identity);
                 text.transform.SetParent(affinities);
+                text.transform.localScale = Vector3.one;
                 BasePlayer towards = FindPartyMemberById(a.CharacterID);
                 text.GetComponent<TMP_Text>().text = $"{towards.Name}: {a.Value}";
             }
