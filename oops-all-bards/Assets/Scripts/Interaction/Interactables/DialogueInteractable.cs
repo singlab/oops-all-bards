@@ -24,7 +24,9 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
         if (!toStart.Exhausted)
         {
             DialogueManager.Instance.StartDialogue(dialogueID);
+      
             QuestManager.Instance.MarkStageComplete(questLink[1]);
+            
         } else
         {
             DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
