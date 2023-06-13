@@ -71,30 +71,22 @@ public class DialogueManager : MonoBehaviour
     {
         speakerName.text = dialogue.SpeakerName;
         portrait.sprite = Resources.Load<Sprite>($"Portraits/{dialogue.SpeakerName}");
-        ////
-        if (portrait.sprite == null)
-        {
-            dialogueModel();
-        }
-        /////
         DialogueNode currentNode = dialogue.DialogueNodes[nodeIndex];
         RenderCurrentNode(currentNode);
         ToggleDialogueUI();
     }
 
-    public void dialogueModel()
+    public void dialogueModel(GameObject character)
     {
         GameObject NPCModelSpawn = null;
-        BasePlayer playerData = DataManager.Instance.PlayerData;
+        GameObject target = character.transform.Find("CameraTarget").gameObject;
 
         //repurpose this so that it's not actually using the player and instead just the model
-        NPCModelSpawn = Instantiate(playerData.Model, portrait.transform.position, Quaternion.Euler(new Vector3(0f, 180f, 0f)));
+        NPCModelSpawn = Instantiate(target, portrait.transform.position, Quaternion.Euler(new Vector3(0f, 180f, 0f)));
         NPCModelSpawn.name = "ccClone";
         NPCModelSpawn.AddComponent<RotateObj>();
 
 
-        //Make the object a child of the container
-        //A bit crude but it works for now
         NPCModelSpawn.transform.SetParent(GameObject.Find("Canvas").transform.Find("Panel").transform.Find("DialogueUI").transform.Find("PortraitPanel").transform.Find("Portrait"));
 
         if (GameObject.Find("Canvas").transform.Find("Panel").transform.Find("DialogueUI").transform.Find("PortraitPanel").transform.Find("Portrait") == null)
@@ -139,13 +131,6 @@ public class DialogueManager : MonoBehaviour
                 Debug.Log($"{response.Then}");
                 toInstantiate.GetComponent<Button>().onClick.AddListener(delegate { Invoke(response.Then, 0); });
             }
-
-            /*
-            //testing for fixing UI scaling issue
-            RectTransform testing = (RectTransform)nodeContentOrganizer.transform;
-            toInstantiate.GetComponent<RectTransform>().sizeDelta = new Vector2((testing.rect.width * 3), testing.rect.height);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(toInstantiate.GetComponent<RectTransform>());
-            */
 
 
         }
