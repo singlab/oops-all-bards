@@ -21,19 +21,19 @@ public class DELPTest : MonoBehaviour
     {
         foreach (string fact in entity.Facts)
         {
-            DELPMessage msg = new DELPMessage(0, fact);
+            DELPMessage msg = new DELPMessage(0, "delp", fact);
             preparedData.Enqueue(msg);
         }
 
         foreach (string srule in entity.StrictRules)
         {
-            DELPMessage msg = new DELPMessage(1, srule);
+            DELPMessage msg = new DELPMessage(1, "delp", srule);
             preparedData.Enqueue(msg);
         }
 
         foreach (string drule in entity.DefeasibleRules)
         {
-            DELPMessage msg = new DELPMessage(2, drule);
+            DELPMessage msg = new DELPMessage(2, "delp", drule);
             preparedData.Enqueue(msg);
         }
     }
