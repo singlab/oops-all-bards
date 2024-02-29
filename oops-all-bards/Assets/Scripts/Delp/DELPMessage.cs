@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+[System.Serializable]
+public class DELPMessage : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    // The code intended to be read by Java server.
+    // 0 - fact
+    // 1 - strict rule
+    // 2 - defeasible rule
+    // 3 - query
+    public int code;
+    // The data represented as a string sent to the Java server.
+    public string data;
 
-    // Update is called once per frame
-    void Update()
+    public DELPMessage(int code, string data)
     {
-        
+        this.code = code;
+        this.data = data;
     }
 }
