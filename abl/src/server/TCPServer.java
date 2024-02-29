@@ -78,6 +78,13 @@ public class TCPServer {
     
     private void handleIncomingMessage(JSONObject jo) {
     	Message toHandle = new Message(jo);
+
+		if (toHandle.msg == "delp")
+		{
+			toHandle.parseDelpMessage();
+			return;
+		}
+
     	if (toHandle.code == 1) {
     		AllyWME wme = (AllyWME) toHandle.parseData();
     		agent.addWME(wme);

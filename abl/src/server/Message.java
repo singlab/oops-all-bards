@@ -48,4 +48,17 @@ public class Message {
 		}
 		return null;
 	}
+
+	void parseDelpMessage()
+	{
+		if (this.code == 0) {
+			// add fact
+		} else if (this.code == 1) {
+			// add srule
+		} else if (this.code == 2) {
+			// add drule
+		} else {
+			// handle query
+		}
+	}
 }
