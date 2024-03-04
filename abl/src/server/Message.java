@@ -54,13 +54,12 @@ public class Message {
 	{
 		if (this.code == 4)
 		{
-			String query = (String) this.data.get("belief");
-			handler.query(query);
+			String query = (String) this.data.get("query");
+			String answer = handler.query(query);
 			System.out.println("KB queried: " + query);
+			System.out.println("Answer: " + answer);
 		} else {
-			System.out.println(this.data);
 			String belief = (String) this.data.get("belief");
-			System.out.println(belief);
 			handler.addBelief(belief);
 			System.out.println("KB updated: " + belief);
 		}

@@ -37,6 +37,7 @@ public class TCPServer {
 
 	public void startHandler() {
 		delpHandler = new DelpHandler();
+		delpHandler.init();
 	}
 	
 	void startServer() {
@@ -80,6 +81,7 @@ public class TCPServer {
 	
     public static void main(String[] args) {
     	server = new TCPServer();
+		server.startHandler();
     	server.startServer();
     }
     
