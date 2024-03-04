@@ -18,6 +18,10 @@ public class DELPTest : MonoBehaviour
         {
             DELPMessage msg = preparedData.Dequeue();
             TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
+        } else
+        {
+            DELPMessage msg = PrepareQuery();
+            TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
         }
     }
 
@@ -48,6 +52,14 @@ public class DELPTest : MonoBehaviour
             preparedData.Enqueue(msg);
         }
     }
+
+    private DELPMessage PrepareQuery()
+    {
+        DelpQuery query = new DelpQuery("Penguin(opus)");
+        string data = JsonUtility.ToJson(query);
+        DELPMessage msg = new DELPMessage(4, "delp", data);
+        return msg;
+    }
 }
 
 [System.Serializable]
@@ -58,5 +70,16 @@ public class DelpBelief
     public DelpBelief(string belief)
     {
         this.belief = belief;
+    }
+}
+
+[System.Serializable]
+public class DelpQuery
+{
+    [SerializeField] public string query;
+
+    public DelpQuery(string query)
+    {
+        this.query = query;
     }
 }
