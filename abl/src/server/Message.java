@@ -54,9 +54,15 @@ public class Message {
 	{
 		if (this.code == 4)
 		{
-			handler.query(this.data.toString());
+			String query = (String) this.data.get("belief");
+			handler.query(query);
+			System.out.println("KB queried: " + query);
 		} else {
-			handler.addBelief(this.data.toString());
+			System.out.println(this.data);
+			String belief = (String) this.data.get("belief");
+			System.out.println(belief);
+			handler.addBelief(belief);
+			System.out.println("KB updated: " + belief);
 		}
 	}
 }
