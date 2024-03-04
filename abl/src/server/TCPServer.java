@@ -7,6 +7,7 @@ import org.json.simple.JSONValue;
 
 import abl.generated.GameAgent;
 import abl.wmes.AllyWME;
+import handler.*;
 /**
  * This program demonstrates a simple TCP/IP socket server.
  *
@@ -26,10 +27,16 @@ public class TCPServer {
 	private static Socket socket;
 	
 	public static GameAgent agent;
+
+	public static DelpHandler delpHandler;
 	
 	public void startAgent() {
 		agent = new GameAgent();
 		agent.startBehaving();
+	}
+
+	public void startHandler() {
+		delpHandler = new DelpHandler();
 	}
 	
 	void startServer() {
@@ -81,7 +88,7 @@ public class TCPServer {
 
 		if (toHandle.msg == "delp")
 		{
-			toHandle.parseDelpMessage();
+			toHandle.parseDelpMessage(delpHandler);
 			return;
 		}
 

@@ -6,6 +6,7 @@ import org.json.simple.parser.ParseException;
 
 import wm.WME;
 import abl.wmes.AllyWME;
+import handler.*;
 
 public class Message {
 	public int code;
@@ -49,16 +50,13 @@ public class Message {
 		return null;
 	}
 
-	void parseDelpMessage()
+	void parseDelpMessage(DelpHandler handler)
 	{
-		if (this.code == 0) {
-			// add fact
-		} else if (this.code == 1) {
-			// add srule
-		} else if (this.code == 2) {
-			// add drule
+		if (this.code == 4)
+		{
+			handler.query(this.data.toString());
 		} else {
-			// handle query
+			handler.addBelief(this.data.toString());
 		}
 	}
 }
