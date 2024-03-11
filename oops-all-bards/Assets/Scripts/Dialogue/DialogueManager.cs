@@ -71,11 +71,17 @@ public class DialogueManager : MonoBehaviour
     {
         speakerName.text = dialogue.SpeakerName;
         portrait.sprite = Resources.Load<Sprite>($"Portraits/{dialogue.SpeakerName}");
+        ////
+        if (portrait.sprite == null)
+        {
+            dialogueModel();
+        }
+        /////
         DialogueNode currentNode = dialogue.DialogueNodes[nodeIndex];
         RenderCurrentNode(currentNode);
         ToggleDialogueUI();
     }
-
+    
     public void dialogueModel(GameObject character)
     {
         GameObject NPCModelSpawn = null;
@@ -85,8 +91,6 @@ public class DialogueManager : MonoBehaviour
         NPCModelSpawn = Instantiate(target, portrait.transform.position, Quaternion.Euler(new Vector3(0f, 180f, 0f)));
         NPCModelSpawn.name = "ccClone";
         NPCModelSpawn.AddComponent<RotateObj>();
-
-
         NPCModelSpawn.transform.SetParent(GameObject.Find("Canvas").transform.Find("Panel").transform.Find("DialogueUI").transform.Find("PortraitPanel").transform.Find("Portrait"));
 
         if (GameObject.Find("Canvas").transform.Find("Panel").transform.Find("DialogueUI").transform.Find("PortraitPanel").transform.Find("Portrait") == null)
