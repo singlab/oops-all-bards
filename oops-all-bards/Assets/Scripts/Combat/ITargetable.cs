@@ -9,6 +9,7 @@ public class ITargetable
     private int health;
     private int flourish;
     private int shield;
+    private int elan;
     private List<CombatStatus> combatStatuses = new List<CombatStatus>();
     private CiFData cifData = new CiFData();
 
@@ -34,6 +35,12 @@ public class ITargetable
     {
         get { return this.shield; }
         set { this.shield = value; }
+    }
+
+    public virtual int Elan
+    {
+        get { return this.elan; }
+        set { this.elan = value; }
     }
 
     public virtual List<CombatStatus> CombatStatuses
