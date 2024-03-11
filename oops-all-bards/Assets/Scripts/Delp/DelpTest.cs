@@ -6,6 +6,7 @@ public class DELPTest : MonoBehaviour
 {
     [SerializeField] private DELPEntity entity;
     private Queue<DELPMessage> preparedData = new Queue<DELPMessage>();
+    private bool queried = false;
 
     void Start()
     {
@@ -18,10 +19,11 @@ public class DELPTest : MonoBehaviour
         {
             DELPMessage msg = preparedData.Dequeue();
             TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
-        } else
+        } else if (preparedData.Count == 0 && queried == false)
         {
             DELPMessage msg = PrepareQuery();
             TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
+            queried = true;
         }
     }
 
@@ -47,7 +49,6 @@ public class DELPTest : MonoBehaviour
         {
             DelpBelief belief = new DelpBelief(drule);
             string data = JsonUtility.ToJson(belief);
-            Debug.Log(data);
             DELPMessage msg = new DELPMessage(2, "delp", data);
             preparedData.Enqueue(msg);
         }
