@@ -71,12 +71,12 @@ public class DialogueManager : MonoBehaviour
     {
         speakerName.text = dialogue.SpeakerName;
         portrait.sprite = Resources.Load<Sprite>($"Portraits/{dialogue.SpeakerName}");
-        ////
-        if (portrait.sprite == null)
-        {
-            dialogueModel();
-        }
-        /////
+        
+        // if (portrait.sprite == null)
+        // {
+        //     dialogueModel();
+        // }
+        
         DialogueNode currentNode = dialogue.DialogueNodes[nodeIndex];
         RenderCurrentNode(currentNode);
         ToggleDialogueUI();
