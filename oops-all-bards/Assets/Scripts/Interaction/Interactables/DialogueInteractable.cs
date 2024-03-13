@@ -24,7 +24,11 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
         if (!toStart.Exhausted)
         {
             DialogueManager.Instance.StartDialogue(dialogueID);
-      
+            if (DialogueManager.Instance.portrait.sprite == null)
+            {
+                Debug.Log("Generating Portrait");
+                DialogueManager.Instance.dialogueModel(gameObject);
+            }
             QuestManager.Instance.MarkStageComplete(questLink[1]);
             
         } else
