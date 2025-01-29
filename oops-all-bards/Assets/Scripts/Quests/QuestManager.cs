@@ -46,14 +46,38 @@ public class QuestManager : MonoBehaviour
         GameObject questToRender = Instantiate(questPrefab, Vector3.zero, Quaternion.identity);
         questToRender.transform.SetParent(questUI.transform, false);
         questToRender.transform.Find("QuestName").GetComponent<TMP_Text>().text = quest.Name;
-        questToRender.transform.Find("QuestStageText").GetComponent<TMP_Text>().text = quest.Stages[currentQuestStage].DisplayText;
+
+        TMP_Text questStageText = questToRender.transform.Find("QuestStageText").GetComponent<TMP_Text>();
+        questStageText.text = quest.Stages[currentQuestStage].DisplayText;
+
+        if (!quest.Linear)
+        {
+            if (quest.ParallelStages.Contains(currentQuestStage))
+            {
+                foreach (int stage in quest.ParallelStages)
+                {
+                    if (stage != currentQuestStage)
+                    {
+                        questStageText.text += "\n" + quest.Stages[stage].DisplayText;
+                    }
+                } 
+            }
+        }
+
         UpdateQuestMarker(quest, false);
     }
 
     private void UpdateQuestMarker(Quest quest, bool destroy)
     {
-        GameObject model = GameObject.Find($"{quest.Stages[currentQuestStage].NPCTargetName}");
+        string npcTargetName = quest.Stages[currentQuestStage].NPCTargetName;
+        if (npcTargetName == "None")
+        {
+            return;
+        }
+
+        GameObject model = GameObject.Find(npcTargetName);
         Transform target = model.transform.Find("CameraTarget");
+
         if (!destroy)
         {
             GameObject toInstantiate = Instantiate(questMarkerPrefab, target.position, Quaternion.identity);
@@ -123,6 +147,8 @@ public class Quest
     [SerializeField] private int id;
     [SerializeField] private List<QuestStage> stages;
     [SerializeField] private bool complete;
+    [SerializeField] private bool linear;
+    [SerializeField] private List<int> parallelStages;
 
     public string Name
     {
@@ -146,6 +172,18 @@ public class Quest
     {
         get { return this.complete; }
         set { this.complete = value; }
+    }
+
+    public bool Linear
+    {
+        get { return this.linear; }
+        set { this.linear = value; }
+    }
+
+    public List<int> ParallelStages
+    {
+        get { return this.parallelStages;}
+        set { this.parallelStages = value;}
     }
 }
 
