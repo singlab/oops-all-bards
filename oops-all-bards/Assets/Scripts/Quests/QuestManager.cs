@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using TMPro;
+using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class QuestManager : MonoBehaviour
     public GameObject questUI;
     public GameObject questPrefab;
     public GameObject questMarkerPrefab;
+    public bool shouldUpdateUI = false;
 
     // Singleton pattern
     void Awake()
@@ -31,16 +33,20 @@ public class QuestManager : MonoBehaviour
 
     void Start()
     {
-        RenderQuest();
+        UpdateQuestUI();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (questUI == null && shouldUpdateUI)
+        {
+            AssignQuestUIToManager();
+            UpdateQuestUI();
+        }
     }
 
-    private void RenderQuest()
+    private void UpdateQuestUI()
     {
         Quest quest = jsonReader.quests.GetQuest(currentQuest);
         GameObject questToRender = Instantiate(questPrefab, Vector3.zero, Quaternion.identity);
@@ -60,11 +66,13 @@ public class QuestManager : MonoBehaviour
                     {
                         questStageText.text += "\n" + quest.Stages[stage].DisplayText;
                     }
-                } 
+                }
+                currentQuestStage = quest.ParallelStages.Last(); 
             }
         }
 
         UpdateQuestMarker(quest, false);
+        shouldUpdateUI = false;
     }
 
     private void UpdateQuestMarker(Quest quest, bool destroy)
@@ -104,13 +112,16 @@ public class QuestManager : MonoBehaviour
 
         UpdateQuestMarker(quest, true);
         currentQuestStage++;
-        RenderQuest();
+        UpdateQuestUI();
     }
 
     public void MarkQuestComplete()
     {
         Quest quest = jsonReader.quests.GetQuest(currentQuest);
         quest.Complete = true;
+        currentQuest++;
+        currentQuestStage = 0;
+        UpdateQuestUI();
     }
 
     private void ClearQuestUI()
@@ -119,6 +130,11 @@ public class QuestManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private void AssignQuestUIToManager()
+    {
+        questUI = GameObject.Find("QuestUI");
     }
 }
 

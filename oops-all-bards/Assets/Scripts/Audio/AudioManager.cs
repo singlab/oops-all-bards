@@ -98,7 +98,7 @@ public class AudioManager : MonoBehaviour
 
         track.audioSource.Play();
 
-        if (null != this.trackPlaying)
+        if (null != this.trackPlaying && this.trackPlaying != track)
         {
             //Debug.Log("stopping: " + trackPlaying.clip.name);
             this.trackPlaying.audioSource.Stop();

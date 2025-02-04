@@ -18,6 +18,7 @@ public class TavernManager : BaseSceneManager
     // Update is called once per frame
     void Start()
     {
+        QuestManager.Instance.shouldUpdateUI = true;
         AudioManager.Instance.PlayMusicTrack("thehauntedhearth");
         playerModel = GameObject.FindGameObjectWithTag("Player");
         quintonModel = GameObject.Find("Quinton");
@@ -25,7 +26,7 @@ public class TavernManager : BaseSceneManager
         {
             //Prevents bad bug when going in the backrooms after the first fight
             Destroy(GameObject.Find("QuintonQuestTrigger")); 
-            StartCoroutine(DemoResolution());
+            //StartCoroutine(DemoResolution());
         }
 
     }
