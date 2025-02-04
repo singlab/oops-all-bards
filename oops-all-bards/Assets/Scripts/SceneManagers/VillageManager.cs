@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class VillageManager : BaseSceneManager
 {
+    private static GameObject playerModel;
+    private static GameObject quintonModel;
+
     void Awake()
     {
         EntitySpawner.Instance.SpawnPlayer(playerSpawnPoint, playerCamera);
@@ -13,7 +16,10 @@ public class VillageManager : BaseSceneManager
     // Start is called before the first frame update
     void Start()
     {
-        
+        QuestManager.Instance.shouldUpdateUI = true;
+        //AudioManager.Instance.PlayMusicTrack("thehauntedhearth");
+        playerModel = GameObject.FindGameObjectWithTag("Player");
+        quintonModel = GameObject.Find("Quinton");
     }
 
     // Update is called once per frame

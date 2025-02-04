@@ -3697,7 +3697,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_Name
-      value: Person 2
+      value: Uway
       objectReference: {fileID: 0}
     - target: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_IsActive
@@ -3709,11 +3709,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 104704, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 138454, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 139742, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 144358, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 176202, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 180220, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_RootOrder
@@ -3721,7 +3737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.9
+      value: 21.721092
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3729,23 +3745,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.516
+      value: 5.18
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.97139716
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0.23746064
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3753,7 +3769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 332.527
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -9422,7 +9438,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_Name
-      value: Person 4
+      value: Ozzy
       objectReference: {fileID: 0}
     - target: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_TagString
@@ -9442,7 +9458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.975
+      value: 20.985056
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9450,23 +9466,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12.795
+      value: 6.289189
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.3281243
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: 0.94463456
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9474,7 +9490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: 141.69
       objectReference: {fileID: 0}
     - target: {fileID: 484904, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -15583,9 +15599,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueID: 1
+  dialogueIds: 0100000006000000
   exhaustedDialogueResponse: Let's get going.
-  questLink: 0000000001000000
+  dialogueQuestLinks:
+  - dialogueQuestLink: 0000000001000000
+  - dialogueQuestLink: 0100000000000000
 --- !u!195 &669835234
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -26599,9 +26617,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueID: 0
+  dialogueIds: 0000000007000000
   exhaustedDialogueResponse: Go see Quinton. I'm sure he's got something for you.
-  questLink: 0000000000000000
+  dialogueQuestLinks:
+  - dialogueQuestLink: 0000000000000000
+  - dialogueQuestLink: 0100000001000000
 --- !u!65 &1146584206
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38838,6 +38858,7 @@ MonoBehaviour:
     type: 3}
   questMarkerPrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
     type: 3}
+  shouldUpdateUI: 0
 --- !u!4 &1706479728
 Transform:
   m_ObjectHideFlags: 0

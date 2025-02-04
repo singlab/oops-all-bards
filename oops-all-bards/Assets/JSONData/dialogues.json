@@ -375,7 +375,136 @@
                     ]
                 }
             ]
+        },
+        {
+            "id": 6,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "You know, I just met you and all. So I appreciate you having my back in there.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Think nothing of it, Quinton. We artists have to stick together.",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "Have the Followers done something like this before?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "That was… unexpected. And worrisome. I think we best go tell Samaren what happened here, see if she knows anything about this.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yeah, of course, Quinton. Let’s go.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Not like this, no. They’re usually more subtle. I think we best go tell Samaren what happened here, see if she knows anything about this.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yeah, of course, Quinton. Let’s go.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "speakerName": "Samaren",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Are you alright, darlin'? You look a little worse for wear. I heard some bangin' and crashin' from the backroom...",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "There were a couple of Followers in your back room… They jumped us when we were getting ready for our gig.",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Gods protect us! I dunno how those ruffians got in here, but you and Quinton both have my sincerest thanks for dealin' with them.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Do you have any idea what they were doing here?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "I haven't a clue, I'm afraid… But whatever their interest, can't be good for business. I'm up to my ears in work 'round here, but if you can figure out what their plans are, I'll be in your debt.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I think we can manage that. Any idea on where to start sniffing around?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "As a matter of fact, I do. Whenever strangers come to town, you can bet yer last gold coin the Guild of Shadows knows somewhat about them.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "The Guild of Shadows?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Yea, you know… Less than upstandin' brokers of rumors and jobs, if yer catchin' my drift…",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Criminals, you mean?",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Naw, not strictly speaking, they just have a… healthy skepticism about the law. Problem is, they're very reclusive. You'll hafta do some heavy digging to find them. Couldn't hurt to ask some of the folk 'round town. Or, force them to find you. You make a big enough name for yourself, I'm sure they'll take an interest in you, too.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Well, it’s a start. Better get going.",
+                            "nextNode": 6
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "Good luck, darlin'. And be careful. The Guild of Shadows ain't nothin' to trifle with. C'mon back if you need a drink or a place to rest.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'll keep that in mind. Thanks, Samaren.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
         }
-        
     ]
 }
