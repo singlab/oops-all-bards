@@ -7,7 +7,7 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
 {
     private bool triggering;
     // public int dialogueIndex = 0;  
-    public int[] dialogueIds;
+    // public int[] dialogueIds;
     public string exhaustedDialogueResponse;
     public DialogueQuestLinks[] dialogueQuestLinks; 
 
@@ -18,16 +18,39 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
         Debug.Log("Executing dialogue.");
         // TODO: Have characters in dialogue actually look towards the player when they speak.
         // transform.LookAt(Camera.main.transform);
-        Dialogue toStart = DialogueManager.Instance.jsonReader.dialogues.GetDialogue(dialogueIds[QuestManager.Instance.CurrentQuest]);
-        if (!toStart.Exhausted)
+        int dialogueId = 0;
+        int savedIndex = 0;
+        for (int i = 0; i < dialogueQuestLinks.Length; i++)
         {
-            DialogueManager.Instance.StartDialogue(dialogueIds[QuestManager.Instance.CurrentQuest]);
+            if (QuestManager.Instance.CurrentQuest == dialogueQuestLinks[i].dialogueQuestLink[0])
+            {
+                dialogueId = dialogueQuestLinks[i].dialogueQuestLink[2];
+                savedIndex = i;
+            }
+        }
+
+        Dialogue toStart = null;
+        if (dialogueId != null)
+        {
+            toStart = DialogueManager.Instance.jsonReader.dialogues.GetDialogue(dialogueId);
+        }
+
+        if (toStart != null && !toStart.Exhausted)
+        {
+            DialogueManager.Instance.StartDialogue(dialogueId);
             if (DialogueManager.Instance.portrait.sprite == null)
             {
                 Debug.Log("Generating Portrait");
                 DialogueManager.Instance.dialogueModel(gameObject);
             }
-            QuestManager.Instance.MarkStageComplete(dialogueQuestLinks[QuestManager.Instance.CurrentQuest].dialogueQuestLink[1]);
+            
+            if (dialogueQuestLinks != null && dialogueQuestLinks.Length > 0)
+            {
+                if (dialogueQuestLinks[savedIndex].dialogueQuestLink[1] != -1)
+                {
+                    QuestManager.Instance.MarkStageComplete(dialogueQuestLinks[savedIndex].dialogueQuestLink[1]);
+                }
+            }
             
         } else
         {

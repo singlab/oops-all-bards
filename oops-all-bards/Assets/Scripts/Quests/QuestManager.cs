@@ -64,7 +64,7 @@ public class QuestManager : MonoBehaviour
                 {
                     if (stage != currentQuestStage)
                     {
-                        questStageText.text += "\n" + quest.Stages[stage].DisplayText;
+                        questStageText.text += "\n\n" + quest.Stages[stage].DisplayText;
                     }
                 }
                 currentQuestStage = quest.ParallelStages.Last(); 
