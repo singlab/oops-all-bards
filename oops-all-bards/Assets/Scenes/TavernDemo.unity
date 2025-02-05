@@ -9520,10 +9520,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueIds: 08000000
   exhaustedDialogueResponse: Uway, spot me another round...?
   dialogueQuestLinks:
-  - dialogueQuestLink: 01000000ffffffff08000000
+  - questId: 1
+    dialogueId: 8
+    questStageId: -1
 --- !u!65 &425942346
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15634,11 +15635,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueIds: 0100000006000000
   exhaustedDialogueResponse: Let's get going.
   dialogueQuestLinks:
-  - dialogueQuestLink: 000000000100000001000000
-  - dialogueQuestLink: 010000000000000006000000
+  - questId: 0
+    dialogueId: 1
+    questStageId: 1
+  - questId: 1
+    dialogueId: 6
+    questStageId: 0
 --- !u!195 &669835234
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -26652,11 +26656,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueIds: 0000000007000000
   exhaustedDialogueResponse: Go see Quinton. I'm sure he's got something for you.
   dialogueQuestLinks:
-  - dialogueQuestLink: 000000000000000000000000
-  - dialogueQuestLink: 010000000100000007000000
+  - questId: 0
+    dialogueId: 0
+    questStageId: 0
+  - questId: 1
+    dialogueId: 7
+    questStageId: 1
 --- !u!65 &1146584206
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38893,7 +38900,7 @@ MonoBehaviour:
     type: 3}
   questMarkerPrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
     type: 3}
-  shouldUpdateUI: 0
+  activeQuests: []
 --- !u!4 &1706479728
 Transform:
   m_ObjectHideFlags: 0
@@ -41019,9 +41026,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4641dbf5dd414b9419e1db268bc482cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questStage: 2
-  dialogueToTrigger: 2
-  hasExecuted: 0
+  questId: 0
+  questStageId: 2
+  dialogueId: 2
 --- !u!1001 &1802413947
 PrefabInstance:
   m_ObjectHideFlags: 0

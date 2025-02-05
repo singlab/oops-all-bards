@@ -18,7 +18,7 @@ public class TavernManager : BaseSceneManager
     // Update is called once per frame
     void Start()
     {
-        QuestManager.Instance.shouldUpdateUI = true;
+        QuestManager.Instance.UpdateQuestUI();
         AudioManager.Instance.PlayMusicTrack("thehauntedhearth");
         playerModel = GameObject.FindGameObjectWithTag("Player");
         quintonModel = GameObject.Find("Quinton");

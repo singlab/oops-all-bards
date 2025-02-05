@@ -16,7 +16,7 @@ public class VillageManager : BaseSceneManager
     // Start is called before the first frame update
     void Start()
     {
-        QuestManager.Instance.shouldUpdateUI = true;
+        QuestManager.Instance.UpdateQuestUI();
         //AudioManager.Instance.PlayMusicTrack("thehauntedhearth");
         playerModel = GameObject.FindGameObjectWithTag("Player");
         quintonModel = GameObject.Find("Quinton");
