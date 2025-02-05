@@ -1,39 +1,42 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DialogueInteractable : MonoBehaviour, IInteractable
 {
     private bool triggering;
-    // public int dialogueIndex = 0;  
-    // public int[] dialogueIds;
     public string exhaustedDialogueResponse;
-    public DialogueQuestLinks[] dialogueQuestLinks; 
+    public DialogueQuestLinks[] dialogueQuestLinks;
 
-    // Assigned DialogueTrigger starts dialogue from manager if the dialogue
-    // has not already been exhausted, or falls back to exhausted dialogue response if it has.
     public void Execute()
     {
         Debug.Log("Executing dialogue.");
-        // TODO: Have characters in dialogue actually look towards the player when they speak.
-        // transform.LookAt(Camera.main.transform);
-        int dialogueId = 0;
-        int savedIndex = 0;
-        for (int i = 0; i < dialogueQuestLinks.Length; i++)
+
+        // Find the relevant dialogue ID and quest stage ID
+        int dialogueId = -1; // Initialize to an invalid value
+        int questStageId = -1;
+        int questId = -1;
+
+        foreach (var link in dialogueQuestLinks)
         {
-            if (QuestManager.Instance.CurrentQuest == dialogueQuestLinks[i].dialogueQuestLink[0])
+            if (QuestManager.Instance.activeQuests.Any(q => q.ID == link.questId)) //Check if the quest is active
             {
-                dialogueId = dialogueQuestLinks[i].dialogueQuestLink[2];
-                savedIndex = i;
+                questId = link.questId;
+                dialogueId = link.dialogueId;
+                questStageId = link.questStageId;
+                break; // Stop searching once a match is found
             }
         }
 
-        Dialogue toStart = null;
-        if (dialogueId != null)
+        if (dialogueId == -1) // No matching quest/dialogue found
         {
-            toStart = DialogueManager.Instance.jsonReader.dialogues.GetDialogue(dialogueId);
+            DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
+            return; // Exit early
         }
+
+        Dialogue toStart = DialogueManager.Instance.jsonReader.dialogues.GetDialogue(dialogueId);
 
         if (toStart != null && !toStart.Exhausted)
         {
@@ -43,38 +46,37 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
                 Debug.Log("Generating Portrait");
                 DialogueManager.Instance.dialogueModel(gameObject);
             }
-            
-            if (dialogueQuestLinks != null && dialogueQuestLinks.Length > 0)
+
+            if (questStageId != -1)
             {
-                if (dialogueQuestLinks[savedIndex].dialogueQuestLink[1] != -1)
-                {
-                    QuestManager.Instance.MarkStageComplete(dialogueQuestLinks[savedIndex].dialogueQuestLink[1]);
+                Quest currentQuest = QuestManager.Instance.activeQuests.Find(q => q.ID == questId);
+                if (currentQuest != null) {
+                  currentQuest.CurrentStageIndex = questStageId; //Set current stage to the correct one.
+                  QuestManager.Instance.MarkStageComplete(); // Mark the stage as complete using the QuestManager's function
+                } else {
+                  Debug.LogWarning("Quest not found in active quests list.");
                 }
             }
-            
-        } else
+
+        }
+        else
         {
             DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
-        }  
+        }
     }
 
     void Update()
     {
-        if (triggering)
+        if (triggering && Input.GetKeyDown(KeyCode.F))
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Execute();
-
-                //Sarah's edit added to prevent triggering dialogue twice error
-                triggering = false;
-            }
+            Execute();
+            triggering = false; // Prevent double triggering
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player")) // Use CompareTag for better performance
         {
             triggering = true;
         }
@@ -82,7 +84,7 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             triggering = false;
         }
@@ -91,6 +93,8 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
     [System.Serializable]
     public class DialogueQuestLinks
     {
-        public int[] dialogueQuestLink;
+        public int questId;
+        public int dialogueId;
+        public int questStageId; // Use -1 if no quest stage is linked
     }
 }

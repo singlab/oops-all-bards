@@ -3,125 +3,248 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class QuestManager : MonoBehaviour
 {
     private static QuestManager _instance;
-    private int currentQuest = 0;
-    public int CurrentQuest => currentQuest;
-    private int currentQuestStage = 0;
-    public int CurrentQuestStage => currentQuestStage;
-    public static QuestManager Instance => QuestManager._instance;
+    public static QuestManager Instance => _instance;
+
     public JSONReader jsonReader;
     public GameObject questUI;
     public GameObject questPrefab;
     public GameObject questMarkerPrefab;
-    public bool shouldUpdateUI = false;
 
-    // Singleton pattern
+    public List<Quest> activeQuests = new List<Quest>();
+    private GameObject currentQuestMarker; // Store the current marker
+    private int currentQuestIndex = 0; // Index in the activeQuests list
+
     void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
-        } else if (_instance != null)
+            DontDestroyOnLoad(gameObject);
+        }
+        else
         {
             Destroy(gameObject);
+            return; // Important to prevent further execution in this case
         }
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
+        AssignQuestUIToManager(); // Call this here to ensure questUI is assigned early
+        AcceptQuest(jsonReader.quests.quests[0]); // Accept the first quest
+        AcceptQuest(jsonReader.quests.quests[1]);
         UpdateQuestUI();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (questUI == null && shouldUpdateUI)
+        if (questUI == null)
         {
             AssignQuestUIToManager();
-            UpdateQuestUI();
         }
     }
 
-    private void UpdateQuestUI()
+    void OnEnable()
     {
-        Quest quest = jsonReader.quests.GetQuest(currentQuest);
-        GameObject questToRender = Instantiate(questPrefab, Vector3.zero, Quaternion.identity);
-        questToRender.transform.SetParent(questUI.transform, false);
-        questToRender.transform.Find("QuestName").GetComponent<TMP_Text>().text = quest.Name;
+        SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to scene loaded event
+    }
 
-        TMP_Text questStageText = questToRender.transform.Find("QuestStageText").GetComponent<TMP_Text>();
-        questStageText.text = quest.Stages[currentQuestStage].DisplayText;
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe to prevent memory leaks
+    }
 
-        if (!quest.Linear)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "GigDemo")
         {
-            if (quest.ParallelStages.Contains(currentQuestStage))
+            AssignQuestUIToManager(); // Re-assign questUI in case it's different in the new scene
+            UpdateQuestUI(); // Update the UI
+        }
+    }
+
+    public void AcceptQuest(Quest quest)
+    {
+        activeQuests.Add(quest);
+        if (activeQuests.Count == 1) { // Only update if this is the first quest
+          UpdateQuestUI();
+        }
+    }
+
+    // public void UpdateQuestUI()
+    // {
+    //     ClearQuestUI(); // Clear before instantiating new quests
+
+    //     if (activeQuests.Count == 0) return; // No active quests to display
+
+    //     Quest currentQuest = activeQuests[currentQuestIndex];
+    //     GameObject questInstance = Instantiate(questPrefab, questUI.transform, false);
+
+    //     questInstance.transform.Find("QuestName").GetComponent<TMP_Text>().text = currentQuest.Name;
+    //     TMP_Text questStageText = questInstance.transform.Find("QuestStageText").GetComponent<TMP_Text>();
+
+    //     int currentStageIndex = currentQuest.CurrentStageIndex;
+
+    //     if (currentQuest.Linear)
+    //     {
+    //         questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
+    //     }
+    //     else
+    //     {
+    //         foreach (int stageIndex in currentQuest.ParallelStages)
+    //         {
+    //             if (!currentQuest.Stages[stageIndex].Complete) // Only show incomplete stages
+    //             {
+    //                 questStageText.text += (questStageText.text != "" ? "\n\n" : "") + currentQuest.Stages[stageIndex].DisplayText;
+    //             }
+    //         }
+    //     }
+
+    //     UpdateQuestMarker(currentQuest);
+    // }
+
+    public void UpdateQuestUI()
+    {
+        ClearQuestUI();
+
+        if (activeQuests.Count == 0) return;
+
+        Quest currentQuest = activeQuests[currentQuestIndex];
+        if (currentQuest == null) return;
+
+        GameObject questInstance = Instantiate(questPrefab, questUI.transform, false);
+
+        questInstance.transform.Find("QuestName").GetComponent<TMP_Text>().text = currentQuest.Name;
+        TMP_Text questStageText = questInstance.transform.Find("QuestStageText").GetComponent<TMP_Text>();
+
+        int currentStageIndex = currentQuest.CurrentStageIndex;
+
+        if (currentQuest.Linear)
+        {
+            questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
+        }
+        else
+        {
+            // Find the minimum parallel stage
+            int minParallelStage = currentQuest.ParallelStages.Count > 0 ? currentQuest.ParallelStages.Min() : -1;
+
+            if (currentStageIndex == minParallelStage) // Only display parallel stages if the current stage is the minimum
             {
-                foreach (int stage in quest.ParallelStages)
+                if (!currentQuest.Stages[currentStageIndex].Complete)
                 {
-                    if (stage != currentQuestStage)
+                    questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
+                }
+
+                foreach (int stageIndex in currentQuest.ParallelStages)
+                {
+                    if (stageIndex != currentStageIndex && !currentQuest.Stages[stageIndex].Complete)
                     {
-                        questStageText.text += "\n\n" + quest.Stages[stage].DisplayText;
+                        questStageText.text += (questStageText.text != "" ? "\n\n" : "") + currentQuest.Stages[stageIndex].DisplayText;
                     }
                 }
-                currentQuestStage = quest.ParallelStages.Last(); 
+            } else {
+            questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
             }
         }
 
-        UpdateQuestMarker(quest, false);
-        shouldUpdateUI = false;
+        UpdateQuestMarker(currentQuest);
     }
 
-    private void UpdateQuestMarker(Quest quest, bool destroy)
+    private void UpdateQuestMarker(Quest quest)
     {
-        string npcTargetName = quest.Stages[currentQuestStage].NPCTargetName;
+        // Destroy the old marker if it exists
+        if (currentQuestMarker != null)
+        {
+            Destroy(currentQuestMarker);
+            currentQuestMarker = null; // Important: Reset the reference
+        }
+
+        string npcTargetName = quest.Stages[quest.CurrentStageIndex].NPCTargetName;
         if (npcTargetName == "None")
         {
             return;
         }
 
         GameObject model = GameObject.Find(npcTargetName);
-        Transform target = model.transform.Find("CameraTarget");
-
-        if (!destroy)
+        if (model == null)
         {
-            GameObject toInstantiate = Instantiate(questMarkerPrefab, target.position, Quaternion.identity);
-            toInstantiate.transform.SetParent(target, true);
-        } else
-        {
-            foreach (Transform child in target)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-    }
-
-    public void MarkStageComplete(int stageID)
-    {
-        ClearQuestUI();
-        Quest quest = jsonReader.quests.GetQuest(currentQuest);
-        quest.Stages[stageID].Complete = true;
-        if (stageID == (quest.Stages.Count - 1))
-        {
-            MarkQuestComplete();
+            Debug.LogWarning($"NPC with name '{npcTargetName}' not found!");
             return;
         }
 
-        UpdateQuestMarker(quest, true);
-        currentQuestStage++;
-        UpdateQuestUI();
+        Transform target = model.transform.Find("CameraTarget");
+        if (target == null)
+        {
+            Debug.LogWarning($"CameraTarget not found on NPC '{npcTargetName}'!");
+            return;
+        }
+
+        currentQuestMarker = Instantiate(questMarkerPrefab, target.position, Quaternion.identity, target); // Store the new marker
+    }
+
+    public void MarkStageComplete()
+    {
+        Quest currentQuest = activeQuests[currentQuestIndex];
+        int currentStageIndex = currentQuest.CurrentStageIndex;
+
+        currentQuest.Stages[currentStageIndex].Complete = true;
+
+
+        if (!currentQuest.Linear && currentQuest.ParallelStages.Contains(currentStageIndex))
+        {
+            bool allParallelComplete = true;
+            foreach (int stageIndex in currentQuest.ParallelStages)
+            {
+                if (!currentQuest.Stages[stageIndex].Complete)
+                {
+                    allParallelComplete = false;
+                    break;
+                }
+            }
+
+            if (!allParallelComplete)
+            {
+                UpdateQuestUI();
+                return; // Don't advance if not all parallel stages are done
+            }
+        }
+
+        // Destroy the marker when the stage is complete
+        if (currentQuestMarker != null)
+        {
+            Destroy(currentQuestMarker);
+            currentQuestMarker = null;
+        }
+
+        currentQuest.CurrentStageIndex++;
+
+        if (currentQuest.CurrentStageIndex >= currentQuest.Stages.Count)
+        {
+            MarkQuestComplete();
+        }
+        else
+        {
+            UpdateQuestUI();
+        }
     }
 
     public void MarkQuestComplete()
     {
-        Quest quest = jsonReader.quests.GetQuest(currentQuest);
-        quest.Complete = true;
-        currentQuest++;
-        currentQuestStage = 0;
-        UpdateQuestUI();
+        Quest currentQuest = activeQuests[currentQuestIndex];
+        currentQuest.Complete = true;
+        activeQuests.RemoveAt(currentQuestIndex); // Remove the completed quest
+
+        if (activeQuests.Count > 0) {
+            currentQuestIndex = 0; // Reset to the first active quest (or 0 if none left)
+            UpdateQuestUI();
+        } else {
+          ClearQuestUI();
+        }
     }
 
     private void ClearQuestUI()
@@ -135,6 +258,10 @@ public class QuestManager : MonoBehaviour
     private void AssignQuestUIToManager()
     {
         questUI = GameObject.Find("QuestUI");
+        if (questUI == null)
+        {
+            Debug.LogWarning("QuestUI not found in the scene!");
+        }
     }
 }
 
@@ -165,6 +292,7 @@ public class Quest
     [SerializeField] private bool complete;
     [SerializeField] private bool linear;
     [SerializeField] private List<int> parallelStages;
+    [SerializeField] private int currentStageIndex = 0;
 
     public string Name
     {
@@ -200,6 +328,12 @@ public class Quest
     {
         get { return this.parallelStages;}
         set { this.parallelStages = value;}
+    }
+
+    public int CurrentStageIndex
+    {
+        get { return this.currentStageIndex; }
+        set { this.currentStageIndex = value; }
     }
 }
 

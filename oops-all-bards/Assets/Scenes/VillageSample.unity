@@ -4470,7 +4470,7 @@ MonoBehaviour:
     type: 3}
   questMarkerPrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
     type: 3}
-  shouldUpdateUI: 0
+  activeQuests: []
 --- !u!4 &217886497
 Transform:
   m_ObjectHideFlags: 0
@@ -30316,10 +30316,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueIds: 09000000
   exhaustedDialogueResponse: Mmm, yes, tyromancy... Hm?
   dialogueQuestLinks:
-  - dialogueQuestLink: 010000000200000009000000
+  - questId: 1
+    dialogueId: 9
+    questStageId: 2
 --- !u!65 &1137846135
 BoxCollider:
   m_ObjectHideFlags: 0
