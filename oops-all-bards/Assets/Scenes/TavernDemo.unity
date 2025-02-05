@@ -9502,6 +9502,41 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 74bae302cdc987848bdf1ce17b6c1017, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1935b8868aef41499f30ff190ab7e82, type: 3}
+--- !u!1 &425942344 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 101004, guid: f1935b8868aef41499f30ff190ab7e82,
+    type: 3}
+  m_PrefabInstance: {fileID: 425942343}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &425942345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425942344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueIds: 08000000
+  exhaustedDialogueResponse: Uway, spot me another round...?
+  dialogueQuestLinks:
+  - dialogueQuestLink: 01000000ffffffff08000000
+--- !u!65 &425942346
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425942344}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.7540357, y: 2.4159648, z: 1.3923331}
+  m_Center: {x: -0.0070337947, y: 0.7079824, z: 0.19616628}
 --- !u!1001 &426310406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15602,8 +15637,8 @@ MonoBehaviour:
   dialogueIds: 0100000006000000
   exhaustedDialogueResponse: Let's get going.
   dialogueQuestLinks:
-  - dialogueQuestLink: 0000000001000000
-  - dialogueQuestLink: 0100000000000000
+  - dialogueQuestLink: 000000000100000001000000
+  - dialogueQuestLink: 010000000000000006000000
 --- !u!195 &669835234
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -26620,8 +26655,8 @@ MonoBehaviour:
   dialogueIds: 0000000007000000
   exhaustedDialogueResponse: Go see Quinton. I'm sure he's got something for you.
   dialogueQuestLinks:
-  - dialogueQuestLink: 0000000000000000
-  - dialogueQuestLink: 0100000001000000
+  - dialogueQuestLink: 000000000000000000000000
+  - dialogueQuestLink: 010000000100000007000000
 --- !u!65 &1146584206
 BoxCollider:
   m_ObjectHideFlags: 0

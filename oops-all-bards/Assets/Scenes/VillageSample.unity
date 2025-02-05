@@ -4470,6 +4470,7 @@ MonoBehaviour:
     type: 3}
   questMarkerPrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
     type: 3}
+  shouldUpdateUI: 0
 --- !u!4 &217886497
 Transform:
   m_ObjectHideFlags: 0
@@ -30221,9 +30222,11 @@ GameObject:
   - component: {fileID: 1137846130}
   - component: {fileID: 1137846133}
   - component: {fileID: 1137846132}
+  - component: {fileID: 1137846135}
   - component: {fileID: 1137846131}
+  - component: {fileID: 1137846134}
   m_Layer: 0
-  m_Name: Townperson_1
+  m_Name: Mudd
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30236,8 +30239,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1137846129}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -5.530884, y: -29.831, z: 19.57}
+  m_LocalRotation: {x: -0, y: 0.7996806, z: -0, w: -0.6004257}
+  m_LocalPosition: {x: 27.74, y: -29.831, z: 13.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -30251,7 +30254,7 @@ Transform:
   - {fileID: 1662907801}
   m_Father: {fileID: 156732232}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 253.801, z: 0}
 --- !u!54 &1137846131
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30301,6 +30304,35 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1137846134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137846129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueIds: 09000000
+  exhaustedDialogueResponse: Mmm, yes, tyromancy... Hm?
+  dialogueQuestLinks:
+  - dialogueQuestLink: 010000000200000009000000
+--- !u!65 &1137846135
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137846129}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.7540357, y: 2.4159648, z: 1.3923331}
+  m_Center: {x: -0.0070337947, y: 0.7079824, z: 0.19616628}
 --- !u!1001 &1143415606
 PrefabInstance:
   m_ObjectHideFlags: 0
