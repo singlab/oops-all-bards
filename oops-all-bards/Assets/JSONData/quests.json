@@ -62,6 +62,22 @@
             "complete": false,
             "linear": false,
             "parallelStages": [2,3]
+        },
+        {
+            "name": "Theatrical Skullduggery",
+            "id": 2,
+            "stages":
+            [
+                {
+                    "id": 0,
+                    "npcTargetName": "Very Normal Human Skull",
+                    "complete": false,
+                    "displayText": "Find a suitable skull for Alera's production"
+                }
+            ],
+            "complete": false,
+            "linear": true,
+            "parallelStages": []
         }
     ]
 }

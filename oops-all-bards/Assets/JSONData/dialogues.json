@@ -642,6 +642,102 @@
                     ]
                 }
             ]
+        },
+        {
+            "id": 10,
+            "speakerName": "Alera",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Greetings, my good sir! I am Alera, a thespian of the highest caliber, and I require your assistance with a most pressing matter.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "A thespian? What kind of assistance do you require?",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Ah, mere formalities! I am in the midst of producing a play, a grand tragedy, a masterpiece of dramatic tension! But alas, it lacks a certain… something.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What kind of play is it?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "It is a tale of woe, of betrayal, of revenge! A young man, wronged by his uncle, seeks justice! But I call it... \"Whamlet!\"",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Whamlet? What a strange name.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Indeed! But to truly capture the essence of this tragic tale, I require a prop, a symbol of mortality, a touch of the macabre...",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What kind of prop?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "A skull, my good sir! A skull! Imagine, if you will, the young Whamlet, holding aloft the skull of his dear departed court jester, lamenting the cruel twists of fate!",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "A skull? Where would I even find one?",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Ah, that's where your assistance comes in! I require the expertise of someone with a discerning eye and a… certain… resourcefulness.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I see. What kind of resourcefulness are we talking about?",
+                            "nextNode": 6 
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "Let us just say that theatrical productions sometimes require... unconventional methods of acquiring props. You understand? Discretion is paramount, of course.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I understand. I'll do my best to find a suitable skull. Though I can't promise anything.",
+                            "nextNode": 7
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "nodeText": "Excellent! This is just what I needed! You have been a tremendous help, my good sir. I shall be sure to send you an invitation to the premiere!",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'll look forward to it. Break a leg!",
+                            "nextNode": -1 
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
