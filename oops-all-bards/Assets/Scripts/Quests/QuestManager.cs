@@ -52,11 +52,18 @@ public class QuestManager : MonoBehaviour
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to scene loaded event
+        DialogueManager.Instance.OnDialogueStateChanged += HandleDialogueStateChanged;
     }
 
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe to prevent memory leaks
+        DialogueManager.Instance.OnDialogueStateChanged -= HandleDialogueStateChanged;
+    }
+
+    private void HandleDialogueStateChanged(bool isInDialogue)
+    {
+        questUI.SetActive(!isInDialogue); 
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -75,38 +82,6 @@ public class QuestManager : MonoBehaviour
           UpdateQuestUI();
         }
     }
-
-    // public void UpdateQuestUI()
-    // {
-    //     ClearQuestUI(); // Clear before instantiating new quests
-
-    //     if (activeQuests.Count == 0) return; // No active quests to display
-
-    //     Quest currentQuest = activeQuests[currentQuestIndex];
-    //     GameObject questInstance = Instantiate(questPrefab, questUI.transform, false);
-
-    //     questInstance.transform.Find("QuestName").GetComponent<TMP_Text>().text = currentQuest.Name;
-    //     TMP_Text questStageText = questInstance.transform.Find("QuestStageText").GetComponent<TMP_Text>();
-
-    //     int currentStageIndex = currentQuest.CurrentStageIndex;
-
-    //     if (currentQuest.Linear)
-    //     {
-    //         questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
-    //     }
-    //     else
-    //     {
-    //         foreach (int stageIndex in currentQuest.ParallelStages)
-    //         {
-    //             if (!currentQuest.Stages[stageIndex].Complete) // Only show incomplete stages
-    //             {
-    //                 questStageText.text += (questStageText.text != "" ? "\n\n" : "") + currentQuest.Stages[stageIndex].DisplayText;
-    //             }
-    //         }
-    //     }
-
-    //     UpdateQuestMarker(currentQuest);
-    // }
 
     public void UpdateQuestUI()
     {

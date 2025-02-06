@@ -30781,7 +30781,7 @@ MonoBehaviour:
   textBubblePrefab: {fileID: 8959183325638355179, guid: 57ddc7ac61502b943aea8832d33790d9,
     type: 3}
   questUI: {fileID: 599930219}
-  NPCModelSpawn: {fileID: 0}
+  isInDialogue: 0
 --- !u!4 &1333121670
 Transform:
   m_ObjectHideFlags: 0
