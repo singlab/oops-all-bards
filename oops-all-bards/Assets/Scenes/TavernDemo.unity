@@ -18514,9 +18514,9 @@ MonoBehaviour:
   m_fontSize: 50
   m_fontSizeBase: 50
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 50
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -18547,7 +18547,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -0.000000077532036, y: 0, z: 0, w: 0}
+  m_margin: {x: -0.000000077532036, y: 0, z: 0, w: -79.02044}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -38887,8 +38887,6 @@ MonoBehaviour:
   jsonReader: {fileID: 1706479726}
   questUI: {fileID: 599930219}
   questPrefab: {fileID: 4096357747738446235, guid: 80ee34ba85c3b6a4b818993584eefddf,
-    type: 3}
-  questMarkerPrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
     type: 3}
   activeQuests: []
   completedQuests: []
