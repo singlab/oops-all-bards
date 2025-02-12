@@ -12,17 +12,19 @@ public class Floater : MonoBehaviour {
     // Position Storage Variables
     Vector3 posOffset = new Vector3 ();
     Vector3 tempPos = new Vector3 ();
+    private Camera mainCamera;
  
     // Use this for initialization
     void Start () {
         // Store the starting position & rotation of the object
         posOffset = transform.position;
+        mainCamera = Camera.main;
     }
      
     // Update is called once per frame
     void Update () {
         // Spin object around Y-Axis
-        transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.World);
+        // transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.World);
  
         // Float up/down with a Sin()
         tempPos = posOffset;
@@ -31,5 +33,18 @@ public class Floater : MonoBehaviour {
         tempPos.z = transform.position.z;
  
         transform.position = tempPos;
+
+        // Face the camera
+        if (mainCamera != null) // Check if the camera exists
+        {
+            Vector3 directionToCamera = mainCamera.transform.position - transform.position;
+            directionToCamera.y = 0; // Keep the object upright (optional)
+
+            if (directionToCamera != Vector3.zero) // Avoids errors if the object and camera are at the same position
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToCamera);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 1);
+            }
+        }
     }
 }

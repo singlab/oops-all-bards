@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Alera_0
   m_EditorClassIdentifier: 
   eventType: 0
-  dialogueBubblePrefab: {fileID: 0}
+  dialogueBubblePrefab: {fileID: 8767671318097568826, guid: cde39afa5887ed4498db48d36b137767,
+    type: 3}
   dialogueID: 10
   questID: 2
-  questStageID: -1
+  questStageID: -99
   checkCondition:
     conditionType: 0
     relatedID: 0
+  exhausted: 0

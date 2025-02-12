@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Quinton_0
   m_EditorClassIdentifier: 
   eventType: 1
-  dialogueBubblePrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
+  dialogueBubblePrefab: {fileID: 8965773036395080770, guid: 9f28fc0edb82b054e9bd374d69bbc967,
     type: 3}
   dialogueID: 1
   questID: 0
   questStageID: 1
   checkCondition:
-    conditionType: 0
+    conditionType: 3
     relatedID: 0
+  exhausted: 1

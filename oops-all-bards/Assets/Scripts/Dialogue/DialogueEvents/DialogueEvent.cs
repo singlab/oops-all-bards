@@ -29,6 +29,8 @@ public class DialogueEvent : ScriptableObject
 
     // Optional: Condition to check before triggering this event
     public Condition checkCondition;
+    // Whether or not this event has been exhausted
+    public bool exhausted = false;
 
     [System.Serializable]
     public class Condition
@@ -38,7 +40,8 @@ public class DialogueEvent : ScriptableObject
             QuestCompleted,
             ItemInInventory,
             FlagSet,
-            PreviousStageCompleted
+            PreviousStageCompleted,
+            None
         }
 
         public ConditionType conditionType;
