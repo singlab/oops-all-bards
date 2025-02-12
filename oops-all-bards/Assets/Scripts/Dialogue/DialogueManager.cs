@@ -40,6 +40,25 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        ResetDialogueEvents();
+    }
+
+    void ResetDialogueEvents()
+    {
+        Debug.Log("Resetting dialogue events.");
+        DialogueInteractable[] interactables = FindObjectsOfType<DialogueInteractable>();
+
+        foreach (DialogueInteractable interactable in interactables)
+        {
+            foreach (DialogueEvent dialogueEvent in interactable.dialogueEvents)
+            {
+                dialogueEvent.exhausted = false;
+            }
+        }
+    }
+
     public void StartDialogue(int dialogueID) 
     {
         Cursor.lockState = CursorLockMode.Confined;
@@ -135,10 +154,26 @@ public class DialogueManager : MonoBehaviour
         OnDialogueStateChanged?.Invoke(isInDialogue); 
     }
 
-    public void SpawnTextBubble(GameObject character, string text) 
+    public void SpawnTextBubble(GameObject character, string text)
     {
         GameObject target = character.transform.Find("CameraTarget").gameObject;
         GameObject textBubble = Instantiate(textBubblePrefab, target.transform.position + Vector3.up * 0.5f, Quaternion.identity, target.transform);
+
+        // Make the text bubble face the camera
+        if (Camera.main != null)
+        {
+            textBubble.transform.LookAt(Camera.main.transform);
+            textBubble.transform.Rotate(Vector3.up * 180f);
+
+            // Optionally, if you want the text bubble to be perfectly upright
+            // even if the camera is looking from above or below, uncomment this:
+            textBubble.transform.rotation = Quaternion.Euler(0, textBubble.transform.eulerAngles.y, 0);
+        }
+        else
+        {
+            Debug.LogWarning("Main Camera not found. Text bubble may not face the screen correctly.");
+        }
+
         textBubble.GetComponentInChildren<TMP_Text>().text = text;
     }
 

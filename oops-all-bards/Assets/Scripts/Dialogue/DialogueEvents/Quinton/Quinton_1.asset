@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a68d1a0d2afbd7419856866a5cab175, type: 3}
   m_Name: Quinton_1
   m_EditorClassIdentifier: 
-  eventType: 1
-  dialogueBubblePrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
+  eventType: 0
+  dialogueBubblePrefab: {fileID: 8767671318097568826, guid: cde39afa5887ed4498db48d36b137767,
     type: 3}
   dialogueID: 6
   questID: 1
-  questStageID: 0
+  questStageID: -99
   checkCondition:
     conditionType: 0
     relatedID: 0
+  exhausted: 0

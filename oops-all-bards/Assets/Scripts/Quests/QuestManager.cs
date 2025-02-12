@@ -42,8 +42,7 @@ public class QuestManager : MonoBehaviour
     {
         InitializeQuestStageToDialogueEventMap();
         AssignQuestUIToManager(); // Call this here to ensure questUI is assigned early
-        AcceptQuest(jsonReader.quests.quests[0]); // Accept the first quest
-        AcceptQuest(jsonReader.quests.quests[1]);
+        AcceptQuest(0); // Accept the first quest
         UpdateQuestUI();
     }
 
@@ -52,6 +51,11 @@ public class QuestManager : MonoBehaviour
         if (questUI == null)
         {
             AssignQuestUIToManager();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            CycleCurrentQuest();
         }
     }
 
@@ -82,12 +86,37 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void AcceptQuest(Quest quest)
+    public void AcceptQuest(int questId)
     {
-        activeQuests.Add(quest);
-        if (activeQuests.Count == 1) { // Only update if this is the first quest
-          UpdateQuestUI();
+        Quest questToAccept = jsonReader.quests.GetQuest(questId);
+
+        if (questToAccept != null)
+        {
+            activeQuests.Add(questToAccept);
+            if (activeQuests.Count == 1) 
+            {
+                UpdateQuestUI();
+            }
         }
+        else
+        {
+            Debug.LogWarning("No quest found with ID: " + questId);
+        }
+    }
+
+    private void CycleCurrentQuest()
+    {
+        if (activeQuests.Count == 0)
+        {
+            return; // No quests to cycle through
+        }
+
+        currentQuestIndex++;
+        if (currentQuestIndex >= activeQuests.Count)
+        {
+            currentQuestIndex = 0; // Wrap around to the first quest
+        }
+        UpdateQuestUI();
     }
 
     public void UpdateQuestUI()
@@ -152,9 +181,7 @@ public class QuestManager : MonoBehaviour
         if (currentDialogueEvent != null && currentDialogueEvent.dialogueBubblePrefab != null)
         {
             // Use the DialogueEvent's prefab for the marker
-            currentQuestMarker = Instantiate(currentDialogueEvent.dialogueBubblePrefab, 
-                                            GetNPCMarkerPosition(quest), 
-                                            Quaternion.identity);                                 
+            currentQuestMarker = Instantiate(currentDialogueEvent.dialogueBubblePrefab, GetNPCMarkerPosition(quest) + new Vector3(0f,0.5f,0f), Quaternion.identity);                                 
         }
     }
 
@@ -282,6 +309,7 @@ public class QuestManager : MonoBehaviour
 
     private void ClearQuestUI()
     {
+        if (questUI == null) return;
         foreach (Transform child in questUI.transform)
         {
             Destroy(child.gameObject);
@@ -293,7 +321,7 @@ public class QuestManager : MonoBehaviour
         questUI = GameObject.Find("QuestUI");
         if (questUI == null)
         {
-            Debug.LogWarning("QuestUI not found in the scene!");
+            // Debug.LogWarning("QuestUI not found in the scene!");
         }
     }
 

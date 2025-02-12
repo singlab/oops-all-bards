@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Samaren_1
   m_EditorClassIdentifier: 
   eventType: 1
-  dialogueBubblePrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
+  dialogueBubblePrefab: {fileID: 8965773036395080770, guid: 9f28fc0edb82b054e9bd374d69bbc967,
     type: 3}
   dialogueID: 7
   questID: 1
@@ -21,3 +21,4 @@ MonoBehaviour:
   checkCondition:
     conditionType: 0
     relatedID: 0
+  exhausted: 0
