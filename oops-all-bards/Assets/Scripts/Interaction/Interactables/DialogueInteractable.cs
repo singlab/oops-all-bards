@@ -27,6 +27,8 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
             if (selectedEvent.eventType == DialogueEvent.DialogueEventType.QuestStart)
             {
                 QuestManager.Instance.AcceptQuest(selectedEvent.questID);
+                QuestManager.Instance.DestroyQuestStartMarker(selectedEvent.questID);
+                QuestManager.Instance.MarkStageComplete();
             }
 
             selectedEvent.exhausted = true;
@@ -50,7 +52,7 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
         return null;
     }
 
-    private bool CheckConditions(DialogueEvent.Condition condition)
+    public bool CheckConditions(DialogueEvent.Condition condition)
     {
         switch (condition.conditionType)
         {

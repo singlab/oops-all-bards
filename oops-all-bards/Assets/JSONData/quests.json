@@ -70,6 +70,12 @@
             [
                 {
                     "id": 0,
+                    "npcTargetName": "Alera",
+                    "complete": false,
+                    "displayText": "Speak to Alera"
+                },
+                {
+                    "id": 1,
                     "npcTargetName": "Very Normal Human Skull",
                     "complete": false,
                     "displayText": "Find a suitable skull for Alera's production"

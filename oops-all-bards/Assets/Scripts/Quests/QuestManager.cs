@@ -13,16 +13,18 @@ public class QuestManager : MonoBehaviour
     public JSONReader jsonReader;
     public GameObject questUI;
     public GameObject questPrefab;
-    public GameObject questMarkerPrefab;
 
     public List<Quest> activeQuests = new List<Quest>();
     public List<Quest> completedQuests = new List<Quest>();
-    private GameObject currentQuestMarker; // Store the current marker
+    private GameObject currentQuestMarker;
     private int currentQuestIndex = 0; // Index in the activeQuests list
     
     // Dictionary to store the mapping between quest stages and their associated DialogueEvents
-    private Dictionary<int, Dictionary<int, DialogueEvent>> questStageToDialogueEventMap 
-        = new Dictionary<int, Dictionary<int, DialogueEvent>>();
+    private Dictionary<int, Dictionary<int, DialogueEvent>> questStageToDialogueEventMap = new Dictionary<int, Dictionary<int, DialogueEvent>>();
+
+    // Dictionary to store instantiated quest start markers, key is quest ID, value is the GameObject
+    private Dictionary<int, GameObject> questStartMarkers = new Dictionary<int, GameObject>();
+    
 
     void Awake()
     {
@@ -42,8 +44,9 @@ public class QuestManager : MonoBehaviour
     {
         InitializeQuestStageToDialogueEventMap();
         AssignQuestUIToManager(); // Call this here to ensure questUI is assigned early
-        AcceptQuest(0); // Accept the first quest
+        // AcceptQuest(0); // Accept the first quest
         UpdateQuestUI();
+        UpdateQuestStartMarkers();
     }
 
     void Update()
@@ -83,6 +86,8 @@ public class QuestManager : MonoBehaviour
             AssignQuestUIToManager(); // Re-assign questUI in case it's different in the new scene
             UpdateQuestUI(); // Update the UI
             InitializeQuestStageToDialogueEventMap(); // Re-initialize the map
+            UpdateQuestStartMarkers(); // Re-instantiate quest start markers
+            UpdateQuestMarker(activeQuests[currentQuestIndex]); // Re-instantiate the quest marker
         }
     }
 
@@ -93,10 +98,10 @@ public class QuestManager : MonoBehaviour
         if (questToAccept != null)
         {
             activeQuests.Add(questToAccept);
-            if (activeQuests.Count == 1) 
-            {
-                UpdateQuestUI();
-            }
+
+            // Set current quest to the accepted quest
+            currentQuestIndex = activeQuests.IndexOf(questToAccept);
+            UpdateQuestUI();
         }
         else
         {
@@ -116,6 +121,7 @@ public class QuestManager : MonoBehaviour
         {
             currentQuestIndex = 0; // Wrap around to the first quest
         }
+        UpdateQuestMarker(activeQuests[currentQuestIndex]);
         UpdateQuestUI();
     }
 
@@ -182,6 +188,38 @@ public class QuestManager : MonoBehaviour
         {
             // Use the DialogueEvent's prefab for the marker
             currentQuestMarker = Instantiate(currentDialogueEvent.dialogueBubblePrefab, GetNPCMarkerPosition(quest) + new Vector3(0f,0.5f,0f), Quaternion.identity);                                 
+        }
+    }
+
+    public void UpdateQuestStartMarkers()
+    {
+        // Iterate through all DialogueInteractable objects in the scene
+        DialogueInteractable[] interactables = FindObjectsOfType<DialogueInteractable>();
+
+        foreach (DialogueInteractable interactable in interactables)
+        {
+            foreach (DialogueEvent dialogueEvent in interactable.dialogueEvents)
+            {
+                if (dialogueEvent.eventType == DialogueEvent.DialogueEventType.QuestStart)
+                {
+                    if (!dialogueEvent.exhausted && interactable.CheckConditions(dialogueEvent.checkCondition)) // Check the condition
+                    {
+                        GameObject toInstantiate = Instantiate(dialogueEvent.dialogueBubblePrefab, (GetNPCMarkerPosition(jsonReader.quests.GetQuest(dialogueEvent.questID)) + new Vector3(0f,0.5f,0f)), Quaternion.identity);
+                        questStartMarkers[dialogueEvent.questID] = toInstantiate;
+                    }
+                }
+            }
+        }
+    }
+
+    public void DestroyQuestStartMarker(int questID)
+    {
+        Debug.Log("Destroying quest start marker for quest ID: " + questID);
+        if (questStartMarkers.ContainsKey(questID))
+        {
+            Debug.Log("Entry found in questStartMarkers dictionary.");
+            Destroy(questStartMarkers[questID]);
+            questStartMarkers.Remove(questID);
         }
     }
 
@@ -285,6 +323,7 @@ public class QuestManager : MonoBehaviour
         if (currentQuest.CurrentStageIndex >= currentQuest.Stages.Count)
         {
             MarkQuestComplete();
+            UpdateQuestStartMarkers();
         }
         else
         {
