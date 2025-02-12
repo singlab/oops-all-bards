@@ -9520,11 +9520,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exhaustedDialogueResponse: Uway, spot me another round...?
-  dialogueQuestLinks:
-  - questId: 1
-    dialogueId: 8
-    questStageId: -1
+  dialogueEvents:
+  - {fileID: 11400000, guid: 51cdf1e5187b2dd4d8570f29bc9d2060, type: 2}
+  exhaustedDialogueResponse: Uway, can you spot me this one time? Please?
 --- !u!65 &425942346
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15635,14 +15633,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exhaustedDialogueResponse: Let's get going.
-  dialogueQuestLinks:
-  - questId: 0
-    dialogueId: 1
-    questStageId: 1
-  - questId: 1
-    dialogueId: 6
-    questStageId: 0
+  dialogueEvents:
+  - {fileID: 11400000, guid: ddabd18835c0b184680f87cc21e84787, type: 2}
+  - {fileID: 11400000, guid: ce12d59ac13383d40819d2160783494f, type: 2}
+  exhaustedDialogueResponse: Shall we get going?
 --- !u!195 &669835234
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -26656,14 +26650,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exhaustedDialogueResponse: Go see Quinton. I'm sure he's got something for you.
-  dialogueQuestLinks:
-  - questId: 0
-    dialogueId: 0
-    questStageId: 0
-  - questId: 1
-    dialogueId: 7
-    questStageId: 1
+  dialogueEvents:
+  - {fileID: 11400000, guid: d7553bc9cab31584b9ba414552ecd79d, type: 2}
+  - {fileID: 11400000, guid: a69db36bebbbc3d478c3335a0a34657a, type: 2}
+  exhaustedDialogueResponse: How about another round?
 --- !u!65 &1146584206
 BoxCollider:
   m_ObjectHideFlags: 0

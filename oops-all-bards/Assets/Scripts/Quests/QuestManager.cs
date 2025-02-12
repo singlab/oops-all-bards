@@ -16,8 +16,13 @@ public class QuestManager : MonoBehaviour
     public GameObject questMarkerPrefab;
 
     public List<Quest> activeQuests = new List<Quest>();
+    public List<Quest> completedQuests = new List<Quest>();
     private GameObject currentQuestMarker; // Store the current marker
     private int currentQuestIndex = 0; // Index in the activeQuests list
+    
+    // Dictionary to store the mapping between quest stages and their associated DialogueEvents
+    private Dictionary<int, Dictionary<int, DialogueEvent>> questStageToDialogueEventMap 
+        = new Dictionary<int, Dictionary<int, DialogueEvent>>();
 
     void Awake()
     {
@@ -35,6 +40,7 @@ public class QuestManager : MonoBehaviour
 
     void Start()
     {
+        InitializeQuestStageToDialogueEventMap();
         AssignQuestUIToManager(); // Call this here to ensure questUI is assigned early
         AcceptQuest(jsonReader.quests.quests[0]); // Accept the first quest
         AcceptQuest(jsonReader.quests.quests[1]);
@@ -72,6 +78,7 @@ public class QuestManager : MonoBehaviour
         {
             AssignQuestUIToManager(); // Re-assign questUI in case it's different in the new scene
             UpdateQuestUI(); // Update the UI
+            InitializeQuestStageToDialogueEventMap(); // Re-initialize the map
         }
     }
 
@@ -123,7 +130,7 @@ public class QuestManager : MonoBehaviour
                     }
                 }
             } else {
-            questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
+                questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
             }
         }
 
@@ -139,27 +146,77 @@ public class QuestManager : MonoBehaviour
             currentQuestMarker = null; // Important: Reset the reference
         }
 
+        // Get the current DialogueEvent associated with the current quest stage
+        DialogueEvent currentDialogueEvent = GetCurrentDialogueEventForQuestStage(quest); 
+
+        if (currentDialogueEvent != null && currentDialogueEvent.dialogueBubblePrefab != null)
+        {
+            // Use the DialogueEvent's prefab for the marker
+            currentQuestMarker = Instantiate(currentDialogueEvent.dialogueBubblePrefab, 
+                                            GetNPCMarkerPosition(quest), 
+                                            Quaternion.identity);                                 
+        }
+    }
+
+    private DialogueEvent GetCurrentDialogueEventForQuestStage(Quest quest)
+    {
+        if (questStageToDialogueEventMap.ContainsKey(quest.ID)) 
+        {
+            Dictionary<int, DialogueEvent> stageToEventMap = questStageToDialogueEventMap[quest.ID];
+            if (stageToEventMap.ContainsKey(quest.CurrentStageIndex)) 
+            {
+                return stageToEventMap[quest.CurrentStageIndex];
+            }
+        }
+
+        return null; 
+    }
+
+    private Vector3 GetNPCMarkerPosition(Quest quest)
+    {
         string npcTargetName = quest.Stages[quest.CurrentStageIndex].NPCTargetName;
         if (npcTargetName == "None")
         {
-            return;
+            return Vector3.zero; // Or handle this case appropriately
         }
 
         GameObject model = GameObject.Find(npcTargetName);
         if (model == null)
         {
             Debug.LogWarning($"NPC with name '{npcTargetName}' not found!");
-            return;
+            return Vector3.zero; 
         }
 
         Transform target = model.transform.Find("CameraTarget");
         if (target == null)
         {
             Debug.LogWarning($"CameraTarget not found on NPC '{npcTargetName}'!");
-            return;
+            return Vector3.zero; 
         }
 
-        currentQuestMarker = Instantiate(questMarkerPrefab, target.position, Quaternion.identity, target); // Store the new marker
+        return target.position;
+    }
+
+    private void InitializeQuestStageToDialogueEventMap()
+    {
+        // Iterate through all DialogueInteractable objects in the scene
+        DialogueInteractable[] interactables = FindObjectsOfType<DialogueInteractable>();
+
+        foreach (DialogueInteractable interactable in interactables)
+        {
+            foreach (DialogueEvent dialogueEvent in interactable.dialogueEvents)
+            {
+                if (dialogueEvent.questID != -1 && dialogueEvent.questStageID != -1)
+                {
+                    if (!questStageToDialogueEventMap.ContainsKey(dialogueEvent.questID))
+                    {
+                        questStageToDialogueEventMap[dialogueEvent.questID] = new Dictionary<int, DialogueEvent>();
+                    }
+
+                    questStageToDialogueEventMap[dialogueEvent.questID][dialogueEvent.questStageID] = dialogueEvent;
+                }
+            }
+        }
     }
 
     public void MarkStageComplete()
@@ -213,6 +270,7 @@ public class QuestManager : MonoBehaviour
         Quest currentQuest = activeQuests[currentQuestIndex];
         currentQuest.Complete = true;
         activeQuests.RemoveAt(currentQuestIndex); // Remove the completed quest
+        completedQuests.Add(currentQuest); // Add it to the completed quests list
 
         if (activeQuests.Count > 0) {
             currentQuestIndex = 0; // Reset to the first active quest (or 0 if none left)
@@ -237,6 +295,41 @@ public class QuestManager : MonoBehaviour
         {
             Debug.LogWarning("QuestUI not found in the scene!");
         }
+    }
+
+    public int GetCurrentQuestID()
+    {
+        if (activeQuests.Count > 0)
+        {
+            return activeQuests[currentQuestIndex].ID; 
+        }
+        else
+        {
+            return -1; // Or another appropriate value to indicate no active quest
+        }
+    }
+
+    public bool IsQuestCompleted(int questID)
+    {
+        foreach (Quest quest in completedQuests)
+        {
+            if (quest.ID == questID && quest.Complete)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsPreviousStageCompleted(int questID)
+    {
+        Quest currentQuest = activeQuests[currentQuestIndex];
+        if (currentQuest == null || currentQuest.CurrentStageIndex == 0)
+        {
+            return false; // Quest not found or first stage
+        }
+
+        return currentQuest.Stages[currentQuest.CurrentStageIndex - 1].Complete; 
     }
 }
 
