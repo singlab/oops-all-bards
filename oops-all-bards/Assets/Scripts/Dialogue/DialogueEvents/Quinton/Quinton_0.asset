@@ -21,4 +21,4 @@ MonoBehaviour:
   checkCondition:
     conditionType: 3
     relatedID: 0
-  exhausted: 1
+  exhausted: 0
