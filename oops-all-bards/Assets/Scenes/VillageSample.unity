@@ -19145,7 +19145,6 @@ GameObject:
   - component: {fileID: 686741317}
   - component: {fileID: 686741316}
   - component: {fileID: 686741315}
-  - component: {fileID: 686741320}
   m_Layer: 0
   m_Name: Alera
   m_TagString: NPC
@@ -19188,11 +19187,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exhaustedDialogueResponse: To flee, or not to flee... No, not quite. Hm?
-  dialogueQuestLinks:
-  - questId: 1
-    dialogueId: 9
-    questStageId: 3
+  dialogueEvents:
+  - {fileID: 11400000, guid: c56e39d8a14936d4391773dc181ad803, type: 2}
+  exhaustedDialogueResponse: To flee, or not to flee... always the question.
 --- !u!54 &686741316
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19255,21 +19252,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &686741320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686741313}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a0457c25dc89d144b29b4c17a3645f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questId: 2
-  questStartPrefab: {fileID: 2788205411036061946, guid: 4cf3747014af7ad4f9751f2a9a0e78d7,
-    type: 3}
 --- !u!1 &688439949
 GameObject:
   m_ObjectHideFlags: 0
@@ -32681,11 +32663,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0575135eb130047aad36e3b6ce0885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exhaustedDialogueResponse: Mmm, yes, tyromancy... Hm?
-  dialogueQuestLinks:
-  - questId: 1
-    dialogueId: 9
-    questStageId: 2
+  dialogueEvents:
+  - {fileID: 11400000, guid: db90c4f86d23fd24baf04649b5c8676f, type: 2}
+  exhaustedDialogueResponse: Hm... yes, tyromancy... Oh! Yes?
 --- !u!65 &1137846135
 BoxCollider:
   m_ObjectHideFlags: 0

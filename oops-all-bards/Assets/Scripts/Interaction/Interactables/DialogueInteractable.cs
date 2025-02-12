@@ -1,62 +1,129 @@
-using System;
-using System.Collections;
+// using System;
+// using System.Collections;
+// using System.Collections.Generic;
+// using System.Linq;
+// using UnityEngine;
+
+// public class DialogueInteractable : MonoBehaviour, IInteractable
+// {
+//     private bool triggering;
+//     public string exhaustedDialogueResponse;
+//     public DialogueQuestLinks[] dialogueQuestLinks;
+
+//     public void Execute()
+//     {
+//         Debug.Log("Executing dialogue.");
+
+//         // Find the relevant dialogue ID and quest stage ID
+//         int dialogueId = -1; // Initialize to an invalid value
+//         int questStageId = -1;
+//         int questId = -1;
+
+//         foreach (var link in dialogueQuestLinks)
+//         {
+//             if (QuestManager.Instance.activeQuests.Any(q => q.ID == link.questId)) //Check if the quest is active
+//             {
+//                 questId = link.questId;
+//                 dialogueId = link.dialogueId;
+//                 questStageId = link.questStageId;
+//                 break; // Stop searching once a match is found
+//             }
+//         }
+
+//         if (dialogueId == -1) // No matching quest/dialogue found
+//         {
+//             DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
+//             return; // Exit early
+//         }
+
+//         Dialogue toStart = DialogueManager.Instance.jsonReader.dialogues.GetDialogue(dialogueId);
+
+//         if (toStart != null && !toStart.Exhausted)
+//         {
+//             DialogueManager.Instance.StartDialogue(dialogueId);
+
+//             if (questStageId != -1)
+//             {
+//                 Quest currentQuest = QuestManager.Instance.activeQuests.Find(q => q.ID == questId);
+//                 if (currentQuest != null) {
+//                   currentQuest.CurrentStageIndex = questStageId; //Set current stage to the correct one.
+//                   QuestManager.Instance.MarkStageComplete(); // Mark the stage as complete using the QuestManager's function
+//                 } else {
+//                   Debug.LogWarning("Quest not found in active quests list.");
+//                 }
+//             }
+
+//         }
+//         else
+//         {
+//             DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
+//         }
+//     }
+
+// GEMINI CODE
+
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class DialogueInteractable : MonoBehaviour, IInteractable
 {
+    public List<DialogueEvent> dialogueEvents = new List<DialogueEvent>();
     private bool triggering;
     public string exhaustedDialogueResponse;
-    public DialogueQuestLinks[] dialogueQuestLinks;
 
     public void Execute()
     {
-        Debug.Log("Executing dialogue.");
+        // Find the relevant dialogue event
+        DialogueEvent selectedEvent = FindMatchingEvent();
 
-        // Find the relevant dialogue ID and quest stage ID
-        int dialogueId = -1; // Initialize to an invalid value
-        int questStageId = -1;
-        int questId = -1;
-
-        foreach (var link in dialogueQuestLinks)
+        if (selectedEvent != null)
         {
-            if (QuestManager.Instance.activeQuests.Any(q => q.ID == link.questId)) //Check if the quest is active
+            // Trigger the selected dialogue event
+            DialogueManager.Instance.StartDialogue(selectedEvent.dialogueID);
+
+            // Handle quest stage progression if applicable and questStageID is valid
+            if (selectedEvent.eventType == DialogueEvent.DialogueEventType.QuestStart ||
+                selectedEvent.eventType == DialogueEvent.DialogueEventType.QuestContinue && 
+                selectedEvent.questStageID != -1) 
             {
-                questId = link.questId;
-                dialogueId = link.dialogueId;
-                questStageId = link.questStageId;
-                break; // Stop searching once a match is found
+                QuestManager.Instance.MarkStageComplete(); 
             }
-        }
-
-        if (dialogueId == -1) // No matching quest/dialogue found
-        {
-            DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
-            return; // Exit early
-        }
-
-        Dialogue toStart = DialogueManager.Instance.jsonReader.dialogues.GetDialogue(dialogueId);
-
-        if (toStart != null && !toStart.Exhausted)
-        {
-            DialogueManager.Instance.StartDialogue(dialogueId);
-
-            if (questStageId != -1)
-            {
-                Quest currentQuest = QuestManager.Instance.activeQuests.Find(q => q.ID == questId);
-                if (currentQuest != null) {
-                  currentQuest.CurrentStageIndex = questStageId; //Set current stage to the correct one.
-                  QuestManager.Instance.MarkStageComplete(); // Mark the stage as complete using the QuestManager's function
-                } else {
-                  Debug.LogWarning("Quest not found in active quests list.");
-                }
-            }
-
         }
         else
         {
-            DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
+            // Handle the case where no matching event was found
+            // (e.g., display an "exhausted" message)
+            DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse); 
+        }
+    }
+
+    private DialogueEvent FindMatchingEvent()
+    {
+        foreach (DialogueEvent dialogueEvent in dialogueEvents)
+        {
+            if (CheckConditions(dialogueEvent.checkCondition) && 
+                (dialogueEvent.questID == QuestManager.Instance.GetCurrentQuestID() || dialogueEvent.questID == -1)) 
+            {
+                return dialogueEvent;
+            }
+        }
+        return null;
+    }
+
+    private bool CheckConditions(DialogueEvent.Condition condition)
+    {
+        switch (condition.conditionType)
+        {
+            case DialogueEvent.Condition.ConditionType.QuestCompleted:
+                return QuestManager.Instance.IsQuestCompleted(condition.relatedID);
+            case DialogueEvent.Condition.ConditionType.PreviousStageCompleted:
+                return QuestManager.Instance.IsPreviousStageCompleted(condition.relatedID);
+            // case DialogueEvent.Condition.ConditionType.ItemInInventory:
+            //     return InventoryManager.Instance.HasItem(condition.relatedID);
+            // case DialogueEvent.Condition.ConditionType.FlagSet:
+            //     return GameManager.Instance.IsFlagSet(condition.relatedID);
+            default:
+                return true; // No condition, always allow
         }
     }
 
@@ -85,11 +152,11 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
         }
     }
 
-    [System.Serializable]
-    public class DialogueQuestLinks
-    {
-        public int questId;
-        public int dialogueId;
-        public int questStageId; // Use -1 if no quest stage is linked
-    }
+    // [System.Serializable]
+    // public class DialogueQuestLinks
+    // {
+    //     public int questId;
+    //     public int dialogueId;
+    //     public int questStageId; // Use -1 if no quest stage is linked
+    // }
 }
