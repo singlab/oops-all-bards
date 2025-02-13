@@ -67,6 +67,8 @@ public class NodeResponse
     [SerializeField] private string nodeResponseText;
     [SerializeField] private int nextNode;
     [SerializeField] private string then; // a method name belonging to DialogueManager
+    [SerializeField] private string skillCheck;
+    [SerializeField] private int skillCheckTarget;
     // TODO: Implement effects of choosing a response in a dialogue
 
     public string NodeResponseText
@@ -85,6 +87,18 @@ public class NodeResponse
     {
         get { return this.then; }
         set { this.then = value; }
+    }
+
+    public string SkillCheck
+    {
+        get { return this.skillCheck; }
+        set { this.skillCheck = value; }
+    }
+
+    public int SkillCheckTarget
+    {
+        get { return this.skillCheckTarget; }
+        set { this.skillCheckTarget = value; }
     }
 }
 
