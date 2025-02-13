@@ -26,7 +26,7 @@ public class DialogueHighlight : MonoBehaviour, IPointerEnterHandler, IPointerEx
         } else if (highlightType == DialogueHighlightType.FailedSkillCheck)
         {
             gameObject.GetComponentInChildren<TMP_Text>().color = Color.gray;
-        } 
+        } else
         {
             gameObject.GetComponentInChildren<TMP_Text>().color = Color.red;
         }
