@@ -9,18 +9,27 @@ using UnityEngine.UI;
 public class DialogueHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     Color savedColor;
+    public DialogueHighlightType highlightType;
 
     //Saved the original text color to switch back to later
     void Start()
     {
         savedColor = gameObject.GetComponentInChildren<TMP_Text>().color;
-
     }
 
     //Show highlighted text when player hovers over a response
     public void OnPointerEnter(PointerEventData eventData)
     {
-        gameObject.GetComponentInChildren<TMP_Text>().color = Color.red;
+        if (highlightType == DialogueHighlightType.PassedSkillCheck)
+        {
+            gameObject.GetComponentInChildren<TMP_Text>().color = Color.green;
+        } else if (highlightType == DialogueHighlightType.FailedSkillCheck)
+        {
+            gameObject.GetComponentInChildren<TMP_Text>().color = Color.gray;
+        } 
+        {
+            gameObject.GetComponentInChildren<TMP_Text>().color = Color.red;
+        }
     }
 
     //When not hovering over a response, text color should switch back to the original text color
@@ -29,5 +38,10 @@ public class DialogueHighlight : MonoBehaviour, IPointerEnterHandler, IPointerEx
         gameObject.GetComponentInChildren<TMP_Text>().color = savedColor;
     }
 
-
+    public enum DialogueHighlightType
+    {
+        Default,
+        PassedSkillCheck,
+        FailedSkillCheck
+    }
 }

@@ -530,7 +530,13 @@
                     [
                         {
                             "nodeResponseText": "But I need to know more. The Followers have been causing trouble here, and who can say what they'll be emboldened to do next?",
-                            "nextNode": 2
+                            "nextNode": 2,
+                            "skillCheck": "Oratory",
+                            "skillCheckTarget": 4
+                        },
+                        {
+                            "nodeResponseText": "I'm not afraid of a little danger. I need to know where they meet.",
+                            "nextNode": 4
                         }
                     ]
                 },
@@ -540,7 +546,7 @@
                     "nodeResponses":
                     [
                         {
-                            "nodeResponseText": "Mudd? I'll try my luck. Thanks, Ozzy.",
+                            "nodeResponseText": "Mudd? I'll try my luck. Thanks.",
                             "nextNode": 3
                         }
                     ]
@@ -552,6 +558,17 @@
                     [
                         {
                             "nodeResponseText": "I'll be cautious. Thanks again.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Sure, sure... You won't be saying that when you're staring down the wrong end of a dagger. Take my advice, stranger, and leave it.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yea... I'll keep that in mind.",
                             "nextNode": -1
                         }
                     ]

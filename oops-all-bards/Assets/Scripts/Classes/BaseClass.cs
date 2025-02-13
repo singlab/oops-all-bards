@@ -59,6 +59,18 @@ public class BaseClass
 		get { return this.abilities; }
 		set { this.abilities = value; }
 	}
+
+	public BaseStat GetBaseStatByName(string statName)
+	{
+		foreach (BaseStat stat in stats)
+		{
+			if (stat.Name == statName)
+			{
+				return stat;
+			}
+		}
+		return null;
+	}
 }
 
 [System.Serializable]

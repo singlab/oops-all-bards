@@ -99,8 +99,26 @@ public class DialogueManager : MonoBehaviour
         {
             GameObject responseObj = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform);
             responseObj.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
-            responseObj.AddComponent<DialogueHighlight>(); 
+            
+            if (response.SkillCheck != null)
+            {
+                Debug.Log("Skill check detected: " + response.SkillCheck + " with target " + response.SkillCheckTarget);
+                Debug.Log("Player's skill value: " + PartyManager.Instance.FindPartyMemberById(0).PlayerClass.GetBaseStatByName(response.SkillCheck).ModifiedValue);
 
+                if (response.SkillCheckTarget <= PartyManager.Instance.FindPartyMemberById(0).PlayerClass.GetBaseStatByName(response.SkillCheck).ModifiedValue)
+                {
+                    responseObj.AddComponent<DialogueHighlight>().highlightType = DialogueHighlight.DialogueHighlightType.PassedSkillCheck;
+                } else
+                {
+                    responseObj.AddComponent<DialogueHighlight>().highlightType = DialogueHighlight.DialogueHighlightType.FailedSkillCheck;
+                    return;
+                }
+            } else
+            {
+                responseObj.AddComponent<DialogueHighlight>();
+            }
+
+            
             responseObj.GetComponent<Button>().onClick.AddListener(() => 
             {
                 NextNode(response.NextNode); 
