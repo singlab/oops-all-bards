@@ -4,17 +4,16 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
-import java.util.*; // Needed for List
+import java.util.*;
 
 behaving_entity WurguthAgent {
 
-    // Assume VivWME is registered and contains characterID.
     register act questionLocals(int, String) with QuestionLocals;
     register act observePlayer(int) with ObservePlayer;
     register act confrontPlayer(int) with ConfrontPlayer;
     register act setTrap(int, String) with SetTrap;
 
-	WMEDictionary dict = new WMEDictionary(); // Assuming you will have your own implementation of this.
+	WMEDictionary dict = new WMEDictionary();
 
     //### InvestigateSuspiciousActivity Behaviors ###
 
@@ -125,7 +124,7 @@ behaving_entity WurguthAgent {
 
 		mental_act {
 			System.out.println("Wurguth is setting a trap");
-			List<String> trapLocations = Helper.getTrapLocations(characterId); // Assume a helper method
+			List<String> trapLocations = Helper.getTrapLocations(characterId);
 			if(trapLocations.size() > 0) {
                 trapLocation = trapLocations.get(0);
             }

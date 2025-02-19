@@ -28,18 +28,5 @@ public class QuestionLocals extends BaseAction {
         Message toSend = new Message(code, msg, data);
         JSONObject jo = toSend.toJSON();
         TCPServer.getInstance().sendOutgoingMessage(jo);
-
-        // In Unity, you would:
-        // 1. Receive this message.
-        // 2. Find the Wurguth GameObject (using characterId).
-        // 3. Find the NPC GameObject (using npcName).
-        // 4. Trigger a dialogue interaction between Wurguth and the NPC.
-        //    This might involve:
-        //    - Playing a "questioning" animation on Wurguth.
-        //    - Starting a dialogue tree with the NPC.
-        //    - The dialogue tree would likely involve skill checks
-        //      and potentially update Wurguth's DELPEntity based on
-        //      the NPC's responses (adding facts like knowsAbout(npc, player)
-        //      or believesThreat(wurguth, player)).
     }
 }

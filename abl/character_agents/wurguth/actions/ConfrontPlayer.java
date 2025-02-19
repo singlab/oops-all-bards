@@ -24,18 +24,5 @@ public class ConfrontPlayer extends BaseAction {
         Message toSend = new Message(code, msg, data);
         JSONObject jo = toSend.toJSON();
         TCPServer.getInstance().sendOutgoingMessage(jo);
-
-        // In Unity:
-        // 1. Receive message.
-        // 2. Find Wurguth.
-        // 3. Initiate a confrontation sequence. This would likely involve:
-        //    - Making Wurguth move to the player.
-        //    - Playing a "confrontation" animation (e.g., aggressive pose).
-        //    - Starting a dialogue with the player.  This dialogue might
-        //      be a demand for information, a threat, or an accusation.
-        //    - The outcome of the dialogue (or the player's actions)
-        //      could lead to combat (transitioning to the NeutralizeThreat
-        //      supertask) or to Wurguth backing down (updating his
-        //      DELPEntity with information learned from the confrontation).
     }
 }

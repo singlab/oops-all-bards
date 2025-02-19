@@ -27,14 +27,5 @@ public class SetTrap extends BaseAction
         Message toSend = new Message(code, msg, data);
         JSONObject jo = toSend.toJSON();
         TCPServer.getInstance().sendOutgoingMessage(jo);
-
-        // In Unity:
-        // 1.  Receive message.
-        // 2.  Find Wurguth
-        // 3.  Initiate trap setting. This might involve:
-        //     -   Making Wurguth move to the location.
-        //     -   Playing an animation.
-        //     -   Instantiating a "trap" object.
-        //     -   Add a fact to the location, or to Wurguth, to make note that a trap has been set.
     }
 }
