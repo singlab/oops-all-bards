@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,12 @@ public class CharacterEquipmentManager : MonoBehaviour
     [SerializeField] private LedgerManager ledgerManager;
     [SerializeField] private Transform characterModelSpawnPoint;
     [SerializeField] private GameObject[] equipmentSlots;
+    [SerializeField] private GameObject characterSummary;
+    [SerializeField] private GameObject characterName;
+    [SerializeField] private GameObject characterClass;
+    [SerializeField] private GameObject[] classStats;
+    [SerializeField] private GameObject[] classAbilites;
+    [SerializeField] private GameObject[] abilityDescriptions;
 
     private GameObject currentModel; 
 
@@ -27,6 +34,7 @@ public class CharacterEquipmentManager : MonoBehaviour
 
         DisableItemOptions();
         InitializeCharacterModel();
+        InitializeCharacterSummary();
     }
 
     public void EquipItem(BaseItem item)
@@ -79,6 +87,29 @@ public class CharacterEquipmentManager : MonoBehaviour
         foreach (GameObject slot in equipmentSlots)
         {
             slot.transform.Find("ItemOptions").gameObject.SetActive(false);
+        }
+    }
+
+    private void InitializeCharacterSummary()
+    {
+        BaseClass c = DataManager.Instance.PlayerData.PlayerClass;
+
+        characterName.GetComponent<TMP_Text>().text = DataManager.Instance.PlayerData.Name;
+        characterClass.GetComponent<TMP_Text>().text = DataManager.Instance.PlayerData.PlayerClass.Name;
+        
+        //Set class stats
+        for (int i = 0; i < c.Stats.Count; i++)
+        {
+            classStats[i].GetComponent<TMP_Text>().text = c.Stats[i].Name + ": " + c.Stats[i].BaseValue; 
+        }
+
+        //Set class abilities, using minus 1 to avoid out of bounds exception for extra ability that shouldn't be listed
+        for (int i = 0; i < c.Abilities.Count - 1; i++)
+        {
+            Debug.Log("Setting ability " + i + ": " + c.Abilities[i].Name);
+            classAbilites[i].GetComponent<TMP_Text>().text = c.Abilities[i].Name;
+            abilityDescriptions[i].GetComponent<TMP_Text>().text = c.Abilities[i].Description;
+            //abilityDescriptions[i].AddComponent<ToolTips>(); //Add comment later when not dead
         }
     }
 }
