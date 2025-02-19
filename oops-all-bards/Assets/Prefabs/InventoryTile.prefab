@@ -903,16 +903,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74db9de3d8b76be4092fe8c124ec4a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item:
-    name: 
-    displayName: 
-    description: 
-    type: 0
-    value: 0
-    icon: {fileID: 0}
-    recipe: []
-  manager: {fileID: 0}
+  itemIcon: {fileID: 0}
+  frame: {fileID: 3785944329246150117}
+  tileButton: {fileID: 5454152231299722763}
   itemOptions: {fileID: 8353057330818133102}
+  useButton: {fileID: 4236193438878498460}
+  equipButton: {fileID: 3194436724067769360}
+  unequipButton: {fileID: 6011595488668797535}
+  trashButton: {fileID: 7390916503204105193}
+  descriptionText: {fileID: 4920567233332381564}
+  OnUse:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEquip:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnequip:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTrash:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3881994062958177760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,7 +1456,7 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0

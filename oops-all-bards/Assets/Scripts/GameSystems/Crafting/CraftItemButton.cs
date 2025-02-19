@@ -1,21 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class CraftItemButton : MonoBehaviour
 {
-    public TextMeshProUGUI text;
-    public BaseItem item;
-    public InventoryItemManager manager;
+    [SerializeField] private TMP_Text text; // Make this private and serialized
+    [SerializeField] private Button button;   // Reference to the button component
+    public BaseItem item { get; private set; } //  Public getter, private setter
+    private InventoryItemManager manager;
 
-    private void Awake()
+    public void Initialize(BaseItem craftingItem, InventoryItemManager inventoryManager)
     {
-        text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        item = craftingItem;
+        manager = inventoryManager;
+        text.text = item.DisplayName;
+        button.onClick.AddListener(OnCraftButtonClicked); // Use UnityEvents
     }
 
-    public void DisplayTooltip()
+     private void OnCraftButtonClicked()
     {
-        manager.UpdateCraftingTooltip(item);
+        manager.UpdateCraftingTooltip(item); // Show tooltip on click
     }
 }

@@ -7083,7 +7083,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1330318053}
         m_TargetAssemblyTypeName: InventoryItemManager, Assembly-CSharp
-        m_MethodName: tabSwitch
+        m_MethodName: SwitchTab
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 517040142}
@@ -14641,16 +14641,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c45bbeb60ca3f5449057c9c2fe7163a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
   image: {fileID: 0}
-  item:
-    name: 
-    displayName: 
-    description: 
-    type: 0
-    value: 0
-    icon: {fileID: 0}
-    recipe: []
+  text: {fileID: 0}
+  button: {fileID: 0}
   manager: {fileID: 0}
 --- !u!1001 &637724921
 PrefabInstance:
@@ -28666,7 +28659,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1330318053}
         m_TargetAssemblyTypeName: InventoryItemManager, Assembly-CSharp
-        m_MethodName: tabSwitch
+        m_MethodName: SwitchTab
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1069779108}
@@ -30667,6 +30660,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f52e0883c06d460fa9c5553c3146585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInventoryUI: {fileID: 1102990199}
+  inventoryTilePrefab: {fileID: 3785944329288628795, guid: 1edc57113fd744678bffccb9e3eaa4e8,
+    type: 3}
+  inventoryItemsContainer: {fileID: 2018109821}
+  recipeContainer: {fileID: 1066923953}
+  recipeTooltip: {fileID: 635199780}
+  recipeButtonPrefab: {fileID: 2207184999729046719, guid: ef9d4bd2b1285344baaeae23c0f9013f,
+    type: 3}
+  inventoryCountText: {fileID: 1260833474}
   tabs:
   - {fileID: 517040142}
   - {fileID: 1069779108}
@@ -30676,20 +30678,8 @@ MonoBehaviour:
   - {fileID: 2022226131}
   - {fileID: 691978362}
   - {fileID: 611831664}
-  playerInventoryUI: {fileID: 1102990199}
-  inventoryTile: {fileID: 3785944329288628795, guid: 1edc57113fd744678bffccb9e3eaa4e8,
-    type: 3}
-  inventoryItemsContainer: {fileID: 2018109820}
-  recipeContainer: {fileID: 1066923952}
-  recipeTooltip: {fileID: 635199780}
-  recipeButton: {fileID: 2207184999729046719, guid: ef9d4bd2b1285344baaeae23c0f9013f,
-    type: 3}
-  invNum: {fileID: 1260833472}
-  invSpaces: []
-  ingredientSpaces: []
-  recipeSpaces: []
   modelViewer: {fileID: 0}
-  ccSpawn: {fileID: 1585950721}
+  characterModelSpawnPoint: {fileID: 1585950722}
 --- !u!4 &1330318054
 Transform:
   m_ObjectHideFlags: 0
@@ -37479,7 +37469,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1330318053}
         m_TargetAssemblyTypeName: InventoryItemManager, Assembly-CSharp
-        m_MethodName: tabSwitch
+        m_MethodName: SwitchTab
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1149496157}

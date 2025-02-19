@@ -74,13 +74,13 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
         if (triggering && Input.GetKeyDown(KeyCode.F))
         {
             Execute();
-            triggering = false; // Prevent double triggering
+            triggering = false;
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // Use CompareTag for better performance
+        if (other.CompareTag("Player"))
         {
             triggering = true;
         }
