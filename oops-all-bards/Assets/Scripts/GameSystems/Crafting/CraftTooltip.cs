@@ -1,37 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
 public class CraftTooltip : MonoBehaviour
 {
-    public TextMeshProUGUI text;
-    public Image image;
-    public BaseItem item;
+    [SerializeField] public Image image;
+    [SerializeField] public TMP_Text text; // Make this private and serialized
+    [SerializeField] private Button button;   // Reference to the button component
+    public BaseItem item { get; set; } //  Public getter, private setter
     public InventoryItemManager manager;
 
-    private void Awake()
+    public void Initialize(BaseItem craftingItem, InventoryItemManager inventoryManager)
     {
-        text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
-        image = transform.Find("Image").GetComponent<Image>(); ;
+        item = craftingItem;
+        manager = inventoryManager;
+        button.onClick.AddListener(OnCraftButtonClicked); // Use UnityEvents
     }
-
+     private void OnCraftButtonClicked()
+    {
+        CraftItem();
+    }
     public void CraftItem()
     {
-        foreach(BaseItem item in item.Recipe)
+        foreach(BaseItem ingredient in item.Recipe)
         {
-            foreach (BaseItem inventoryItem in DataManager.Instance.PlayerData.Inventory)
-            {
-                if (BaseItem.GetItem(inventoryItem.Name) == item)
-                {
-                    DataManager.Instance.PlayerData.Inventory.Remove(inventoryItem);
-                    break;
-                }
-            }
+            DataManager.Instance.PlayerData.Inventory.Remove(ingredient);
         }
-        DataManager.Instance.PlayerData.Inventory.Add(new BaseItem(this.item));
+        DataManager.Instance.PlayerData.Inventory.Add(item);
+        manager.UpdateInventory();
         manager.UpdateCraftingTab();
-        manager.recipeTooltip.SetActive(false);
     }
 }
