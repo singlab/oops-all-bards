@@ -322,6 +322,439 @@
                     ]
                 }
             ]
+        },  
+        {
+            "id": 5,
+            "speakerName": "Herbalist",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Ignore any skeletons you see poking out of the crop be- oh you need something?",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Buy",
+                            "nextNode": -1
+                        },
+                        {
+                            "nodeResponseText": "Leave",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+					"id": 1,
+                    "nodeText": "To herb or not to herb? That is the question.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Buy",
+                            "nextNode": -1
+                        },
+                        {
+                            "nodeResponseText": "Leave",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                	"id": 2,
+                    "nodeText": "You want plants? I have plants. I also have things made with plants if you’re so inclined.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Buy",
+                            "nextNode": -1
+                        },
+                        {
+                            "nodeResponseText": "Leave",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "speakerName": "Quinton",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "You know, I just met you and all. So I appreciate you having my back in there.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Think nothing of it, Quinton. We artists have to stick together.",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "Have the Followers done something like this before?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "That was… unexpected. And worrisome. I think we best go tell Samaren what happened here, see if she knows anything about this.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yeah, of course, Quinton. Let’s go.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Not like this, no. They’re usually more subtle. I think we best go tell Samaren what happened here, see if she knows anything about this.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yeah, of course, Quinton. Let’s go.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "speakerName": "Samaren",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Are you alright, darlin'? You look a little worse for wear. I heard some bangin' and crashin' from the backroom...",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "There were a couple of Followers in your back room… They jumped us when we were getting ready for our gig.",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Gods protect us! I dunno how those ruffians got in here, but you and Quinton both have my sincerest thanks for dealin' with them.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Do you have any idea what they were doing here?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "I haven't a clue, I'm afraid… But whatever their interest, can't be good for business. I'm up to my ears in work 'round here, but if you can figure out what their plans are, I'll be in your debt.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I think we can manage that. Any idea on where to start sniffing around?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "As a matter of fact, I do. Whenever strangers come to town, you can bet yer last gold coin the Guild of Shadows knows somewhat about them.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "The Guild of Shadows?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Yea, you know… Less than upstandin' brokers of rumors and jobs, if yer catchin' my drift…",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Criminals, you mean?",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Naw, not strictly speaking, they just have a… healthy skepticism about the law. Problem is, they're very reclusive. You'll hafta do some heavy digging to find them. Couldn't hurt to ask some of the folk 'round town. Or, force them to find you. You make a big enough name for yourself, I'm sure they'll take an interest in you, too.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Well, it’s a start. Better get going.",
+                            "nextNode": 6
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "Good luck, darlin'. And be careful. The Guild of Shadows ain't nothin' to trifle with. C'mon back if you need a drink or a place to rest.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'll keep that in mind. Thanks, Samaren.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "speakerName": "Ozzy",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Well now, what can I do for you? You look like you've got something on your mind.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "You wouldn't happen to know anything about the Guild of Shadows, would you?",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "How about we keep our voices low, eh? The Guild of Shadows... you're asking about some mighty shady folk there, friend. Best not to get tangled up in their affairs. They deal in things best left untouched.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "But I need to know more. The Followers have been causing trouble here, and who can say what they'll be emboldened to do next?",
+                            "nextNode": 2,
+                            "skillCheck": "Oratory",
+                            "skillCheckTarget": 4
+                        },
+                        {
+                            "nodeResponseText": "I'm not afraid of a little danger. I need to know where they meet.",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Now, now, I don't get involved in such things. But if you're really determined to learn more… there's a kobold in town named Mudd. He's got a nose for trouble, and might know a thing or two about the Guild. Though, you'll have to pry the information out of him. He's not exactly the most trusting sort.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Mudd? I'll try my luck. Thanks.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Just remember my warning. The Guild of Shadows isn't something to be taken lightly.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'll be cautious. Thanks again.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Sure, sure... You won't be saying that when you're staring down the wrong end of a dagger. Take my advice, stranger, and leave it.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Yea... I'll keep that in mind.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "speakerName": "Mudd",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Greetings, esteemed adventurer. I trust your journey has been most… invigorating? No, no, 'invigorating' is far too pedestrian. Perhaps 'galvanizing'? Or, dare I say, 'electrifying'?",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'm looking for information on the Guild of Shadows.",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Ah, the Guild of Shadows. A most enigmatic organization. Their methods are perplexing, their motives convoluted. One could almost say they are… shrouded in mystery! Though, 'cloaked' might be more appropriate.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I need to know more. I suspect they're involved in some trouble.",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Trouble? My, what a mundane word. 'Turmoil', perhaps? Or 'chaos'? The Guild of Shadows certainly stirs the pot of… unpredictability. Though, 'brewing' might be a more suitable metaphor.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'm not interested in your wordplay. I need information, and I suspect you have some.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Information? Such a limited term. 'Knowledge', perhaps? Or 'insight'? I, Mudd, am a veritable repository of… hmm… knowledge! Though, 'fountain' might be more evocative.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Enough with the riddles! I need to know where the Guild of Shadows meets.",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Ah, their rendezvous. A most secretive affair. Their locations are ever-shifting, their presence ephemeral. One could almost say they are… ghosts! No, 'phantoms' is more accurate.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Just tell me where they meet! I'm running out of patience.",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Very well, very well. Patience, my dear adventurer, is a virtue. Though, 'endurance' might be more fitting. Let me ponder… Ah, yes! They have been known to congregate in a most peculiar location. A dilapidated structure by the docks. One could almost say it is… haunted! Though, 'infested' might be more accurate.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "A dilapidated structure by the docks? I'll check it out. Thanks, Mudd.",
+                            "nextNode": 6
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "You are welcome. Or perhaps 'delighted' is more appropriate. Now, if you'll excuse me, I must contemplate the profound nature of existence. Or perhaps simply 'ponder'...",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'll leave you to your… contemplations. Farewell, Mudd.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "speakerName": "Alera",
+            "exhausted": false,
+            "dialogueNodes":
+            [
+                {
+                    "id": 0,
+                    "nodeText": "Greetings, my good sir! I am Alera, a thespian of the highest caliber, and I require your assistance with a most pressing matter.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "A thespian? What kind of assistance do you require?",
+                            "nextNode": 1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Ah, mere formalities! I am in the midst of producing a play, a grand tragedy, a masterpiece of dramatic tension! But alas, it lacks a certain… something.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What kind of play is it?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "It is a tale of woe, of betrayal, of revenge! A young man, wronged by his uncle, seeks justice! But I call it... \"Whamlet!\"",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "Whamlet? What a strange name.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Indeed! But to truly capture the essence of this tragic tale, I require a prop, a symbol of mortality, a touch of the macabre...",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "What kind of prop?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "A skull, my good sir! A skull! Imagine, if you will, the young Whamlet, holding aloft the skull of his dear departed court jester, lamenting the cruel twists of fate!",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "A skull? Where would I even find one?",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Ah, that's where your assistance comes in! I require the expertise of someone with a discerning eye and a… certain… resourcefulness.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I see. What kind of resourcefulness are we talking about?",
+                            "nextNode": 6 
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "Let us just say that theatrical productions sometimes require... unconventional methods of acquiring props. You understand? Discretion is paramount, of course.",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I understand. I'll do my best to find a suitable skull. Though I can't promise anything.",
+                            "nextNode": 7
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "nodeText": "Excellent! This is just what I needed! You have been a tremendous help, my good sir. I shall be sure to send you an invitation to the premiere!",
+                    "nodeResponses":
+                    [
+                        {
+                            "nodeResponseText": "I'll look forward to it. Break a leg!",
+                            "nextNode": -1 
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

@@ -25,7 +25,65 @@
                     "displayText": "Follow Quinton to the back room and get ready for the gig"
                 }
             ],
-            "complete": false
+            "complete": false,
+            "linear": true,
+            "parallelStages": []
+        },
+        {
+            "name": "Long Shadows",
+            "id": 1,
+            "stages":
+            [
+                {
+                    "id": 0,
+                    "npcTargetName": "Quinton",
+                    "complete": false,
+                    "displayText": "Speak with Quinton about what just happened"
+                },
+                {
+                    "id": 1,
+                    "npcTargetName": "Samaren",
+                    "complete": false,
+                    "displayText": "Ask Samaren about rumors regarding the activity of the Followers of Bolothamogg"
+                },
+                {
+                    "id": 2,
+                    "npcTargetName": "None",
+                    "complete": false,
+                    "displayText": "Gather information about the Guild of Shadows from villagers around town"
+                },
+                {
+                    "id": 3,
+                    "npcTargetName": "None",
+                    "complete": false,
+                    "displayText": "Lure out the Guild of Shadows by making a name for yourself"
+                }
+            ],
+            "complete": false,
+            "linear": false,
+            "parallelStages": [2,3]
+        },
+        {
+            "name": "Theatrical Skullduggery",
+            "id": 2,
+            "stages":
+            [
+                {
+                    "id": 0,
+                    "npcTargetName": "Alera",
+                    "complete": false,
+                    "displayText": "Speak to Alera"
+                },
+                {
+                    "id": 1,
+                    "npcTargetName": "Very Normal Human Skull",
+                    "complete": false,
+                    "displayText": "Find a suitable skull for Alera's production"
+                }
+            ],
+            "complete": false,
+            "linear": true,
+            "parallelStages": []
         }
     ]
 }

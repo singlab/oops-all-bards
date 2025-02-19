@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a68d1a0d2afbd7419856866a5cab175, type: 3}
+  m_Name: Samaren_0
+  m_EditorClassIdentifier: 
+  eventType: 0
+  dialogueBubblePrefab: {fileID: 8767671318097568826, guid: cde39afa5887ed4498db48d36b137767,
+    type: 3}
+  dialogueID: 0
+  questID: 0
+  questStageID: -99
+  checkCondition:
+    conditionType: 4
+    relatedID: 0
+  exhausted: 0
