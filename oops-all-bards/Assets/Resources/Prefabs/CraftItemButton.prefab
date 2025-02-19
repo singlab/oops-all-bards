@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 2207184999729046691}
   - component: {fileID: 2207184999729046690}
   - component: {fileID: 2207184999729046717}
-  - component: {fileID: -4137761168277582116}
-  - component: {fileID: 2146366215107134813}
+  - component: {fileID: 8989673088028005624}
   m_Layer: 5
   m_Name: CraftItemButton
   m_TagString: Untagged
@@ -124,7 +123,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-4137761168277582116
+--- !u!114 &8989673088028005624
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,48 +132,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2207184999729046719}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99e3b331cebade9498a0901418bfd1d1, type: 3}
+  m_Script: {fileID: 11500000, guid: f2839c6236cc36043a02141c0743fa8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
-  item:
-    name: 
-    displayName: 
-    description: 
-    type: 0
-    value: 0
-    icon: {fileID: 0}
-    recipe: []
-  manager: {fileID: 0}
---- !u!114 &2146366215107134813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2207184999729046719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: -4137761168277582116}
-          m_TargetAssemblyTypeName: CraftItemButton, Assembly-CSharp
-          m_MethodName: DisplayTooltip
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  image: {fileID: 2207184999729046690}
+  text: {fileID: 2207184999735999102}
 --- !u!1 &2207184999735999096
 GameObject:
   m_ObjectHideFlags: 0
