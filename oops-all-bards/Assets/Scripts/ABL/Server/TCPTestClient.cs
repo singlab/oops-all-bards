@@ -83,8 +83,8 @@ public class TCPTestClient : MonoBehaviour {
 							return;
 						}
 
-						ABLResponse response = JsonUtility.FromJson<ABLResponse>(result);
-						ActionManager.Instance.ParseData(response);
+						// ABLResponse response = JsonUtility.FromJson<ABLResponse>(result);
+						ActionManager.Instance.HandleABLResponse(result);
 					} 				
 				} 			
 			}         

@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine.UI;
 
 // A class that manages the features of the combat demo.
-public class DemoManager : MonoBehaviour
+public class DemoManager : MonoBehaviour, IActionListener
 {
     private static DemoManager _instance;
     public static DemoManager Instance => DemoManager._instance;
@@ -50,6 +50,8 @@ public class DemoManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ActionManager.Instance.AddActionListener(this);
+
         CreateSignpostMessage(help2);
         CreateSignpostMessage(help1);
 
@@ -144,5 +146,25 @@ public class DemoManager : MonoBehaviour
         toInstantiate.GetComponentInChildren<Button>().onClick.AddListener(delegate { DestroySignpostMessage(toInstantiate); });
     }
     
-
+    public void OnActionExecuted(string actionName, ActionData data)
+    {
+        if (actionName == "Protect" && !hasBeenProtectedOnce)
+        {
+            CreateSignpostMessage(help6);
+            hasBeenProtectedOnce = true;
+        }
+        else if (actionName == "RequestAssistance" && !hasRequestAidOnce)
+        {
+            CreateSignpostMessage(help7);
+            hasRequestAidOnce = true;
+        }
+        else if(actionName == "RequestAssistance")
+        {
+             DialogueManager.Instance.TriggerAssistanceQuip(data.actingCharacter);
+        }
+        else if(actionName == "Quip")
+        {
+            DialogueManager.Instance.ChooseAppropriateQuip(data.actingCharacter, data.inCombat);
+        }
+    }
 }

@@ -4,142 +4,69 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
-import java.util.*;
+import java.util.*; // Needed for List
 
 behaving_entity WurguthAgent {
 
+    // Assume VivWME is registered and contains characterID.
     register act questionLocals(int, String) with QuestionLocals;
     register act observePlayer(int) with ObservePlayer;
     register act confrontPlayer(int) with ConfrontPlayer;
     register act setTrap(int, String) with SetTrap;
 
-	WMEDictionary dict = new WMEDictionary();
-
     //### InvestigateSuspiciousActivity Behaviors ###
 
-    sequential behavior investigateSuspiciousActivity(VivWME vivWME) {
-        int characterId;
-
+    // Top-level behavior to manage the entire supertask.  Viv will spawngoal this.
+    sequential behavior investigateSuspiciousActivity(int characterId) {
         mental_act {
-          characterId = vivWME.getCharacterID();
           System.out.println("Wurguth: Investigating suspicious activity. characterID = " + characterId);
         }
-
-        // Continuously monitor for conditions to trigger sub-behaviors.
-        with (persistent) subgoal monitorSuspicion(characterId);
+        // Start a persistent parallel behavior to manage sub-behaviors.
+        with (persistent) subgoal manageInvestigation(characterId);
     }
 
-    sequential behavior monitorSuspicion(int characterId)
-    {
-		with (persistent) subgoal questionLocals(characterId);
-		with (persistent) subgoal observePlayer(characterId);
-		with (persistent) subgoal confrontPlayer(characterId);
-		with (persistent) subgoal setTrap(characterId);
+
+    // This parallel behavior will hold all the individual action behaviors.
+    // Viv will dynamically add/remove subgoals to this behavior.
+    parallel behavior manageInvestigation(int characterId) {
+      // This is a placeholder. The actual behaviors (questionLocals, etc.)
+      // will be spawned here by Viv, based on its DELP-based evaluation.
+      with(success_test{ (1 == 2) }) wait; //Always false, never terminates.
     }
 
-    sequential behavior questionLocals(int characterId) {
-        String currentNpc;  // Store the current NPC being interacted with.
+    // These are now simple sequential behaviors that just perform the action.
+    // They don't have any preconditions or wait conditions.  They are *only*
+    // executed when Viv explicitly spawns them as subgoals of manageInvestigation.
 
-        // Wait until the player is suspicious, and an NPC is present
-        with (success_test {
-              (dict.getDELPBelief(characterId, "playerIsSuspicious(" + characterId + ")") == "YES") &&
-              (dict.getDELPBelief(characterId, "npcIsPresent(" + characterId + ",currentLocation)") == "YES")
-        }) wait;
-
-		mental_act
+     sequential behavior questionLocals(int characterId, String currentNpc) {
+        mental_act
 		{
 			System.out.println("Wurguth is questioning locals");
 		}
-
-        // Iterate through available NPCs.
-        mental_act {
-			List<String> nearbyNPCs = Helper.getNearbyNPCs(characterId);
-			if(nearbyNPCs.size() > 0) {
-                currentNpc = nearbyNPCs.get(0);
-            }
-		    else
-			{
-				currentNpc = null;
-			}
-        }
-
-        // If there is no one to question, the behavior should not continue.
-        if{ (currentNpc == null) }
-        {
-			fail_step;
-        }
-
-        // Check the trustworthiness assumption for the *current* NPC.
-        with (success_test { (dict.getDELPBelief(characterId, "believesTrustworthy(" + characterId + ", " + currentNpc + ")") == "YES") }) wait;
-
-        // Perform the questioning action.
         act questionLocals(characterId, currentNpc);
     }
-	
 
     sequential behavior observePlayer(int characterId) {
-
-        // Wait until the player is suspicious and Wurguth knows their location.
-         with (success_test {
-              (dict.getDELPBelief(characterId, "playerIsSuspicious(" + characterId + ")") == "YES") &&
-              (dict.getDELPBelief(characterId, "knowsLocationOf(" + characterId + ", player)") == "YES") &&
-              (dict.getDELPBelief(characterId, "canHide(" + characterId +")") == "YES")
-        }) wait;
-
 		mental_act
 		{
 			System.out.println("Wurguth is observing the player");
 		}
-		
         act observePlayer(characterId);
     }
 
-
     sequential behavior confrontPlayer(int characterId) {
-
-        // Wait until the player is suspicious, Wurguth knows their location, and is in range.
-        with (success_test {
-             (dict.getDELPBelief(characterId, "playerIsSuspicious(" + characterId + ")") == "YES") &&
-             (dict.getDELPBelief(characterId, "knowsLocationOf(" + characterId + ", player)") == "YES") &&
-             (dict.getDELPBelief(characterId, "playerInRange(" + characterId + ")") == "YES") &&
-             (dict.getDELPBelief(characterId, "believesIntimidating(" + characterId + ", player)") == "YES")
-        }) wait;
-
 		mental_act
 		{
 			System.out.println("Wurguth is confronting the player");
 		}
-
         act confrontPlayer(characterId);
     }
 
-	sequential behavior setTrap(int characterId)
+	sequential behavior setTrap(int characterId, String trapLocation)
 	{
-		 String trapLocation;
-
-		with (success_test {
-             (dict.getDELPBelief(characterId, "playerIsSuspicious(" + characterId + ")") == "YES") &&
-             (dict.getDELPBelief(characterId, "knowsLocationOf(" + characterId + ", player)") == "YES")
-        }) wait;
-
 		mental_act {
 			System.out.println("Wurguth is setting a trap");
-			List<String> trapLocations = Helper.getTrapLocations(characterId);
-			if(trapLocations.size() > 0) {
-                trapLocation = trapLocations.get(0);
-            }
-			else
-			{
-				trapLocation = null;
-			}
         }
-		
-		 if{ (trapLocation == null) }
-        {
-			fail_step;
-        }
-
-		with (success_test { (dict.getDELPBelief(characterId, "trapLocation(" + trapLocation + ")") == "YES")}) wait;
 		act setTrap(characterId, trapLocation);
 	}
 }
