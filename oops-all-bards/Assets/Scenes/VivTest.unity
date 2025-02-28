@@ -250,7 +250,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bindings: {fileID: 1216771529}
-  characters: 
   currentSupertask:
     name: 
     behaviors: []
@@ -491,6 +490,11 @@ MonoBehaviour:
     - InParty
     - InCombat
     - CanHelp
+  characterBindings:
+  - key: 1
+    val: Quinton
+  - key: 2
+    val: Wurguth
 --- !u!4 &1216771530
 Transform:
   m_ObjectHideFlags: 0

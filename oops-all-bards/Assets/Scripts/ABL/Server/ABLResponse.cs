@@ -21,6 +21,10 @@ public class ActionData
     public int actingCharacter;
     // The character ID of the target character, if any
     public int targetCharacter;
+    // The name of the NPC on which the character is acting, if any
+    public string npcName;
     // Whether or not the acting character is in combat, if relevant
     public bool inCombat;
+    // The location of the action, if relevant
+    public string location;
 }

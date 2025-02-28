@@ -9,8 +9,6 @@ namespace Viv
     {
         // A reference to the bindings between supertasks, behaviors, and assumptions.
         [SerializeField] private CustomDictionary bindings;
-        // A list of managed characters, using integer IDs.
-        [SerializeField] private List<int> characters;
         // The current supertask Viv is managing.
         [SerializeField] private Supertask currentSupertask;
         // Whether or not Viv should use simulated CiF input.
@@ -19,17 +17,17 @@ namespace Viv
 	    public static Viv Instance => Viv._instance;
 
         void Awake()
-    {
-        if (_instance == null)
         {
-            _instance = this;
-        } else if (_instance != null)
-        {
-            Destroy(gameObject);
-        }
+            if (_instance == null)
+            {
+                _instance = this;
+            } else if (_instance != null)
+            {
+                Destroy(gameObject);
+            }
 
-		DontDestroyOnLoad(gameObject);
-    } 
+            DontDestroyOnLoad(gameObject);
+        } 
 
         void Start()
         {
@@ -420,5 +418,13 @@ namespace Viv
     {
         public string key;
         public List<string> val;
+    }
+
+    [System.Serializable]
+    // A class that represents a binding between the integer ID of a character, and the name of that character.
+    public class CharacterBindings 
+    {
+        public int key;
+        public string val;
     }
 }

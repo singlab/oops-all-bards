@@ -8,7 +8,7 @@ public class QuestionLocalsAction : IABLAction
     {
         //Get data from the action data
         int actingCharacter = data.actingCharacter;
-        int targetCharacter = data.targetCharacter;
+        string npcName = data.npcName;
 
         // Get the acting character, and target character's location
         // Move acting character to the targets location
