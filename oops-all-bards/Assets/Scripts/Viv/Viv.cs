@@ -15,6 +15,8 @@ namespace Viv
         [SerializeField] private bool simulateCif = true;
         private static Viv _instance;
 	    public static Viv Instance => Viv._instance;
+        // A registry that maps the integer ID of a character to the VivCharacter object associated with that ID.
+        [SerializeField] private static Dictionary<int, VivCharacter> characterRegistry = new Dictionary<int, VivCharacter>();
 
         void Awake()
         {
@@ -54,6 +56,26 @@ namespace Viv
             if (this.currentSupertask != null)
             {
                 this.currentSupertask.Evaluate();
+            }
+        }
+
+        public static void RegisterCharacter(VivCharacter character)
+        {
+            // Register the character with the Viv system.
+            if (character.characterID == -1)
+            {
+                Debug.LogError("VivCharacter ID is not set. Please assign a valid ID.");
+                return;
+            }
+
+            if (!characterRegistry.ContainsKey(character.characterID))
+            {
+                characterRegistry.Add(character.characterID, character);
+                Debug.Log($"Registered VivCharacter '{character.characterName}' with ID {character.characterID}.");
+            }
+            else
+            {
+                Debug.LogWarning($"VivCharacter with ID {character.characterID} is already registered. Please use a unique ID.");
             }
         }
 
