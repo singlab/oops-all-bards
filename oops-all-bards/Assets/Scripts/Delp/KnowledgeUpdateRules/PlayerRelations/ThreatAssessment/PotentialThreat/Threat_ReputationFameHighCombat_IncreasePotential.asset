@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9f2a7b2449211b4bb181b9b6539c887, type: 3}
+  m_Name: Threat_ReputationFameHighCombat_IncreasePotential
+  m_EditorClassIdentifier: 
+  interactionType: ReputationChange
+  outcome: Reputation_Fame_High_Combat
+  factToAdd: potentialThreat(target, actor)
+  factToRemove: 
+  actorMatters: 1
+  targetMatters: 1
+  description: If the player's (actor) fame from combat becomes high, characters
+    observing/affected (target) perceive them as a potential threat.

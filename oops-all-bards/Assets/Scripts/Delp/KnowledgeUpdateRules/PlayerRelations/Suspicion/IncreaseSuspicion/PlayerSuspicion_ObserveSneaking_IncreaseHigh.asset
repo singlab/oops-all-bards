@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9f2a7b2449211b4bb181b9b6539c887, type: 3}
+  m_Name: PlayerSuspicion_ObserveSneaking_IncreaseHigh
+  m_EditorClassIdentifier: 
+  interactionType: Observe
+  outcome: Observe_SuspiciousAction_Sneaking
+  factToAdd: playerIsHighlySuspicious(actor)
+  factToRemove: playerIsSuspicious(actor)
+  actorMatters: 1
+  targetMatters: 0
+  description: If the character (actor) observes the player sneaking suspiciously
+    (e.g., near a Guild location), increase suspicion level to high (removing lower
+    level).

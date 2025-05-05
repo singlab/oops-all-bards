@@ -27,6 +27,10 @@ public class CombatManager : MonoBehaviour
 
     public static CombatManager Instance => CombatManager._instance;
 
+    // private fields for event management
+    private Action<object> doAllyActionLambda;
+    private Action<object> doEnemyActionLambda;
+
     void Awake()
     {
         if (_instance == null)
@@ -60,12 +64,13 @@ public class CombatManager : MonoBehaviour
     // A function that uses the event management system to subscribe to events used in this manager.
     private void SubscribeToEvents()
     {
-        EventManager.Instance.SubscribeToEvent(EventType.AllyAI, DoAllyAction);
-
-        EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, DoEnemyAction);
-
+        // Create the lambda expression
+        doAllyActionLambda = (eventData) => DoAllyAction();
+        doEnemyActionLambda = (eventData) => DoEnemyAction();
+        // Subscribe to the events using the lambda expression
+        EventManager.Instance.SubscribeToEvent(EventType.AllyAI, doAllyActionLambda);
+        EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, doEnemyActionLambda);
     }
-
 
     // A function used to initialize the combat queue.
     public void InitCombatQueue(List<BasePlayer> party, List<BaseEnemy> enemies)

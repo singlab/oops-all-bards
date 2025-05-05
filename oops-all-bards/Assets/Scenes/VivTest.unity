@@ -230,6 +230,7 @@ GameObject:
   m_Component:
   - component: {fileID: 319780884}
   - component: {fileID: 319780883}
+  - component: {fileID: 319780885}
   m_Layer: 0
   m_Name: Viv
   m_TagString: Untagged
@@ -250,13 +251,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bindings: {fileID: 1216771529}
-  currentSupertask:
-    name: 
-    behaviors: []
-    actingCharacter: 0
-    targetCharacter: 0
-    inProgress: 0
-    evaluation: []
   simulateCif: 1
 --- !u!4 &319780884
 Transform:
@@ -273,6 +267,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &319780885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319780882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865cf1aaf54a6f143b4872c186ea2fe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rules:
+  - {fileID: 11400000, guid: ebb1d688b6e87fe4394ce7fa462ceafe, type: 2}
+  - {fileID: 11400000, guid: e05326a7d169a7d4eb9dcd750dd85aba, type: 2}
+  - {fileID: 11400000, guid: 18d9ea9c2cc05d047a21c6be9a603ab9, type: 2}
+  - {fileID: 11400000, guid: 72ff7d931436a22499b149bec4e1a824, type: 2}
+  - {fileID: 11400000, guid: 8a743021fb1c2a6459f737665c38e94c, type: 2}
 --- !u!1 &613507667
 GameObject:
   m_ObjectHideFlags: 0

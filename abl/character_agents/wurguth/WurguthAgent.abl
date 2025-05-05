@@ -4,17 +4,14 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
-import java.util.*; // Needed for List
+import java.util.*;
 
 behaving_entity WurguthAgent {
 
-    // Assume VivWME is registered and contains characterID.
     register act questionLocals(int, String) with QuestionLocals;
     register act observePlayer(int) with ObservePlayer;
     register act confrontPlayer(int) with ConfrontPlayer;
     register act setTrap(int, String) with SetTrap;
-
-    //### InvestigateSuspiciousActivity Behaviors ###
 
     // Top-level behavior to manage the entire supertask.  Viv will spawngoal this.
     sequential behavior investigateSuspiciousActivity(int characterId) {
@@ -25,48 +22,36 @@ behaving_entity WurguthAgent {
         with (persistent) subgoal manageInvestigation(characterId);
     }
 
-
     // This parallel behavior will hold all the individual action behaviors.
-    // Viv will dynamically add/remove subgoals to this behavior.
     parallel behavior manageInvestigation(int characterId) {
-      // This is a placeholder. The actual behaviors (questionLocals, etc.)
-      // will be spawned here by Viv, based on its DELP-based evaluation.
-      with(success_test{ (1 == 2) }) wait; //Always false, never terminates.
+        with(success_test{ (1 == 2) }) wait;
     }
 
-    // These are now simple sequential behaviors that just perform the action.
-    // They don't have any preconditions or wait conditions.  They are *only*
-    // executed when Viv explicitly spawns them as subgoals of manageInvestigation.
-
-     sequential behavior questionLocals(int characterId, String currentNpc) {
-        mental_act
-		{
-			System.out.println("Wurguth is questioning locals");
-		}
+    sequential behavior questionLocals(int characterId, String currentNpc) {
+        mental_act {
+          System.out.println("Wurguth is questioning locals");
+        }
         act questionLocals(characterId, currentNpc);
     }
 
     sequential behavior observePlayer(int characterId) {
-		mental_act
-		{
-			System.out.println("Wurguth is observing the player");
-		}
+        mental_act {
+          System.out.println("Wurguth is observing the player");
+        }
         act observePlayer(characterId);
     }
 
     sequential behavior confrontPlayer(int characterId) {
-		mental_act
-		{
-			System.out.println("Wurguth is confronting the player");
-		}
+        mental_act {
+          System.out.println("Wurguth is confronting the player");
+        }
         act confrontPlayer(characterId);
     }
 
-	sequential behavior setTrap(int characterId, String trapLocation)
-	{
-		mental_act {
-			System.out.println("Wurguth is setting a trap");
+    sequential behavior setTrap(int characterId, String trapLocation) {
+        mental_act {
+          System.out.println("Wurguth is setting a trap");
         }
-		act setTrap(characterId, trapLocation);
-	}
+        act setTrap(characterId, trapLocation);
+    }
 }

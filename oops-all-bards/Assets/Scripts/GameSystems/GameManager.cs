@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,12 @@ public class GameManager : MonoBehaviour
 
     public int tavernVisits = 1;
     public bool completedGame = false;
+
+    // private fields for event management
+    private Action<object> checkQueueLambda;
+    private Action<object> awaitPlayerInputLambda;
+    private Action<object> combatLossLambda;
+    private Action<object> combatWinLambda;
 
     // Singleton pattern
     void Awake()
@@ -73,10 +80,16 @@ public class GameManager : MonoBehaviour
     // A function that uses the event management system to subscribe to events used in this manager.
     private void SubscribeToEvents()
     {
-        EventManager.Instance.SubscribeToEvent(EventType.CheckQueue, CheckQueue);
-        EventManager.Instance.SubscribeToEvent(EventType.AwaitPlayerInput, AwaitPlayerInput);
-        EventManager.Instance.SubscribeToEvent(EventType.CombatLoss, CombatLoss);
-        EventManager.Instance.SubscribeToEvent(EventType.CombatWin, CombatWin);
+        // Create lambdas for the events that this manager should be aware of
+        checkQueueLambda = (eventData) => CheckQueue();
+        awaitPlayerInputLambda = (eventData) => AwaitPlayerInput();
+        combatLossLambda = (eventData) => CombatLoss();
+        combatWinLambda = (eventData) => CombatWin();
+
+        EventManager.Instance.SubscribeToEvent(EventType.CheckQueue, checkQueueLambda);
+        EventManager.Instance.SubscribeToEvent(EventType.AwaitPlayerInput, awaitPlayerInputLambda);
+        EventManager.Instance.SubscribeToEvent(EventType.CombatLoss, combatLossLambda);
+        EventManager.Instance.SubscribeToEvent(EventType.CombatWin, combatWinLambda);
     }
 
     public void CheckQueue()

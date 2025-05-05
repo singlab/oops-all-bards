@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,11 @@ namespace Viv
         // A reference to the bindings between supertasks, behaviors, and assumptions.
         [SerializeField] private CustomDictionary bindings;
         // The current supertask Viv is managing.
-        [SerializeField] private Supertask currentSupertask;
+        private Supertask currentSupertask;
         // Whether or not Viv should use simulated CiF input.
         [SerializeField] private bool simulateCif = true;
         private static Viv _instance;
-	    public static Viv Instance => Viv._instance;
+        public static Viv Instance => Viv._instance;
         // A registry that maps the integer ID of a character to the VivCharacter object associated with that ID.
         [SerializeField] private static Dictionary<int, VivCharacter> characterRegistry = new Dictionary<int, VivCharacter>();
 
@@ -23,13 +24,14 @@ namespace Viv
             if (_instance == null)
             {
                 _instance = this;
-            } else if (_instance != null)
+            }
+            else if (_instance != null)
             {
                 Destroy(gameObject);
             }
 
             DontDestroyOnLoad(gameObject);
-        } 
+        }
 
         void Start()
         {
@@ -41,7 +43,7 @@ namespace Viv
 
         void Update()
         {
-            
+
         }
 
         private void InitiateSupertask(Supertask supertask)
@@ -79,6 +81,15 @@ namespace Viv
             }
         }
 
+        public static void UnregisterCharacter(int characterId)
+        {
+            if (Instance != null && characterRegistry.ContainsKey(characterId))
+            {
+                characterRegistry.Remove(characterId);
+                Debug.Log($"Unregistered character ID: {characterId}");
+            }
+        }
+
         // A testing function that emulates CiF assigning a supertask for a given character.
         void SimulateCiFStart()
         {
@@ -103,6 +114,17 @@ namespace Viv
                     Debug.Log(a.ToString());
                 }
             }
+        }
+
+        public DELPEntity FindCharacterDELPEntity(int characterId)
+        {
+            if (characterRegistry.TryGetValue(characterId, out VivCharacter character))
+            {
+                return character.delpEntity;
+            }
+
+            Debug.LogWarning($"DELPEntity not found for character ID: {characterId}");
+            return null;
         }
     }
 
@@ -196,10 +218,12 @@ namespace Viv
                 if (current == "YES")
                 {
                     score.Truths += 1;
-                } else if (current == "NO")
+                }
+                else if (current == "NO")
                 {
                     score.Falsities += 1;
-                } else
+                }
+                else
                 {
                     score.Uncertainties += 1;
                 }
@@ -242,7 +266,7 @@ namespace Viv
             this.truths = 0;
             this.falsities = 0;
             this.uncertainties = 0;
-        } 
+        }
 
         public TFU(int truths, int falsities, int uncertainties)
         {
@@ -358,6 +382,9 @@ namespace Viv
         public enum Validity { DEFAULT, YES, NO, UNDECIDED };
         [SerializeField] private Validity isValid;
 
+        // private fields for event management
+        private Action<object> assignDelpResponseLambda;
+
         public Assumption()
         {
             this.actingCharacter = 0;
@@ -378,13 +405,15 @@ namespace Viv
         public override string ToString()
         {
             string toBuild = string.Format("{0}({1})", predicate, subject);
-            return toBuild; 
+            return toBuild;
         }
 
         // A utility function to query a DELP knowledgebase with the given assumption and validate it.
         public void Validate()
         {
-            EventManager.Instance.SubscribeToEvent(EventType.DelpResponse, AssignDELPResponse);
+            // Create lambda for event subscription
+            assignDelpResponseLambda = (eventData) => AssignDELPResponse();
+            EventManager.Instance.SubscribeToEvent(EventType.DelpResponse, assignDelpResponseLambda);
 
             DELPQuery query = new DELPQuery(this.ToString());
             DELPMessage msg = query.PrepareQuery();
@@ -401,18 +430,22 @@ namespace Viv
                 if (this.tmpResponse.data.answer.Contains("YES"))
                 {
                     this.isValid = Validity.YES;
-                } else if (this.tmpResponse.data.answer.Contains("NO"))
+                }
+                else if (this.tmpResponse.data.answer.Contains("NO"))
                 {
                     this.isValid = Validity.NO;
-                } else if (this.tmpResponse.data.answer.Contains("UNDECIDED"))
+                }
+                else if (this.tmpResponse.data.answer.Contains("UNDECIDED"))
                 {
                     this.isValid = Validity.UNDECIDED;
-                } else
+                }
+                else
                 {
                     this.isValid = Validity.DEFAULT;
                 }
                 Debug.Log("Assumption validated: " + this.isValid.ToString());
-            } else
+            }
+            else
             {
                 Debug.Log("Assumption could not be validated; mismatching query.");
             }
@@ -428,7 +461,7 @@ namespace Viv
 
     [System.Serializable]
     // A class that represents a binding between the name of a given supertask, and a list of names of the ABL behaviors associated with that supertask.
-    public class SupertaskBindings 
+    public class SupertaskBindings
     {
         public string key;
         public List<string> val;
@@ -436,7 +469,7 @@ namespace Viv
 
     [System.Serializable]
     // A class that represents a binding between the name of an ABL behavior, and a list of assumptions.
-    public class BehaviorBindings 
+    public class BehaviorBindings
     {
         public string key;
         public List<string> val;
@@ -444,7 +477,7 @@ namespace Viv
 
     [System.Serializable]
     // A class that represents a binding between the integer ID of a character, and the name of that character.
-    public class CharacterBindings 
+    public class CharacterBindings
     {
         public int key;
         public string val;

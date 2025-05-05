@@ -27,7 +27,21 @@ namespace Viv
                 return;
             }
 
-            Viv.RegisterCharacter(this);
+            if (Viv.Instance != null)
+            {
+                Viv.RegisterCharacter(this);
+            } else {
+                Debug.LogError($"Viv instance not found when trying to register {characterName}. Make sure Viv initializes first.");
+            }
+        }
+
+        void OnDestroy()
+        {
+            // Unregister when the GameObject is destroyed
+            if (Viv.Instance != null && characterID != -1)
+            {
+                Viv.UnregisterCharacter(characterID);
+            }
         }
     }
 }
