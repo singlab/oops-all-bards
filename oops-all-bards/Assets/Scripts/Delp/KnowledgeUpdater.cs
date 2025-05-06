@@ -7,9 +7,16 @@ public class KnowledgeUpdater : MonoBehaviour
 {
     public List<KnowledgeUpdateRule> rules;
     private System.Action<object> handleInteractionLambda;
+    private Viv.Viv vivInstance;
 
     void Start()
     {
+        vivInstance = Viv.Viv.Instance;
+        if (vivInstance == null)
+        {
+            Debug.LogError("Viv instance not found. KnowledgeUpdater will not function.");
+        }
+
         handleInteractionLambda = (eventData) => HandleInteraction(eventData);
 
         EventManager.Instance.SubscribeToEvent(EventType.OnInteraction, handleInteractionLambda);
@@ -25,120 +32,179 @@ public class KnowledgeUpdater : MonoBehaviour
 
     private void HandleInteraction(object eventData)
     {
+        if (vivInstance == null) return;
+
         Dictionary<string, object> data = eventData as Dictionary<string, object>;
-        if (data == null) { Debug.LogError("HandleInteraction received invalid eventData format."); return; }
+        if (data == null) { /* Error handling */ return; }
 
         GameObject actor = data.TryGetValue("actor", out object actorObj) ? actorObj as GameObject : null;
         GameObject target = data.TryGetValue("target", out object targetObj) ? targetObj as GameObject : null;
         string interactionType = data.TryGetValue("interactionType", out object typeObj) ? typeObj as string : null;
-        string receivedOutcome = data.TryGetValue("outcome", out object outcomeObj) ? outcomeObj as string : null; // <-- Get the string
+        string receivedOutcome = data.TryGetValue("outcome", out object outcomeObj) ? outcomeObj as string : null; // <-- Get the string outcome
 
-        if (actor == null || string.IsNullOrEmpty(interactionType) || string.IsNullOrEmpty(receivedOutcome)) // <-- Check string
+        if (actor == null || string.IsNullOrEmpty(interactionType) || string.IsNullOrEmpty(receivedOutcome)) // <-- Check string outcome
         {
-            Debug.LogError("KnowledgeUpdater received incomplete interaction data after unpacking.");
+            Debug.LogWarning("KnowledgeUpdater received incomplete interaction data after unpacking.");
             return;
         }
 
         foreach (KnowledgeUpdateRule rule in rules)
         {
-            // Check if the rule matches the event.
-            // Compare interactionType string and the outcome string
             if (string.Equals(rule.interactionType, interactionType, System.StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(rule.outcome, receivedOutcome, System.StringComparison.Ordinal)) // <-- String comparison
+                string.Equals(rule.outcome, receivedOutcome, System.StringComparison.Ordinal))
             {
-                ApplyRule(actor, target, rule);
+                List<VivCharacter> affectedCharacters = GetAffectedCharacters(actor, target, rule);
+
+                foreach (VivCharacter recipientCharacter in affectedCharacters)
+                {
+                    ApplyRuleToRecipient(actor, target, recipientCharacter, rule);
+                }
             }
         }
     }
 
-    private void ApplyRule(GameObject actor, GameObject target, KnowledgeUpdateRule rule)
+    // Determines which characters are affected by a rule based on the event and rule criteria
+    private List<VivCharacter> GetAffectedCharacters(GameObject actor, GameObject target, KnowledgeUpdateRule rule)
     {
-        // If the actor matters for this rule, update the delp entity for the actor.
-        if (rule.actorMatters)
-        {
-            VivCharacter actorVivChar = actor.GetComponent<VivCharacter>();
-            if (actorVivChar != null && actorVivChar.characterID != -1) // Check if component exists and ID is valid
-            {
-                int id = actorVivChar.characterID;
-                DELPEntity delp = Viv.Viv.Instance.FindCharacterDELPEntity(id);
-                if (delp != null)
-                {
-                    AddFact(actor, target, rule.factToAdd, delp);
-                    RemoveFact(actor, target, rule.factToRemove, delp);
-                }
-                else { Debug.LogWarning($"Could not find DELPEntity for actor ID: {id}"); }
-            }
-            else { Debug.LogWarning($"Actor '{actor.name}' does not have a valid VivCharacter component or ID."); }
-        }
+        List<VivCharacter> affected = new List<VivCharacter>();
+        VivCharacter actorViv = actor?.GetComponent<VivCharacter>(); // Use ?. for null check
+        VivCharacter targetViv = target?.GetComponent<VivCharacter>();
 
-        // If the target matters, update the delp entity for the target.
-        // Make sure target is not null before proceeding
-        if (rule.targetMatters && target != null)
+        switch (rule.applicability)
         {
-            VivCharacter targetVivChar = target.GetComponent<VivCharacter>();
-            if (targetVivChar != null && targetVivChar.characterID != -1)
-            {
-                int id = targetVivChar.characterID;
-                DELPEntity delp = Viv.Viv.Instance.FindCharacterDELPEntity(id);
-                if (delp != null)
+            case RuleApplicability.DirectParticipantsOnly:
+                if (rule.actorMatters && actorViv != null) affected.Add(actorViv);
+                // Add target only if it's different from actor or if actor doesn't matter
+                if (rule.targetMatters && targetViv != null && (!rule.actorMatters || actorViv != targetViv))
                 {
-                    AddFact(actor, target, rule.factToAdd, delp);
-                    RemoveFact(actor, target, rule.factToRemove, delp);
+                    if (!affected.Contains(targetViv)) affected.Add(targetViv); // Avoid adding twice
                 }
-                else { Debug.LogWarning($"Could not find DELPEntity for target ID: {id}"); }
-            }
-            else { Debug.LogWarning($"Target '{target.name}' does not have a valid VivCharacter component or ID."); }
+                break;
+
+            case RuleApplicability.SpecificCharacterByID:
+                if (rule.specificCharacterID != -1)
+                {
+                    // We need Viv to find characters by ID now
+                    VivCharacter specificChar = vivInstance.FindVivCharacter(rule.specificCharacterID); // Assumes Viv.FindVivCharacter(id) exists
+                    if (specificChar != null) affected.Add(specificChar);
+                    else { Debug.LogWarning($"Rule '{rule.name}' references specific Character ID {rule.specificCharacterID} which was not found."); }
+                }
+                break;
+
+            // case RuleApplicability.CharactersWithFaction:
+            //     if (!string.IsNullOrEmpty(rule.specificFaction))
+            //     {
+            //         // We need Viv or another manager to find characters by faction
+            //         affected.AddRange(vivInstance.FindCharactersByFaction(rule.specificFaction)); // Assumes Viv.FindCharactersByFaction(name) exists
+            //     }
+            //     break;
+
+            case RuleApplicability.CharactersNearActor:
+                if (actor != null)
+                {
+                    affected.AddRange(FindNearbyVivCharacters(actor.transform.position, rule.proximityRadius));
+                }
+                break;
+
+            case RuleApplicability.CharactersNearTarget:
+                if (target != null)
+                {
+                    affected.AddRange(FindNearbyVivCharacters(target.transform.position, rule.proximityRadius));
+                }
+                break;
+
+            case RuleApplicability.AllCharacters:
+                affected.AddRange(vivInstance.GetAllRegisteredCharacters()); // Assumes Viv.GetAllRegisteredCharacters() exists
+                break;
+        }
+        return affected;
+    }
+
+    private void ApplyRuleToRecipient(GameObject eventActor, GameObject eventTarget, VivCharacter recipient, KnowledgeUpdateRule rule)
+    {
+        if (recipient == null) return;
+
+        DELPEntity delp = recipient.delpEntity; // Get DELP entity directly
+        if (delp != null)
+        {
+            // Apply fact changes, passing the recipient context
+            AddFact(eventActor, eventTarget, recipient, rule.factToAdd, delp);
+            RemoveFact(eventActor, eventTarget, recipient, rule.factToRemove, delp);
+        }
+        else
+        {
+            Debug.LogWarning($"VivCharacter '{recipient.characterName}' has no DELPEntity assigned when trying to apply rule '{rule.name}'.");
         }
     }
 
     // Add fact helper function.
-    private void AddFact(GameObject actor, GameObject target, string fact, DELPEntity delp)
+    private void AddFact(GameObject eventActor, GameObject eventTarget, VivCharacter recipient, string factTemplate, DELPEntity delp)
     {
-        if (delp != null && !string.IsNullOrEmpty(fact)) // Check if fact string is valid
+        if (delp != null && !string.IsNullOrEmpty(factTemplate))
         {
-            string processedFact = ProcessFactString(actor, target, fact);
-            if (!string.IsNullOrEmpty(processedFact)) // Ensure processing didn't result in empty string
+            string processedFact = ProcessFactString(eventActor, eventTarget, recipient, factTemplate);
+            if (!string.IsNullOrEmpty(processedFact))
             {
                 delp.AddFact(processedFact);
+                // PrepareAndUpdate is called within DELPEntity's AddFact
             }
         }
     }
 
-    // Remove fact helper function.
-    private void RemoveFact(GameObject actor, GameObject target, string fact, DELPEntity delp)
+    private void RemoveFact(GameObject eventActor, GameObject eventTarget, VivCharacter recipient, string factTemplate, DELPEntity delp)
     {
-        if (delp != null && !string.IsNullOrEmpty(fact)) // Check if fact string is valid
+        if (delp != null && !string.IsNullOrEmpty(factTemplate))
         {
-            string processedFact = ProcessFactString(actor, target, fact);
-            if (!string.IsNullOrEmpty(processedFact)) // Ensure processing didn't result in empty string
+            string processedFact = ProcessFactString(eventActor, eventTarget, recipient, factTemplate);
+            if (!string.IsNullOrEmpty(processedFact))
             {
                 delp.RemoveFact(processedFact);
+                // PrepareAndUpdate is called within DELPEntity's RemoveFact
             }
         }
     }
 
     // Process fact string.
-    private string ProcessFactString(GameObject actor, GameObject target, string fact)
+    private string ProcessFactString(GameObject eventActor, GameObject eventTarget, VivCharacter recipient, string factTemplate)
     {
-        if (string.IsNullOrEmpty(fact)) return string.Empty;
+        if (string.IsNullOrEmpty(factTemplate) || recipient == null) return string.Empty;
 
-        // Replace placeholders with actual values. This makes the rules MUCH more flexible.
-        string processedFact = fact;
+        string processedFact = factTemplate;
 
-        // Use actor name (can be changed to ID if DELP handles integers better)
-        if (actor != null)
+        // Replace 'self' with the recipient's name/ID
+        // Using name here, adjust if using ID in DELP facts
+        processedFact = processedFact.Replace("self", recipient.characterName);
+
+        // Replace 'actor'
+        if (eventActor != null)
         {
-            processedFact = processedFact.Replace("actor", actor.GetComponent<VivCharacter>()?.characterName ?? actor.name); // Use VivCharacter name if available
+            processedFact = processedFact.Replace("actor", eventActor.GetComponent<VivCharacter>()?.characterName ?? eventActor.name);
         }
 
-        // Check if the target is valid before getting its name.
-        if (target != null)
+        // Replace 'target'
+        if (eventTarget != null)
         {
-            processedFact = processedFact.Replace("target", target.GetComponent<VivCharacter>()?.characterName ?? target.name); // Use VivCharacter name if available
+            processedFact = processedFact.Replace("target", eventTarget.GetComponent<VivCharacter>()?.characterName ?? eventTarget.name);
         }
 
-        // Add more placeholder replacements if needed (e.g., "location", "item")
+        // Add more placeholder replacements as needed
 
         return processedFact;
+    }
+
+    private IEnumerable<VivCharacter> FindNearbyVivCharacters(Vector3 position, float radius)
+    {
+        Collider[] colliders = Physics.OverlapSphere(position, radius);
+        List<VivCharacter> nearby = new List<VivCharacter>();
+        foreach (Collider hit in colliders)
+        {
+            VivCharacter vivChar = hit.GetComponent<VivCharacter>();
+            if (vivChar != null)
+            {
+                nearby.Add(vivChar);
+            }
+        }
+        return nearby;
+        // Alternative: Iterate through Viv.Instance.GetAllRegisteredCharacters() and check distance.
     }
 }

@@ -21,20 +21,22 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] public GameObject textBubblePrefab;
     [SerializeField] public GameObject questUI;
     public bool isInDialogue = false;
-    public delegate void DialogueStateChangedEventHandler(bool isInDialogue); 
+    public delegate void DialogueStateChangedEventHandler(bool isInDialogue);
     public event DialogueStateChangedEventHandler OnDialogueStateChanged;
 
     private int nodeIndex;
     private int dialogueIndex;
+    private GameObject currentSpeaker;
+    private GameObject currentListener;
 
-    private void Awake() 
+    private void Awake()
     {
-        if (_instance == null) 
+        if (_instance == null)
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
-        } 
-        else 
+        }
+        else
         {
             Destroy(gameObject);
         }
@@ -59,7 +61,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(int dialogueID) 
+    public void StartDialogue(int dialogueID)
     {
         Cursor.lockState = CursorLockMode.Confined;
         nodeIndex = 0;
@@ -72,16 +74,16 @@ public class DialogueManager : MonoBehaviour
         OnDialogueStateChanged?.Invoke(isInDialogue);
     }
 
-    private void RenderDialogueUI(Dialogue dialogue) 
+    private void RenderDialogueUI(Dialogue dialogue)
     {
         speakerName.text = dialogue.SpeakerName;
-        portrait.sprite = Resources.Load<Sprite>($"Portraits/{dialogue.SpeakerName}"); 
+        portrait.sprite = Resources.Load<Sprite>($"Portraits/{dialogue.SpeakerName}");
         // Handle missing portrait scenario here (e.g., use a default portrait)
 
         DialogueNode currentNode = dialogue.DialogueNodes[nodeIndex];
         RenderCurrentNode(currentNode);
         dialogueUI.SetActive(true);
-        dialogueUI.GetComponent<Animator>().Play("dialogueBox"); 
+        dialogueUI.GetComponent<Animator>().Play("dialogueBox");
     }
 
     public void ToggleDialogueUI()
@@ -90,12 +92,12 @@ public class DialogueManager : MonoBehaviour
         dialogueUI.GetComponent<Animator>().Play("dialogueBox");
     }
 
-    private void RenderCurrentNode(DialogueNode node) 
+    private void RenderCurrentNode(DialogueNode node)
     {
         ClearNodeResponses();
         nodeText.text = node.NodeText;
 
-        foreach (NodeResponse response in node.NodeResponses) 
+        foreach (NodeResponse response in node.NodeResponses)
         {
             GameObject responseObj = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform);
             responseObj.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
@@ -106,59 +108,61 @@ public class DialogueManager : MonoBehaviour
                 if (response.SkillCheckTarget <= PartyManager.Instance.FindPartyMemberById(0).PlayerClass.GetBaseStatByName(response.SkillCheck).ModifiedValue)
                 {
                     responseObj.AddComponent<DialogueHighlight>().highlightType = DialogueHighlight.DialogueHighlightType.PassedSkillCheck;
-                    responseObj.GetComponent<Button>().onClick.AddListener(() => 
+                    responseObj.GetComponent<Button>().onClick.AddListener(() =>
                     {
-                        NextNode(response.NextNode); 
-                        if (response.Then != null) 
+                        NextNode(response.NextNode);
+                        if (response.Then != null)
                         {
-                            Invoke(response.Then, 0); 
+                            Invoke(response.Then, 0);
                         }
                     });
-                } else
+                }
+                else
                 {
                     responseObj.AddComponent<DialogueHighlight>().highlightType = DialogueHighlight.DialogueHighlightType.FailedSkillCheck;
                 }
-            } else
+            }
+            else
             {
                 responseObj.AddComponent<DialogueHighlight>();
-                responseObj.GetComponent<Button>().onClick.AddListener(() => 
+                responseObj.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    NextNode(response.NextNode); 
-                    if (response.Then != null) 
+                    NextNode(response.NextNode);
+                    if (response.Then != null)
                     {
-                        Invoke(response.Then, 0); 
+                        Invoke(response.Then, 0);
                     }
                 });
             }
         }
     }
 
-    private void ClearNodeResponses() 
+    private void ClearNodeResponses()
     {
-        foreach (Transform child in nodeContentOrganizer.transform) 
+        foreach (Transform child in nodeContentOrganizer.transform)
         {
             Destroy(child.gameObject);
         }
     }
 
-    public void NextNode(int index) 
+    public void NextNode(int index)
     {
-        if (index == -1) 
+        if (index == -1)
         {
             CloseDialogue();
-        } 
-        else if (index == -2) 
+        }
+        else if (index == -2)
         {
             CloseDialogue();
-            DemoManager.Instance.RecruitQuinton(); 
+            DemoManager.Instance.RecruitQuinton();
             GameObject.Find("Quinton").GetComponent<NPCMovement>().SendQuintonToBackroom();
-        } 
-        else if (index == -999) 
+        }
+        else if (index == -999)
         {
             CloseDialogue();
-            DemoManager.Instance.LoadScene("GigDemo"); 
-        } 
-        else 
+            DemoManager.Instance.LoadScene("GigDemo");
+        }
+        else
         {
             nodeIndex = index;
             DialogueNode currentNode = jsonReader.dialogues.GetDialogue(dialogueIndex).DialogueNodes[nodeIndex];
@@ -166,13 +170,13 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    private void CloseDialogue() 
+    private void CloseDialogue()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        dialogueUI.GetComponent<Animator>().Play("dialogueBoxClose"); 
+        dialogueUI.GetComponent<Animator>().Play("dialogueBoxClose");
         GameManager.Instance.TogglePlayerControls();
         isInDialogue = false;
-        OnDialogueStateChanged?.Invoke(isInDialogue); 
+        OnDialogueStateChanged?.Invoke(isInDialogue);
     }
 
     public void SpawnTextBubble(GameObject character, string text)

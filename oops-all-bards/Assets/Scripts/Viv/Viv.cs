@@ -90,6 +90,17 @@ namespace Viv
             }
         }
 
+        public VivCharacter FindVivCharacter(int characterId)
+        {
+            characterRegistry.TryGetValue(characterId, out VivCharacter character);
+            return character;
+        }
+
+        public IEnumerable<VivCharacter> GetAllRegisteredCharacters()
+        {
+            return new List<VivCharacter>(characterRegistry.Values);
+        }
+
         // A testing function that emulates CiF assigning a supertask for a given character.
         void SimulateCiFStart()
         {

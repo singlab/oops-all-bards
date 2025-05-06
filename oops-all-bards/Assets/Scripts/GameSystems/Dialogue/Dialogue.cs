@@ -69,8 +69,10 @@ public class NodeResponse
     [SerializeField] private string then; // a method name belonging to DialogueManager
     [SerializeField] private string skillCheck;
     [SerializeField] private int skillCheckTarget;
-    // TODO: Implement effects of choosing a response in a dialogue
-
+    public bool triggersInteraction = false;
+    public string interactionType = "";
+    public string outcomeOnPass = "";
+    public string outcomeOnFail = "";
     public string NodeResponseText
     {
         get { return this.nodeResponseText; }
