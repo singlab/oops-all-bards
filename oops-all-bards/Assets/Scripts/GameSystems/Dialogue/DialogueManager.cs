@@ -26,8 +26,8 @@ public class DialogueManager : MonoBehaviour
 
     private int nodeIndex;
     private int dialogueIndex;
-    private GameObject currentSpeaker;
-    private GameObject currentListener;
+    private GameObject currentSpeaker_eventActor; // often player
+    private GameObject currentListener_eventTarget; // the one being interacted with
 
     private void Awake()
     {
@@ -63,13 +63,56 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(int dialogueID)
     {
-        Cursor.lockState = CursorLockMode.Confined;
-        nodeIndex = 0;
-        GameManager.Instance.TogglePlayerControls();
-        dialogueIndex = dialogueID;
+        if (jsonReader == null || jsonReader.dialogues == null)
+        {
+            Debug.LogError("DialogueManager: JSONReader or its dialogues data is not initialized!");
+            CloseDialogue(); // Attempt to clean up
+            return;
+        }
 
         Dialogue dialogue = jsonReader.dialogues.GetDialogue(dialogueID);
-        RenderDialogueUI(dialogue);
+        if (dialogue == null)
+        {
+            Debug.LogError($"DialogueManager: Dialogue with ID {dialogueID} not found.");
+            CloseDialogue();
+            return;
+        }
+
+        currentListener_eventTarget = GameObject.FindGameObjectWithTag("Player");
+        if (currentListener_eventTarget == null)
+        {
+            Debug.LogError("DialogueManager: Player GameObject (tagged 'Player') not found. Cannot set as listener for event triggering.");
+        }
+
+        string npcNameFromDialogue = dialogue.SpeakerName;
+        currentSpeaker_eventActor = GameObject.Find(npcNameFromDialogue);
+        if (currentSpeaker_eventActor == null)
+        {
+            Debug.LogError($"DialogueManager: NPC GameObject named '{npcNameFromDialogue}' (from dialogue.SpeakerName) not found. Cannot set as speaker for event triggering.");
+        }
+
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        GameObject npcObject = GameObject.Find(dialogue.SpeakerName); // This is the NPC whose dialogue it is
+
+        if (playerObject != null && npcObject != null)
+        {
+            // Standard scenario: Player (actor) interacts with NPC (target)
+            currentSpeaker_eventActor = playerObject;
+            currentListener_eventTarget = npcObject;
+        }
+        else
+        {
+            Debug.LogWarning("DialogueManager: Could not reliably set event actor/target. Player or NPC not found.");
+            currentSpeaker_eventActor = null; // Ensure they are null if setup failed
+            currentListener_eventTarget = null;
+        }
+
+        Cursor.lockState = CursorLockMode.Confined;
+        nodeIndex = 0;
+        if (GameManager.Instance != null) GameManager.Instance.TogglePlayerControls();
+        dialogueIndex = dialogueID;
+
+        RenderDialogueUI(dialogue); // This sets the UI speaker name from dialogue.SpeakerName
         isInDialogue = true;
         OnDialogueStateChanged?.Invoke(isInDialogue);
     }
@@ -97,43 +140,107 @@ public class DialogueManager : MonoBehaviour
         ClearNodeResponses();
         nodeText.text = node.NodeText;
 
+        if (node.NodeResponses == null)
+        {
+            Debug.LogWarning($"Dialogue Node {node.ID} (Text: \"{node.NodeText}\") has no responses.");
+            return;
+        }
+
         foreach (NodeResponse response in node.NodeResponses)
         {
             GameObject responseObj = Instantiate(nodeResponsePrefab, nodeContentOrganizer.transform);
-            responseObj.GetComponentInChildren<TMP_Text>().text = response.NodeResponseText;
+            Button responseButton = responseObj.GetComponent<Button>();
+            TMP_Text responseText = responseObj.GetComponentInChildren<TMP_Text>();
+            DialogueHighlight highlight = responseObj.GetComponent<DialogueHighlight>() ?? responseObj.AddComponent<DialogueHighlight>(); // Get or Add
 
-            if (response.SkillCheck != null)
+            NodeResponse currentResponseData = response;
+
+            string displayText = currentResponseData.NodeResponseText;
+            bool skillCheckDefined = !string.IsNullOrEmpty(currentResponseData.SkillCheck) && currentResponseData.SkillCheckTarget > 0;
+            DialogueHighlight.DialogueHighlightType currentHighlightType = DialogueHighlight.DialogueHighlightType.Default;
+
+            if (skillCheckDefined)
             {
-                responseObj.GetComponentInChildren<TMP_Text>().text += " (" + $"{response.SkillCheck}" + $" {response.SkillCheckTarget}" + ")";
-                if (response.SkillCheckTarget <= PartyManager.Instance.FindPartyMemberById(0).PlayerClass.GetBaseStatByName(response.SkillCheck).ModifiedValue)
+                displayText += $" ({currentResponseData.SkillCheck} {currentResponseData.SkillCheckTarget})";
+                bool skillCheckPassed = true; // Assume pass until checked
+                BasePlayer player = PartyManager.Instance?.FindPartyMemberById(0);
+                if (player != null && player.PlayerClass != null)
                 {
-                    responseObj.AddComponent<DialogueHighlight>().highlightType = DialogueHighlight.DialogueHighlightType.PassedSkillCheck;
-                    responseObj.GetComponent<Button>().onClick.AddListener(() =>
+                    var stat = player.PlayerClass.GetBaseStatByName(currentResponseData.SkillCheck);
+                    if (stat != null)
                     {
-                        NextNode(response.NextNode);
-                        if (response.Then != null)
-                        {
-                            Invoke(response.Then, 0);
-                        }
-                    });
+                        skillCheckPassed = stat.ModifiedValue >= currentResponseData.SkillCheckTarget;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Skill '{currentResponseData.SkillCheck}' not found for player.");
+                        skillCheckPassed = false;
+                    }
                 }
                 else
                 {
-                    responseObj.AddComponent<DialogueHighlight>().highlightType = DialogueHighlight.DialogueHighlightType.FailedSkillCheck;
+                    Debug.LogError("Player data for skill check not found!");
+                    skillCheckPassed = false;
                 }
+
+                currentHighlightType = skillCheckPassed ?
+                    DialogueHighlight.DialogueHighlightType.PassedSkillCheck :
+                    DialogueHighlight.DialogueHighlightType.FailedSkillCheck;
             }
-            else
+            // Else, currentHighlightType remains DialogueHighlightType.Default
+
+            responseText.text = displayText;
+            highlight.InitializeHighlight(currentHighlightType);
+
+            // --- onClick Listener ---
+            responseButton.onClick.AddListener(() =>
             {
-                responseObj.AddComponent<DialogueHighlight>();
-                responseObj.GetComponent<Button>().onClick.AddListener(() =>
+                // Optional: Check if the button is actually interactable before processing
+                // This check is somewhat redundant if DialogueHighlight correctly disables it,
+                // but can be a failsafe.
+                if (!responseButton.interactable)
                 {
-                    NextNode(response.NextNode);
-                    if (response.Then != null)
+                    Debug.Log($"Clicked a non-interactable (failed skill check) response: '{currentResponseData.NodeResponseText}'");
+                    return; // Don't process click for non-interactable buttons
+                }
+
+                // Re-evaluate skill check pass/fail status for outcome determination
+                // (or use the 'currentHighlightType' if confident it won't change)
+                bool finalSkillCheckResult = true;
+                if (skillCheckDefined)
+                {
+                    BasePlayer player = PartyManager.Instance?.FindPartyMemberById(0);
+                    if (player != null && player.PlayerClass != null)
                     {
-                        Invoke(response.Then, 0);
+                        var stat = player.PlayerClass.GetBaseStatByName(currentResponseData.SkillCheck);
+                        if (stat != null) finalSkillCheckResult = stat.ModifiedValue >= currentResponseData.SkillCheckTarget;
+                        else finalSkillCheckResult = false;
                     }
-                });
-            }
+                    else finalSkillCheckResult = false;
+                }
+
+                // Trigger Interaction Event if configured
+                if (currentResponseData.triggersInteraction && !string.IsNullOrEmpty(currentResponseData.interactionType))
+                {
+                    string outcomeToTrigger = finalSkillCheckResult ? currentResponseData.outcomeOnPass : currentResponseData.outcomeOnFail;
+                    if (!string.IsNullOrEmpty(outcomeToTrigger))
+                    {
+                        if (currentSpeaker_eventActor != null && currentListener_eventTarget != null)
+                        {
+                            EventManager.Instance.TriggerInteraction(
+                                currentSpeaker_eventActor,
+                                currentListener_eventTarget,
+                                currentResponseData.interactionType,
+                                outcomeToTrigger
+                            );
+                        }
+                        else { /* Error Log */ }
+                    }
+                }
+
+                NextNode(currentResponseData.NextNode);
+                if (!string.IsNullOrEmpty(currentResponseData.Then)) Invoke(currentResponseData.Then, 0);
+            });
         }
     }
 

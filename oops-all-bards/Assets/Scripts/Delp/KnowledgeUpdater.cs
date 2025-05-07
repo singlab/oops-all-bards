@@ -167,27 +167,38 @@ public class KnowledgeUpdater : MonoBehaviour
     // Process fact string.
     private string ProcessFactString(GameObject eventActor, GameObject eventTarget, VivCharacter recipient, string factTemplate)
     {
-        if (string.IsNullOrEmpty(factTemplate) || recipient == null) return string.Empty;
+        if (string.IsNullOrEmpty(factTemplate) || recipient == null)
+        {
+            Debug.LogWarning("ProcessFactString: Null factTemplate or recipient.");
+            return string.Empty;
+        }
 
         string processedFact = factTemplate;
 
-        // Replace 'self' with the recipient's name/ID
-        // Using name here, adjust if using ID in DELP facts
-        processedFact = processedFact.Replace("self", recipient.characterName);
+        // 1. Replace "{self}" with the recipient's identifier
+        processedFact = processedFact.Replace("{self}", recipient.characterName);
 
-        // Replace 'actor'
+        // 2. Replace "{eventActor}"
         if (eventActor != null)
         {
-            processedFact = processedFact.Replace("actor", eventActor.GetComponent<VivCharacter>()?.characterName ?? eventActor.name);
+            VivCharacter evActorVivChar = eventActor.GetComponent<VivCharacter>();
+            processedFact = processedFact.Replace("{eventActor}", evActorVivChar?.characterName ?? eventActor.name);
+        }
+        else
+        {
+            processedFact = processedFact.Replace("{eventActor}", "unknownActor"); // Or handle as error
         }
 
-        // Replace 'target'
+        // 3. Replace "{eventTarget}"
         if (eventTarget != null)
         {
-            processedFact = processedFact.Replace("target", eventTarget.GetComponent<VivCharacter>()?.characterName ?? eventTarget.name);
+            VivCharacter evTargetVivChar = eventTarget.GetComponent<VivCharacter>();
+            processedFact = processedFact.Replace("{eventTarget}", evTargetVivChar?.characterName ?? eventTarget.name);
         }
-
-        // Add more placeholder replacements as needed
+        else
+        {
+            processedFact = processedFact.Replace("{eventTarget}", "unknownTarget"); // Or handle as error
+        }
 
         return processedFact;
     }

@@ -152,9 +152,9 @@ public class Publisher
         Handlers?.Invoke(eventData);
     }
 
-     public void UnSubscribeAllMethods()
+    public void UnSubscribeAllMethods()
     {
-        if(Handlers != null)
+        if (Handlers != null)
         {
             // Removes each action associates to this handler
             foreach (Action<object> handler in Handlers.GetInvocationList())
@@ -255,10 +255,12 @@ public class EventManager : MonoBehaviour
     // This is the method other scripts will call to trigger interactions.
     public void TriggerInteraction(GameObject actor, GameObject target, string interactionType, string outcome)
     {
+        Debug.Log($"EventManager: TriggerInteraction called with actor: {actor}, target: {target}, interactionType: {interactionType}, outcome: {outcome}");
+
         if (actor == null) { Debug.LogError("TriggerInteraction called with null actor."); return; }
         if (string.IsNullOrEmpty(interactionType)) { Debug.LogError("TriggerInteraction called with null or empty interactionType."); return; }
         if (string.IsNullOrEmpty(outcome)) { Debug.LogError("TriggerInteraction called with null or empty outcome string."); return; }
-        
+
         // Package the data into a dictionary.  This is flexible and avoids creating a new class.
         Dictionary<string, object> eventData = new Dictionary<string, object>()
         {

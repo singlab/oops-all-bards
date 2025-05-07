@@ -1,41 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DELP;
 
-namespace Viv 
+namespace Viv
 {
+    [RequireComponent(typeof(VivCharacterController))]
     public class VivCharacter : MonoBehaviour
     {
+        [Header("Core Info")]
         public string characterName = "DefaultName";
+        [Tooltip("Unique ID for this character used by AI systems.")]
         public int characterID = -1;
+
+        [Header("AI Components")]
+        [Tooltip("The DELP knowledge base asset for this character.")]
         public DELPEntity delpEntity;
 
-        void Start()
+
+        [Header("Component References")]
+        [SerializeField]
+        private VivCharacterController characterController;
+        public VivCharacterController Controller => characterController;
+
+
+        protected virtual void Awake()
         {
-            // Initialization logic specific to VivCharacter can go here
-            Debug.Log($"VivCharacter '{characterName}' initialized.");
-            
+            if (characterController == null)
+            {
+                characterController = GetComponent<VivCharacterController>();
+            }
+        }
+
+
+        protected virtual void Start()
+        {
+            // Validate required data
             if (characterID == -1)
             {
-                Debug.LogWarning($"VivCharacter ID for character '{characterName}' is not set. Please assign a valid ID.");
+                Debug.LogWarning($"VivCharacter ID for '{characterName}' is not set. Please assign a valid ID.", this);
             }
-
             if (delpEntity == null)
             {
-                Debug.LogError($"VivCharacter '{gameObject.name}' is missing its required DELPEntity ScriptableObject!", this);
-                // this.enabled = false;
+                Debug.LogError($"VivCharacter '{characterName}' is missing its required DELPEntity ScriptableObject!", this);
+                enabled = false; // Disable this component if critical data is missing
                 return;
             }
 
+            // Register with the main Viv system
             if (Viv.Instance != null)
             {
                 Viv.RegisterCharacter(this);
-            } else {
+            }
+            else
+            {
                 Debug.LogError($"Viv instance not found when trying to register {characterName}. Make sure Viv initializes first.");
             }
         }
 
-        void OnDestroy()
+        protected virtual void OnDestroy()
         {
             // Unregister when the GameObject is destroyed
             if (Viv.Instance != null && characterID != -1)

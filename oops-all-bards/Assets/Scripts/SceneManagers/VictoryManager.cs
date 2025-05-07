@@ -22,7 +22,7 @@ public class VictoryManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private Reward GenerateReward()
@@ -44,7 +44,8 @@ public class VictoryManager : MonoBehaviour
     private void ApplyRewardToPlayer(Reward reward)
     {
         BasePlayer player = PartyManager.Instance.FindPartyMemberById(0);
-        player.Fame += reward.Fame;
+
+        FameManager.Instance?.AddFame(reward.Fame, player);
         player.Gold += reward.Gold;
         player.CiFData = new CiFData();
         Affinity quinton = new Affinity(1, reward.AffinityIncrease);

@@ -1,11 +1,9 @@
 {
-    "quests":
-    [
+    "quests": [
         {
             "name": "Humble Bard-ginnings",
             "id": 0,
-            "stages":
-            [
+            "stages": [
                 {
                     "id": 0,
                     "npcTargetName": "Samaren",
@@ -32,8 +30,7 @@
         {
             "name": "Long Shadows",
             "id": 1,
-            "stages":
-            [
+            "stages": [
                 {
                     "id": 0,
                     "npcTargetName": "Quinton",
@@ -61,13 +58,15 @@
             ],
             "complete": false,
             "linear": false,
-            "parallelStages": [2,3]
+            "parallelStages": [
+                2,
+                3
+            ]
         },
         {
             "name": "Theatrical Skullduggery",
             "id": 2,
-            "stages":
-            [
+            "stages": [
                 {
                     "id": 0,
                     "npcTargetName": "Alera",
@@ -83,7 +82,11 @@
             ],
             "complete": false,
             "linear": true,
-            "parallelStages": []
+            "parallelStages": [],
+            "triggersInteractionOnComplete": true,
+            "onCompleteInteractionType": "Assist",
+            "onCompleteInteractionOutcome": "Assist_SuccessGuildAlly",
+            "onCompleteInteractionTargetName": "Alera"
         }
     ]
 }

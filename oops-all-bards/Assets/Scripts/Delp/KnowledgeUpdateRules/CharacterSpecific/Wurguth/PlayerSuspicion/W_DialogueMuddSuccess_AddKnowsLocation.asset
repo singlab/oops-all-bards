@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9f2a7b2449211b4bb181b9b6539c887, type: 3}
-  m_Name: PlayerSuspicion_DialogueGuildSuccess_Increase
+  m_Name: W_DialogueMuddSuccess_AddKnowsLocation
   m_EditorClassIdentifier: 
   interactionType: Dialogue
   outcome: Dialogue_GuildInfoSuccess
-  factToAdd: playerIsSuspicious(target)
+  factToAdd: knowsLocationOf({self}, guildMeetingSpot)
   factToRemove: 
-  actorMatters: 0
+  applicability: 1
+  specificCharacterID: -1
+  specificFaction: 
+  proximityRadius: 10
+  actorMatters: 1
   targetMatters: 1
-  description: If the player successfully gets Guild info via dialogue, the listener/observer
-    (target) becomes suspicious.
+  description: Adds knowledge Player knows location when they get info from Mudd.

@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9f2a7b2449211b4bb181b9b6539c887, type: 3}
-  m_Name: Threat_ReputationFameHighCombat_IncreasePotential
+  m_Name: W_ReputationHigh_AddPotentialThreat
   m_EditorClassIdentifier: 
   interactionType: ReputationChange
   outcome: Reputation_Fame_High_Combat
-  factToAdd: potentialThreat(target, actor)
+  factToAdd: considersPotentialThreat({self}, {eventActor})
   factToRemove: 
+  applicability: 1
+  specificCharacterID: -1
+  specificFaction: 
+  proximityRadius: 10
   actorMatters: 1
   targetMatters: 1
-  description: If the player's (actor) fame from combat becomes high, characters
-    observing/affected (target) perceive them as a potential threat.
+  description: Adds belief Player is potential threat due to high fame.

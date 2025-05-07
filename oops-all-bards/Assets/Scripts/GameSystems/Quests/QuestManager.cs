@@ -18,13 +18,13 @@ public class QuestManager : MonoBehaviour
     public List<Quest> completedQuests = new List<Quest>();
     private GameObject currentQuestMarker;
     private int currentQuestIndex = 0; // Index in the activeQuests list
-    
+
     // Dictionary to store the mapping between quest stages and their associated DialogueEvents
     private Dictionary<int, Dictionary<int, DialogueEvent>> questStageToDialogueEventMap = new Dictionary<int, Dictionary<int, DialogueEvent>>();
 
     // Dictionary to store instantiated quest start markers, key is quest ID, value is the GameObject
     private Dictionary<int, GameObject> questStartMarkers = new Dictionary<int, GameObject>();
-    
+
 
     void Awake()
     {
@@ -76,7 +76,7 @@ public class QuestManager : MonoBehaviour
 
     private void HandleDialogueStateChanged(bool isInDialogue)
     {
-        questUI.SetActive(!isInDialogue); 
+        questUI.SetActive(!isInDialogue);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -164,7 +164,9 @@ public class QuestManager : MonoBehaviour
                         questStageText.text += (questStageText.text != "" ? "\n\n" : "") + currentQuest.Stages[stageIndex].DisplayText;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 questStageText.text = currentQuest.Stages[currentStageIndex].DisplayText;
             }
         }
@@ -182,12 +184,12 @@ public class QuestManager : MonoBehaviour
         }
 
         // Get the current DialogueEvent associated with the current quest stage
-        DialogueEvent currentDialogueEvent = GetCurrentDialogueEventForQuestStage(quest); 
+        DialogueEvent currentDialogueEvent = GetCurrentDialogueEventForQuestStage(quest);
 
         if (currentDialogueEvent != null && currentDialogueEvent.dialogueBubblePrefab != null)
         {
             // Use the DialogueEvent's prefab for the marker
-            currentQuestMarker = Instantiate(currentDialogueEvent.dialogueBubblePrefab, GetNPCMarkerPosition(quest) + new Vector3(0f,0.5f,0f), Quaternion.identity);                                 
+            currentQuestMarker = Instantiate(currentDialogueEvent.dialogueBubblePrefab, GetNPCMarkerPosition(quest) + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
         }
     }
 
@@ -204,7 +206,7 @@ public class QuestManager : MonoBehaviour
                 {
                     if (!dialogueEvent.exhausted && interactable.CheckConditions(dialogueEvent.checkCondition)) // Check the condition
                     {
-                        GameObject toInstantiate = Instantiate(dialogueEvent.dialogueBubblePrefab, (GetNPCMarkerPosition(jsonReader.quests.GetQuest(dialogueEvent.questID)) + new Vector3(0f,0.5f,0f)), Quaternion.identity);
+                        GameObject toInstantiate = Instantiate(dialogueEvent.dialogueBubblePrefab, (GetNPCMarkerPosition(jsonReader.quests.GetQuest(dialogueEvent.questID)) + new Vector3(0f, 0.5f, 0f)), Quaternion.identity);
                         questStartMarkers[dialogueEvent.questID] = toInstantiate;
                     }
                 }
@@ -225,16 +227,16 @@ public class QuestManager : MonoBehaviour
 
     private DialogueEvent GetCurrentDialogueEventForQuestStage(Quest quest)
     {
-        if (questStageToDialogueEventMap.ContainsKey(quest.ID)) 
+        if (questStageToDialogueEventMap.ContainsKey(quest.ID))
         {
             Dictionary<int, DialogueEvent> stageToEventMap = questStageToDialogueEventMap[quest.ID];
-            if (stageToEventMap.ContainsKey(quest.CurrentStageIndex)) 
+            if (stageToEventMap.ContainsKey(quest.CurrentStageIndex))
             {
                 return stageToEventMap[quest.CurrentStageIndex];
             }
         }
 
-        return null; 
+        return null;
     }
 
     private Vector3 GetNPCMarkerPosition(Quest quest)
@@ -249,14 +251,14 @@ public class QuestManager : MonoBehaviour
         if (model == null)
         {
             Debug.LogWarning($"NPC with name '{npcTargetName}' not found!");
-            return Vector3.zero; 
+            return Vector3.zero;
         }
 
         Transform target = model.transform.Find("CameraTarget");
         if (target == null)
         {
             Debug.LogWarning($"CameraTarget not found on NPC '{npcTargetName}'!");
-            return Vector3.zero; 
+            return Vector3.zero;
         }
 
         return target.position;
@@ -333,16 +335,57 @@ public class QuestManager : MonoBehaviour
 
     public void MarkQuestComplete()
     {
-        Quest currentQuest = activeQuests[currentQuestIndex];
-        currentQuest.Complete = true;
+        Quest completedQuest = activeQuests[currentQuestIndex];
+        completedQuest.Complete = true;
         activeQuests.RemoveAt(currentQuestIndex); // Remove the completed quest
-        completedQuests.Add(currentQuest); // Add it to the completed quests list
+        completedQuests.Add(completedQuest); // Add it to the completed quests list
 
-        if (activeQuests.Count > 0) {
+        if (completedQuest.triggersInteractionOnComplete &&
+            !string.IsNullOrEmpty(completedQuest.onCompleteInteractionType) &&
+            !string.IsNullOrEmpty(completedQuest.onCompleteInteractionOutcome))
+        {
+            GameObject eventActor = GameObject.FindGameObjectWithTag("Player"); // Assuming player completed it
+
+            // Find the target NPC using the specified name
+            GameObject eventTarget = null;
+            if (!string.IsNullOrEmpty(completedQuest.onCompleteInteractionTargetName))
+            {
+                eventTarget = GameObject.Find(completedQuest.onCompleteInteractionTargetName);
+                if (eventTarget == null)
+                {
+                    Debug.LogWarning($"QuestManager: Could not find Interaction Target GameObject named '{completedQuest.onCompleteInteractionTargetName}' for quest '{completedQuest.Name}' completion event.");
+                    // Decide if the event should still trigger without a target? Probably not if the rule needs it.
+                }
+            }
+
+            // Trigger the event only if we have the actor (and target if specified)
+            if (eventActor != null && (string.IsNullOrEmpty(completedQuest.onCompleteInteractionTargetName) || eventTarget != null))
+            {
+                Debug.Log($"Triggering Interaction on completion of quest '{completedQuest.Name}': " +
+                          $"Actor='{eventActor.name}', Target='{eventTarget?.name ?? "None"}', " +
+                          $"Type='{completedQuest.onCompleteInteractionType}', Outcome='{completedQuest.onCompleteInteractionOutcome}'");
+
+                EventManager.Instance.TriggerInteraction(
+                    eventActor,
+                    eventTarget, // Can be null if targetName wasn't specified or found
+                    completedQuest.onCompleteInteractionType,
+                    completedQuest.onCompleteInteractionOutcome
+                );
+            }
+            else
+            {
+                Debug.LogError($"QuestManager: Could not trigger interaction for quest '{completedQuest.Name}' - Player or required Target NPC not found.");
+            }
+        }
+
+        if (activeQuests.Count > 0)
+        {
             currentQuestIndex = 0; // Reset to the first active quest (or 0 if none left)
             UpdateQuestUI();
-        } else {
-          ClearQuestUI();
+        }
+        else
+        {
+            ClearQuestUI();
         }
     }
 
@@ -368,7 +411,7 @@ public class QuestManager : MonoBehaviour
     {
         if (activeQuests.Count > 0)
         {
-            return activeQuests[currentQuestIndex].ID; 
+            return activeQuests[currentQuestIndex].ID;
         }
         else
         {
@@ -396,7 +439,7 @@ public class QuestManager : MonoBehaviour
             return false; // Quest not found or first stage
         }
 
-        return currentQuest.Stages[currentQuest.CurrentStageIndex - 1].Complete; 
+        return currentQuest.Stages[currentQuest.CurrentStageIndex - 1].Complete;
     }
 }
 
@@ -428,6 +471,10 @@ public class Quest
     [SerializeField] private bool linear;
     [SerializeField] private List<int> parallelStages;
     [SerializeField] private int currentStageIndex = 0;
+    public bool triggersInteractionOnComplete = false;
+    public string onCompleteInteractionType = ""; // e.g., InteractionTypes.Assist
+    public string onCompleteInteractionOutcome = ""; // e.g., OutcomeStrings.Assist.SuccessGuildAlly
+    public string onCompleteInteractionTargetName = ""; // e.g., "Alera"
 
     public string Name
     {
@@ -461,8 +508,8 @@ public class Quest
 
     public List<int> ParallelStages
     {
-        get { return this.parallelStages;}
-        set { this.parallelStages = value;}
+        get { return this.parallelStages; }
+        set { this.parallelStages = value; }
     }
 
     public int CurrentStageIndex
