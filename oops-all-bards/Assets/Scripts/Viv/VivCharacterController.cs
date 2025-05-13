@@ -33,6 +33,15 @@ public class VivCharacterController : MonoBehaviour
     [SerializeField]
     private CharacterAIState currentState = CharacterAIState.Idle;
     public CharacterAIState CurrentState => currentState;
+
+    private enum AttackSequencePhase
+    {
+        None,           // Default, or when Attacking state is not active
+        Yelling,        // Playing the yell animation
+        InAggroDialogue,// In the hostile dialogue
+        TransitionToCombat // Ready to load combat scene
+    }
+    private AttackSequencePhase currentAttackSequencePhase = AttackSequencePhase.None;
     #endregion
 
     #region Inspector Fields
@@ -42,12 +51,11 @@ public class VivCharacterController : MonoBehaviour
     [SerializeField] private string sensitiveAreaTag = "SensitiveArea";
     [Tooltip("How often the 'Observe' event can trigger for sensitive area presence (seconds).")]
     [SerializeField] private float observationTriggerCooldown = 5.0f; // Cooldown to prevent spam
-    // [Tooltip("Standard interaction distance.")]
-    // [SerializeField] private float interactionDistance = 2.0f;
+    [Header("Interaction Settings")]
+    [Tooltip("Standard interaction distance.")]
+    [SerializeField] private float interactionDistance = 2.0f;
     [Tooltip("How fast the character turns to face targets.")]
     [SerializeField] private float rotationSpeed = 5.0f;
-
-
     // --- Component References ---
     [Header("Component References (Auto-assigned)")]
     [SerializeField] protected Animator animator;
@@ -62,6 +70,12 @@ public class VivCharacterController : MonoBehaviour
     protected CharacterAIState stateAfterMoving = CharacterAIState.Idle; // What state to enter after reaching destination
     protected float stateTimer;                 // Timer for states that might time out
     private bool canTriggerObservationEvent = true; // Cooldown flag for observation trigger
+    #endregion
+
+    #region Interrupt Handling
+    private bool isInterruptRequested = false;
+    private CharacterAIState nextStateAfterInterrupt = CharacterAIState.Idle;
+    private GameObject targetForNextStateAfterInterrupt = null;
     #endregion
 
     #region Initialization
@@ -92,6 +106,28 @@ public class VivCharacterController : MonoBehaviour
     // --- Core State Machine Logic ---
     protected virtual void Update()
     {
+        if (isInterruptRequested)
+        {
+            isInterruptRequested = false;
+            CharacterAIState stateToTransitionTo = nextStateAfterInterrupt;
+            GameObject newTarget = targetForNextStateAfterInterrupt;
+
+            targetForNextStateAfterInterrupt = null;
+
+            Debug.Log($"{vivCharacter.characterName}: Interrupt processed. Transitioning from {currentState} to {stateToTransitionTo}. New target: {newTarget?.name ?? "None"}");
+
+            // It's important that TransitionToState sets currentTargetObject if newTarget is not null
+            // before OnEnterState for the new state is called.
+            if (newTarget != null)
+            {
+                currentTargetObject = newTarget;
+            }
+            TransitionToState(stateToTransitionTo);
+            // After transitioning due to interrupt, we might want to skip the rest of this frame's Update for the old state.
+            // However, the TransitionToState will set a new 'currentState', so the switch below will run for the *new* state.
+            // This is generally fine.
+        }
+
         stateTimer += Time.deltaTime;
 
         // Execute logic based on the current state
@@ -159,6 +195,20 @@ public class VivCharacterController : MonoBehaviour
         // Reset target rotation when moving
         if (navMeshAgent != null) navMeshAgent.updateRotation = (state == CharacterAIState.MovingToTarget || state == CharacterAIState.Patrolling);
 
+        if (state == CharacterAIState.Attacking)
+        {
+            // Movement to target (if needed) is handled by Action_AttackTarget
+            // before this state is formally entered after arrival.
+            // So, when we enter CharacterAIState.Attacking, we assume we are at/near the target
+            // and ready to start the aggressive sequence.
+            Debug.Log($"{vivCharacter.characterName}: Entered Attacking state. Target: {currentTargetObject?.name}. Starting Yell phase.");
+            TransitionAttackSequencePhase(AttackSequencePhase.Yelling);
+        }
+        else
+        {
+            // If not entering Attacking state, ensure attack phase is reset
+            currentAttackSequencePhase = AttackSequencePhase.None;
+        }
     }
     protected virtual void OnExitState(CharacterAIState state)
     {
@@ -169,6 +219,14 @@ public class VivCharacterController : MonoBehaviour
         // if((state == CharacterAIState.MovingToTarget || state == CharacterAIState.Patrolling) && navMeshAgent.hasPath) {
         //    navMeshAgent?.ResetPath();
         // }
+
+        if (state == CharacterAIState.Attacking)
+        {
+            currentAttackSequencePhase = AttackSequencePhase.None;
+            // Optional: Ensure NavMeshAgent stops if it was somehow moving during a phase
+            // if (navMeshAgent != null && navMeshAgent.isOnNavMesh) navMeshAgent.ResetPath();
+            Debug.Log($"{vivCharacter.characterName}: Exited Attacking state, sequence phase reset.");
+        }
     }
     #endregion
 
@@ -275,34 +333,94 @@ public class VivCharacterController : MonoBehaviour
 
     protected virtual void Update_Attacking()
     {
-        // !! IMPLEMENT combat logic !!
-        // - Face target
-        // - Check range
-        // - Trigger attack animations/damage dealing via CombatManager/stats
-        // - Check if target defeated
-        // - Check if should flee
-        Debug.LogWarning("Update_Attacking needs implementation.");
-        if (currentTargetObject != null) FaceTarget(currentTargetObject);
-        // Example: Transition if target is gone or defeated
-        // if (currentTargetObject == null || IsTargetDefeated(currentTargetObject)) {
-        //     TransitionToState(CharacterAIState.Idle);
-        // }
+        if (currentTargetObject == null)
+        {
+            Debug.LogWarning($"{vivCharacter.characterName}: Target lost during Attack sequence. Transitioning to Idle.");
+            TransitionToState(CharacterAIState.Idle);
+            return;
+        }
+
+        FaceTarget(currentTargetObject); // Continuously face target during all attack phases
+
+        switch (currentAttackSequencePhase)
+        {
+            case AttackSequencePhase.Yelling:
+                animator?.SetFloat("Speed", 0f); // Ensure stationary while yelling
+                                                 // The "Yell" animation trigger is now handled in TransitionAttackSequencePhase.
+                                                 // Since we don't wait for yell duration, we immediately try to transition to dialogue.
+                                                 // This phase effectively just ensures the yell was triggered.
+                Debug.Log($"{vivCharacter.characterName}: Yelling phase nominal, attempting to transition to Aggro Dialogue.");
+                TransitionAttackSequencePhase(AttackSequencePhase.InAggroDialogue);
+                break;
+
+            case AttackSequencePhase.InAggroDialogue:
+                animator?.SetFloat("Speed", 0f);
+                // Dialogue was started in TransitionAttackSequencePhase.
+                // Wait for DialogueManager to signal dialogue end.
+                if (DialogueManager.Instance != null && !DialogueManager.Instance.isInDialogue)
+                {
+                    // Dialogue finished
+                    Debug.Log($"{vivCharacter.characterName}: Aggro Dialogue complete.");
+                    TransitionAttackSequencePhase(AttackSequencePhase.TransitionToCombat);
+                }
+                break;
+
+            case AttackSequencePhase.TransitionToCombat:
+                Debug.Log($"{vivCharacter.characterName}: Aggressive dialogue with {currentTargetObject.name} finished. Preparing to load combat scene.");
+
+                // !! IMPLEMENT: Load your combat scene here !!
+                // Example:
+                // GameManager.Instance.StartCombatEncounter(vivCharacter, currentTargetObject.GetComponent<VivCharacter>());
+                // SceneManager.LoadScene("YourCombatSceneName");
+
+                // After initiating combat scene load/setup, Wurguth in *this* scene might go idle.
+                // The VivCharacter in the combat scene would take over.
+                TransitionToState(CharacterAIState.Idle); // Fallback
+                                                          // currentAttackSequencePhase will be reset to None by OnExitState(Attacking)
+                break;
+
+            case AttackSequencePhase.None:
+                // This case should ideally not be reached if OnEnterState(Attacking)
+                // correctly sets an initial phase. But as a fallback:
+                Debug.LogWarning($"{vivCharacter.characterName}: In Attacking state but AttackSequencePhase is None. Resetting to Idle.");
+                TransitionToState(CharacterAIState.Idle);
+                break;
+        }
     }
 
     protected virtual void Update_Confronting()
     {
-        // State entered after reaching target for confrontation
-        Debug.Log($"{vivCharacter.characterName}: Now confronting {currentTargetObject?.name}");
-        // !! IMPLEMENT: Trigger dialogue via DialogueManager !!
-        // Example:
-        // if (currentTargetObject != null && DialogueManager.Instance != null) {
-        //     int dialogueIdToStart = GetConfrontationDialogueID(); // Need logic to find correct dialogue ID
-        //     DialogueManager.Instance.StartDialogue(dialogueIdToStart, gameObject, currentTargetObject);
-        //     TransitionToState(CharacterAIState.InDialogue); // Switch to InDialogue state
-        // } else {
-        //     TransitionToState(CharacterAIState.Idle); // Cannot confront
-        // }
-        TransitionToState(CharacterAIState.Idle); // Placeholder
+        if (currentTargetObject == null)
+        {
+            TransitionToState(CharacterAIState.Idle);
+            return;
+        }
+
+        FaceTarget(currentTargetObject);
+
+        // Assuming dialogue initiation happens here
+        if (stateTimer > 0.1f && DialogueManager.Instance != null && !DialogueManager.Instance.isInDialogue)
+        {
+            Debug.Log($"{vivCharacter.characterName} initiating confrontation dialogue with {currentTargetObject.name}");
+            animator?.SetTrigger("Talk"); // <<--- TRIGGER TALK ANIMATION
+
+            int confrontationDialogueID = GetConfrontationDialogueID(currentTargetObject);
+
+            if (confrontationDialogueID != -1)
+            {
+                DialogueManager.Instance.StartDialogue(confrontationDialogueID);
+                TransitionToState(CharacterAIState.InDialogue);
+            }
+            else
+            {
+                Debug.LogWarning($"{vivCharacter.characterName}: Could not find confrontation dialogue ID for {currentTargetObject.name}.");
+                TransitionToState(CharacterAIState.Idle);
+            }
+        }
+        else if (DialogueManager.Instance != null && DialogueManager.Instance.isInDialogue && currentState != CharacterAIState.InDialogue)
+        {
+            TransitionToState(CharacterAIState.InDialogue);
+        }
     }
 
     protected virtual void Update_Questioning()
@@ -422,6 +540,82 @@ public class VivCharacterController : MonoBehaviour
         TransitionToState(CharacterAIState.MovingToTarget);
         navMeshAgent.SetDestination(destination);
     }
+
+    private void TransitionAttackSequencePhase(AttackSequencePhase newPhase)
+    {
+        if (currentAttackSequencePhase == newPhase && newPhase != AttackSequencePhase.Yelling) // Allow re-triggering Yell if necessary
+            return;
+
+        Debug.Log($"{vivCharacter.characterName}: Attack Sequence Phase: {currentAttackSequencePhase} -> {newPhase}");
+        currentAttackSequencePhase = newPhase;
+        // stateTimer for the main CharacterAIState.Attacking is NOT reset here,
+        // as the sub-phases don't rely on it in this simplified version.
+
+        switch (newPhase)
+        {
+            case AttackSequencePhase.Yelling:
+                if (navMeshAgent != null && navMeshAgent.isOnNavMesh) navMeshAgent.ResetPath(); // Ensure stopped
+                if (navMeshAgent != null) navMeshAgent.updateRotation = false; // For FaceTarget control
+                animator?.SetTrigger("Yell"); // Trigger yell animation
+                Debug.Log($"{vivCharacter.characterName}: Yell animation triggered.");
+                break;
+            case AttackSequencePhase.InAggroDialogue:
+                if (navMeshAgent != null) navMeshAgent.updateRotation = false; // For FaceTarget control
+                if (currentTargetObject != null && DialogueManager.Instance != null)
+                {
+                    int hostileDialogueID = GetAggressiveConfrontationDialogueID(currentTargetObject);
+                    if (hostileDialogueID != -1)
+                    {
+                        Debug.Log($"{vivCharacter.characterName}: Starting aggressive dialogue (ID: {hostileDialogueID}) with {currentTargetObject.name}.");
+                        DialogueManager.Instance.StartDialogue(hostileDialogueID);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{vivCharacter.characterName}: No hostile dialogue ID found for {currentTargetObject.name}. Skipping dialogue, proceeding to combat transition.");
+                        TransitionAttackSequencePhase(AttackSequencePhase.TransitionToCombat);
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"{vivCharacter.characterName}: Cannot start aggressive dialogue (target or DialogueManager null). Transitioning to Idle.");
+                    TransitionToState(CharacterAIState.Idle); // Critical failure in sequence
+                }
+                break;
+            case AttackSequencePhase.TransitionToCombat:
+                // The actual scene load/combat start is now handled in Update_Attacking's case for this phase.
+                Debug.Log($"{vivCharacter.characterName}: Ready to transition to combat scene.");
+                break;
+        }
+    }
+
+    protected virtual int GetAggressiveConfrontationDialogueID(GameObject target)
+    {
+        // !! IMPLEMENT THIS LOGIC !!
+        // This method needs to determine the correct dialogue ID for Wurguth's
+        // aggressive confrontation with the specific 'target' (likely the player).
+        // It could be based on Wurguth's VivCharacter data, game state, or target properties.
+        // Example:
+        if (vivCharacter.characterName == "Wurguth" && target.CompareTag("Player"))
+        {
+            // You might have a ScriptableObject or config file mapping characters to dialogue IDs
+            // For now, a placeholder:
+            Debug.LogWarning("GetAggressiveConfrontationDialogueID: Returning placeholder ID 101 for Wurguth vs Player.");
+            return 101; // Replace with your actual lookup
+        }
+        Debug.LogError($"GetAggressiveConfrontationDialogueID: No specific ID found for {vivCharacter.characterName} vs {target.name}.");
+        return -1; // Indicates no specific dialogue found
+    }
+
+    protected virtual int GetConfrontationDialogueID(GameObject target) // For normal confrontation
+    {
+        // !! IMPLEMENT THIS LOGIC for non-aggressive confrontation !!
+        if (vivCharacter.characterName == "Wurguth" && target.CompareTag("Player"))
+        {
+            Debug.LogWarning("GetConfrontationDialogueID: Returning placeholder ID 102 for Wurguth vs Player (non-aggressive).");
+            return 102; // Replace
+        }
+        return -1;
+    }
     #endregion
 
     #region Public Action Methods
@@ -475,11 +669,30 @@ public class VivCharacterController : MonoBehaviour
 
     public virtual void Action_AttackTarget(GameObject target)
     {
-        if (target == null) { Debug.LogWarning($"{vivCharacter.characterName}: AttackTarget called with null target."); return; }
-        Debug.Log($"{vivCharacter.characterName}: ACTION - AttackTarget ({target.name})");
+        if (target == null)
+        {
+            Debug.LogWarning($"{vivCharacter.characterName}: Action_AttackTarget called with null target.");
+            TransitionToState(CharacterAIState.Idle);
+            return;
+        }
+        Debug.Log($"{vivCharacter.characterName}: ACTION - Initiating AGGRESSIVE approach for target ({target.name})");
         currentTargetObject = target;
-        TransitionToState(CharacterAIState.Attacking);
-        // Combat system might take over from here
+
+        float distance = Vector3.Distance(transform.position, target.transform.position);
+        // Use interactionDistance or a specific engageRange to decide if movement is needed
+        if (distance <= interactionDistance)
+        {
+            // Already in range, directly transition to Attacking state.
+            // OnEnterState(Attacking) will then start the Yelling phase.
+            TransitionToState(CharacterAIState.Attacking);
+        }
+        else
+        {
+            // Need to move closer first.
+            // OnDestinationReached will transition to CharacterAIState.Attacking,
+            // which will then trigger the Yelling phase via its OnEnterState.
+            MoveToPosition(target.transform.position, CharacterAIState.Attacking);
+        }
     }
 
     // --- Add other public action methods corresponding to your ABL acts ---

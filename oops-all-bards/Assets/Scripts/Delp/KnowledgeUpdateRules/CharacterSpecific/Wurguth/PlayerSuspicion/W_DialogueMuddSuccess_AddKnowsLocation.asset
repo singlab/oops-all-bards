@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionType: Dialogue
   outcome: Dialogue_GuildInfoSuccess
-  factToAdd: knowsLocationOf({self}, guildMeetingSpot)
+  factToAdd: knowsLocationOf({eventActor}, guildMeetingSpot)
   factToRemove: 
   applicability: 1
   specificCharacterID: -1

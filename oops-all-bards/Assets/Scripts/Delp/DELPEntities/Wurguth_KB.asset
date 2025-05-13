@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec0fe26c46e4bc4a925c4810bc5e622, type: 3}
+  m_Name: Wurguth_KB
+  m_EditorClassIdentifier: 
+  facts:
+  - member(wurguth, guildOfShadows).
+  - member(alera, guildOfShadows).
+  - canHide(wurguth).
+  - believesCanIntimidate(wurguth, player).
+  - trapLocation(docks_alley).
+  - trapLocation(warehouse_entrance).
+  strictRules:
+  - isAlly(wurguth, alera) <- member(wurguth, guildOfShadows), member(alera, guildOfShadows).
+  - isEnemyOfCharacter(wurguth, player) <- considersConfirmedThreat(wurguth, player).
+  defeasibleRules:
+  - isHighlySuspiciousOf(wurguth, player) -< isSuspiciousOf(wurguth, player), knowsLocationOf(player,
+    guildMeetingSpot).
+  - considersPotentialThreat(wurguth, player) -< hasHighFame(player).
+  - ~isSuspiciousOf(wurguth, player) -< playerHelped(player, alera), isAlly(wurguth,
+    alera).
+  - ~isHighlySuspiciousOf(wurguth, player) -< playerHelped(player, alera), isAlly(wurguth,
+    alera).
+  - shouldAttackPlayerAtMeetingSpot(wurguth) -< isHighlySuspiciousOf(wurguth, player).
+  - shouldConfrontPlayerInstead(wurguth) -< considersPotentialThreat(wurguth, player),
+    ~isSuspiciousOf(wurguth, player), ~isHighlySuspiciousOf(wurguth, player).
+  - ~shouldAttackPlayerAtMeetingSpot(wurguth) -< shouldConfrontPlayerInstead(wurguth).
