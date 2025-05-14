@@ -20,6 +20,7 @@ public static class OutcomeStrings
         public const string Dialogue_Lie = "Dialogue_Lie";
         public const string Dialogue_Truth = "Dialogue_Truth";
         public const string Dialogue_GuildInfoSuccess = "Dialogue_GuildInfoSuccess";
+        public const string Dialogue_PiggyRevealsMotivation = "Dialogue_PiggyRevealsMotivation";
         // ... other dialogue outcomes
     }
 
@@ -32,6 +33,9 @@ public static class OutcomeStrings
     {
         public const string Combat_Hit = "Combat_Hit";
         public const string Combat_Miss = "Combat_Miss";
+        public const string Combat_PlayerInitiated_Piggy = "Combat_PlayerInitiated_Piggy";
+        public const string Combat_PlayerInitiated_QuestNPC = "Combat_PlayerInitiated_QuestNPC";
+        public const string Combat_WurguthAttacksPlayer = "Combat_WurguthAttacksPlayer";
         // ... other combat outcomes
     }
 

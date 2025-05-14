@@ -13,7 +13,7 @@ public class CombatManager : MonoBehaviour
 
     //public reference to ui gameobject
     public CombatUI combatUI;
-    public GameObject UI;  
+    public GameObject UI;
     // A reference to the combat queue.
     public CombatQueue combatQueue;
     // A reference to the player party.
@@ -36,8 +36,10 @@ public class CombatManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-        } else if (_instance != null)
+        }
+        else if (_instance != this)
         {
+            Debug.LogWarning("Duplicate CombatManager instance found. Destroying this one.", gameObject);
             Destroy(gameObject);
         }
     }
@@ -47,7 +49,16 @@ public class CombatManager : MonoBehaviour
     {
 
         SubscribeToEvents();
-        InitCombatQueue(PartyManager.Instance.currentParty, EnemyFactory.Instance.GenerateRandomEnemies(2));
+        if (GameManager.Instance.combatants_enemyParty == null || GameManager.Instance.combatants_enemyParty.Count == 0)
+        {
+            Debug.Log("No enemy party found. Generating random enemies.");
+            InitCombatQueue(PartyManager.Instance.currentParty, EnemyFactory.Instance.GenerateRandomEnemies(2));
+        }
+        else
+        {
+            Debug.Log("Enemy party found. Generating specific enemies.");
+            InitCombatQueue(PartyManager.Instance.currentParty, EnemyFactory.Instance.SpawnSpecificEnemies(GameManager.Instance.combatants_enemyParty));
+        }
         GameManager.Instance.CheckQueue();
         combatUI = CombatUI.Instance;
         combatUI.SetActiveCamera(combatUI.OverviewCamera);
@@ -58,7 +69,16 @@ public class CombatManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    void OnDestroy()
+    {
+        if (_instance == this) // Only if this is the true instance being destroyed
+        {
+            UnsubscribeFromEvents(); // Call your unsubscription logic
+            _instance = null; // Allow a new instance to be created later
+        }
     }
 
     // A function that uses the event management system to subscribe to events used in this manager.
@@ -68,8 +88,22 @@ public class CombatManager : MonoBehaviour
         doAllyActionLambda = (eventData) => DoAllyAction();
         doEnemyActionLambda = (eventData) => DoEnemyAction();
         // Subscribe to the events using the lambda expression
-        EventManager.Instance.SubscribeToEvent(EventType.AllyAI, doAllyActionLambda);
-        EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, doEnemyActionLambda);
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.SubscribeToEvent(EventType.AllyAI, doAllyActionLambda);
+            EventManager.Instance.SubscribeToEvent(EventType.EnemyAI, doEnemyActionLambda);
+        }
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        if (EventManager.Instance != null)
+        {
+            if (doAllyActionLambda != null)
+                EventManager.Instance.UnsubscribeToEvent(EventType.AllyAI, doAllyActionLambda);
+            if (doEnemyActionLambda != null)
+                EventManager.Instance.UnsubscribeToEvent(EventType.EnemyAI, doEnemyActionLambda);
+        }
     }
 
     // A function used to initialize the combat queue.
@@ -82,7 +116,7 @@ public class CombatManager : MonoBehaviour
         PartyManager.Instance.ToggleInCombat(true);
         // Clean up for new combat scenario.
         combatQueue = new CombatQueue();
-        combatQueue.Clear();  
+        combatQueue.Clear();
         // Add standard functions for start, player input, enemy AI, and end.
         PushAndCreateCombatQueueable(new CombatStart());
         foreach (BasePlayer p in party)
@@ -90,7 +124,8 @@ public class CombatManager : MonoBehaviour
             if (p.ID == 0)
             {
                 PushAndCreateCombatQueueable(new PlayerTurn(p));
-            } else
+            }
+            else
             {
                 PushAndCreateCombatQueueable(new AllyTurn(p));
             }
@@ -129,7 +164,7 @@ public class CombatManager : MonoBehaviour
     {
         ITargetable targetable = null;
         target = null;
-        
+
         while (target == null)
         {
             yield return null;
@@ -217,7 +252,7 @@ public class CombatManager : MonoBehaviour
         else yield return new WaitForSeconds(3f);
 
         // If the attack misses, skip this turn
-        if(!AttackHits(action.target))
+        if (!AttackHits(action.target))
         {
             Debug.Log(action.target.Name + " dodges!");
             CombatUI.Instance.UpdateCombatLog(action.target.Name + " dodges!");
@@ -235,7 +270,7 @@ public class CombatManager : MonoBehaviour
             bool isStrengthened = IsStrengthened(action.actingCharacter);
             int modifiedDamage = isStrengthened ? (action.ability.Damage * 2) : action.ability.Damage;
             action.target.Health -= modifiedDamage;
-            Debug.Log(action.actingCharacter.Name + " deals " + modifiedDamage + " damage to " + action.target.Name + "."); 
+            Debug.Log(action.actingCharacter.Name + " deals " + modifiedDamage + " damage to " + action.target.Name + ".");
             CombatUI.Instance.UpdateCombatLog(action.actingCharacter.Name + " deals " + modifiedDamage + " damage to " + action.target.Name + ".");
             CheckCombatantsHealth(action.target);
         }
@@ -249,7 +284,8 @@ public class CombatManager : MonoBehaviour
             {
                 action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE);
                 DemoManager.Instance.hasAssistedOnce = true;
-            };
+            }
+            ;
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.DEFEND)
         {
@@ -261,7 +297,8 @@ public class CombatManager : MonoBehaviour
             {
                 action.target.CiFData.RemoveStatusByType(Status.StatusTypes.REQUIRES_ASSISTANCE);
                 DemoManager.Instance.hasAssistedOnce = true;
-            };
+            }
+            ;
         }
         if (action.ability.CombatType == BaseAbility.CombatAbilityTypes.SUPPORT)
         {
@@ -280,7 +317,7 @@ public class CombatManager : MonoBehaviour
             }
         }
         // Handle damage/heal and update UI to reflect new value.
-        
+
         PortraitData targetPortrait = CombatUI.FindPortrait(action.target.Name);
         targetPortrait.anim.SetTrigger("takeDamage");
         targetPortrait.healthBar.UpdateValueBar(action.target.Health);
@@ -316,13 +353,14 @@ public class CombatManager : MonoBehaviour
 
         Debug.Log("Calculating enemy action...");
         BaseEnemy actingCharacter = (BaseEnemy)EventManager.Instance.EventData;
-        
+
         // TODO: This AI is very simple. Should change to be more interesting.
         // Choose random party member and use Attack ability.
         BasePlayer target = null;
-        if ( party.Count > 0) { target = party[UnityEngine.Random.Range(0, party.Count)]; };
+        if (party.Count > 0) { target = party[UnityEngine.Random.Range(0, party.Count)]; }
+        ;
         BaseAbility ability = actingCharacter.EnemyClass.Abilities[0];
-        if ( target == null )
+        if (target == null)
         {
             CheckForWinLoss();
             //return?
@@ -347,7 +385,8 @@ public class CombatManager : MonoBehaviour
         if (!isBlind && attackHits)
         {
             ApplyEffects(actingCharacter, target, ability);
-        } else 
+        }
+        else
         {
             Debug.Log($"{actingCharacter.Name} tried to attack {target.Name}, but missed!");
             CombatUI.Instance.UpdateCombatLog($"{actingCharacter.Name} tried to attack {target.Name}, but missed!");
@@ -387,13 +426,16 @@ public class CombatManager : MonoBehaviour
         BasePlayer actingCharacter = (BasePlayer)EventManager.Instance.EventData;
         BaseEnemy target;
         BaseAbility ability;
-        
+
         // TODO: This AI is very simple. Should change to be more interesting.
         // Choose random enemy and use Attack ability.
-        if (enemies.Count > 0) {
+        if (enemies.Count > 0)
+        {
             target = enemies[UnityEngine.Random.Range(0, enemies.Count)];
             ability = actingCharacter.PlayerClass.Abilities[0];
-        } else {
+        }
+        else
+        {
             CheckForWinLoss();
             yield break;
         }
@@ -423,7 +465,8 @@ public class CombatManager : MonoBehaviour
         targetPortrait.healthBar.UpdateValueBar(target.Health);
         CheckCombatantsHealth(target);
 
-        if ( isStrengthened ) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); };
+        if (isStrengthened) { actingCharacter.RemoveCombatStatus(CombatStatus.CombatStatusTypes.STRENGTHENED); }
+        ;
 
         if (ability.AbilityAnimationClip != null && target.Health > 0)
         {
@@ -434,7 +477,7 @@ public class CombatManager : MonoBehaviour
         actingCharacter.OwnsTurn = false;
 
         // Tell DemoManager to check the queue and continue to next turn.
-        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null); 
+        EventManager.Instance.InvokeEvent(EventType.CheckQueue, null);
     }
 
 
@@ -481,7 +524,8 @@ public class CombatManager : MonoBehaviour
                         combatQueue.Remove(q);
                     }
                 }
-            } else
+            }
+            else
             {
                 foreach (ICombatQueueable q in array)
                 {
@@ -524,7 +568,7 @@ public class CombatManager : MonoBehaviour
     }
 
     // A function used to determine a win/loss of combat.
-    public void CheckForWinLoss() 
+    public void CheckForWinLoss()
     {
         if (party.Count == 0)
         {
@@ -564,10 +608,10 @@ public class CombatManager : MonoBehaviour
     {
 
         bool targetIsProtected = IsProtected(target);
-        if (targetIsProtected && party.Count > 1) 
+        if (targetIsProtected && party.Count > 1)
         {
             Debug.Log(target.Name + " has a PROTECTED status effect");
-            CombatUI.Instance.UpdateCombatLog(target.Name + " has a PROTECTED status effect"); 
+            CombatUI.Instance.UpdateCombatLog(target.Name + " has a PROTECTED status effect");
             target.RemoveCombatStatus(CombatStatus.CombatStatusTypes.PROTECTED);
             ITargetable newTarget = AcquireProtectingTarget();
             Debug.Log(newTarget.Name + " has a PROTECTING status effect");
@@ -586,7 +630,8 @@ public class CombatManager : MonoBehaviour
                 target.Shield -= ability.Damage;
                 Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "'s shield!");
                 CombatUI.Instance.UpdateCombatLog(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "'s shield!");
-            } else 
+            }
+            else
             {
                 int overflow = ability.Damage - target.Shield;
                 target.Shield = 0;
@@ -594,7 +639,8 @@ public class CombatManager : MonoBehaviour
                 Debug.Log(actingCharacter.Name + " destroys " + target.Name + "'s shield, and deals " + overflow + " damage to " + target.Name + "!");
                 CombatUI.Instance.UpdateCombatLog(actingCharacter.Name + " destroys " + target.Name + "'s shield, and deals " + overflow + " damage to " + target.Name + "!");
             }
-        } else 
+        }
+        else
         {
             target.Health -= ability.Damage;
             Debug.Log(actingCharacter.Name + " deals " + ability.Damage + " damage to " + target.Name + "!");
@@ -691,7 +737,8 @@ public class CombatManager : MonoBehaviour
         if (id == 0)
         {
             return GameObject.Find("PlayerModel");
-        } else
+        }
+        else
         {
             return GameObject.Find("AllyModel");
         }
@@ -700,5 +747,5 @@ public class CombatManager : MonoBehaviour
     private GameObject GetModelByName(string name)
     {
         return GameObject.Find($"{name}Model");
-    }  
+    }
 }

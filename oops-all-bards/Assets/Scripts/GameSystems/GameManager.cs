@@ -11,9 +11,12 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance => GameManager._instance;
-
     public int tavernVisits = 1;
     public bool completedGame = false;
+
+    // Public fields for combat scene management
+    public List<GameObject> combatants_playerParty = new List<GameObject>();
+    public List<string> combatants_enemyParty = new List<string>();
 
     // private fields for event management
     private Action<object> checkQueueLambda;
@@ -41,6 +44,7 @@ public class GameManager : MonoBehaviour
 
         // Subscribe to events that the demo manager should be aware of.
         SubscribeToEvents();
+        EventManager.Instance.SubscribeToEvent(EventType.OnInteraction, HandleCombatStartInteraction);
 
         // Add player to the party.
         PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
@@ -149,12 +153,102 @@ public class GameManager : MonoBehaviour
         GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<CameraController>().enabled = false;
     }
 
-
     public void IncrementTavernVisits()
     {
         tavernVisits++;
     }
 
+    void OnDestroy()
+    {
+        if (_instance == this) // Only if this is the true instance
+        {
+            if (EventManager.Instance != null)
+            {
+                EventManager.Instance.UnsubscribeToEvent(EventType.CheckQueue, checkQueueLambda);
+                EventManager.Instance.UnsubscribeToEvent(EventType.AwaitPlayerInput, awaitPlayerInputLambda);
+                EventManager.Instance.UnsubscribeToEvent(EventType.CombatLoss, combatLossLambda);
+                EventManager.Instance.UnsubscribeToEvent(EventType.CombatWin, combatWinLambda);
+                EventManager.Instance.UnsubscribeToEvent(EventType.OnInteraction, HandleCombatStartInteraction);
+            }
+        }
+    }
 
+    private void HandleCombatStartInteraction(object eventData)
+    {
+        Dictionary<string, object> data = eventData as Dictionary<string, object>;
+        if (data == null) return;
 
+        string interactionType = data.TryGetValue("interactionType", out object typeObj) ? typeObj as string : null;
+        string outcome = data.TryGetValue("outcome", out object outcomeObj) ? outcomeObj as string : null;
+
+        // Check if this is one of our defined combat start outcomes
+        if (interactionType == InteractionTypes.Combat &&
+            (outcome == OutcomeStrings.Combat.Combat_PlayerInitiated_Piggy ||
+             outcome == OutcomeStrings.Combat.Combat_PlayerInitiated_QuestNPC || // For the other guard
+             outcome == OutcomeStrings.Combat.Combat_WurguthAttacksPlayer)) // Anticipating Wurguth
+        {
+            GameObject eventActor = data.TryGetValue("actor", out object actorObj) ? actorObj as GameObject : null;
+            GameObject eventTarget = data.TryGetValue("target", out object targetObj) ? targetObj as GameObject : null;
+
+            if (eventActor != null && eventTarget != null)
+            {
+                Debug.Log($"HandleCombatStartInteraction: Player ({eventActor.name}) is initiating combat with ({eventTarget.name}) based on outcome: {outcome}");
+
+                // Determine who is player and who is enemy for this specific trigger
+                GameObject playerCombatant = null;
+                string enemyCombatant = null;
+
+                if (eventActor.CompareTag("Player")) // Assuming Player is the actor initiating
+                {
+                    playerCombatant = eventActor;
+                    enemyCombatant = eventTarget.name;
+                }
+                else if (eventTarget.CompareTag("Player")) // Could be that an NPC (actor) attacks Player (target)
+                {
+                    playerCombatant = eventTarget;
+                    enemyCombatant = eventActor.name;
+                }
+                else
+                {
+                    Debug.LogError("CombatStartInteraction: Could not determine Player from event actor/target.");
+                    return;
+                }
+
+                StartCombatEncounter(new List<GameObject> { playerCombatant }, new List<string> { enemyCombatant });
+            }
+        }
+    }
+
+    public void StartCombatEncounter(List<GameObject> playerUnits, List<string> enemyUnits)
+    {
+        if (playerUnits == null || playerUnits.Count == 0 || enemyUnits == null || enemyUnits.Count == 0)
+        {
+            Debug.LogError("StartCombatEncounter called with empty player or enemy units.");
+            return;
+        }
+
+        // Clear previous combatants
+        combatants_playerParty.Clear();
+        combatants_enemyParty.Clear();
+
+        // Store the GameObjects for the Combat Scene to use
+        foreach (var playerUnit in playerUnits)
+        {
+            if (playerUnit != null) combatants_playerParty.Add(playerUnit);
+        }
+        foreach (var enemyUnit in enemyUnits)
+        {
+            if (enemyUnit != null) combatants_enemyParty.Add(enemyUnit);
+        }
+
+        // Disable characters in the current scene if they are being "moved"
+        // This depends on how your combat scene works (does it spawn new instances or use existing ones?)
+        // foreach(var p in combatants_playerParty) p.SetActive(false);
+        // foreach(var e in combatants_enemyParty) e.SetActive(false);
+
+        Debug.Log($"Preparing to start combat. Player Party Count: {combatants_playerParty.Count}, Enemy Party Count: {combatants_enemyParty.Count}");
+
+        // Load the combat scene
+        SceneManager.LoadScene("GigDemo");
+    }
 }

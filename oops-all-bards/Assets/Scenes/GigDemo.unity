@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8990,9 +8990,30 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5555139112849115068, guid: f23c0f6e25ded6d43aa70c6ed827b225,
         type: 3}
+      propertyPath: enemyNames.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555139112849115068, guid: f23c0f6e25ded6d43aa70c6ed827b225,
+        type: 3}
+      propertyPath: enemyDataList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555139112849115068, guid: f23c0f6e25ded6d43aa70c6ed827b225,
+        type: 3}
+      propertyPath: enemyNames.Array.data[5]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555139112849115068, guid: f23c0f6e25ded6d43aa70c6ed827b225,
+        type: 3}
       propertyPath: enemyTransforms.Array.size
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5555139112849115068, guid: f23c0f6e25ded6d43aa70c6ed827b225,
+        type: 3}
+      propertyPath: enemyDataList.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: cc11b631973d0774fb742b803d3e26c4,
+        type: 2}
     - target: {fileID: 5555139112849115068, guid: f23c0f6e25ded6d43aa70c6ed827b225,
         type: 3}
       propertyPath: enemyTransforms.Array.data[0]

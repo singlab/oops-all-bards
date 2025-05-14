@@ -690,6 +690,185 @@
                     ]
                 }
             ]
+        },
+        {
+            "id": 11,
+            "speakerName": "Piggy",
+            "exhausted": false,
+            "dialogueNodes": [
+                {
+                    "id": 0,
+                    "nodeText": "Oi! You! Snuffling around where you don't belong! This skull isn't for your grubby mitts!",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "That's a rather... unique skull. What's so special about it?",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "I'm not looking for trouble. I'll just be on my way.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Special? *SPECIAL?!* This, my friend, is no mere noggin! This is a conduit, a key! The Skull of Whispered Promises! It hums with the very essence of... well, *dark stuff*!",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Dark stuff? Like... evil? What are you planning to do with it?",
+                            "nextNode": 2,
+                            "triggersInteraction": true,
+                            "interactionType": "Dialogue",
+                            "outcomeOnPass": "Dialogue_PiggyRevealsMotivation",
+                            "outcomeOnFail": ""
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Planning? Oh, I have *grand* plans! This beauty will be my offering, my golden ticket to join the esteemed ranks of the Mighty Bolothamogg! He appreciates those with ambition... and powerful artifacts.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Bolothamogg? You want to join *him*? And you think this skull will impress him?",
+                            "nextNode": 3
+                        },
+                        {
+                            "nodeResponseText": "Sounds like you've got it all figured out. Good luck with that. (Back away slowly)",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Impress him? It will *enthrall* him! But first, I need to ensure no one else gets their greasy fingers on it. Especially not someone who might... interfere with my ascendancy. Like *you*.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Look, I just need it for a play. 'Whamlet,' ever heard of it?",
+                            "nextNode": 4
+                        },
+                        {
+                            "nodeResponseText": "So, you're saying I can't have it?",
+                            "nextNode": 6
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "A play? *A PLAY?!* You think this vessel of untold power is for some frippery and stage paint?! HA! The only drama here will be your demise if you try to take it! This skull stays with ME until Bolothamogg himself calls for it!",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "I guess we're doing this the hard way then.",
+                            "nextNode": -1,
+                            "triggersInteraction": true,
+                            "interactionType": "Combat",
+                            "outcomeOnPass": "Combat_PlayerInitiated_Piggy",
+                            "outcomeOnFail": ""
+                        },
+                        {
+                            "nodeResponseText": "Alright, alright! It's yours. No need for unpleasantries. (Attempt to leave)",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Not so fast! Now that you know my plans, and the power of this skull... I can't just let you wander off, can I? You've become a loose end. And Bolothamogg *hates* loose ends.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "So it's a fight no matter what? Fine. Let's get this over with.",
+                            "nextNode": -1,
+                            "triggersInteraction": true,
+                            "interactionType": "Combat",
+                            "outcomeOnPass": "Combat_PlayerInitiated_Piggy",
+                            "outcomeOnFail": ""
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "Can't have it? My dear, deluded interloper, you're not even in the *same dimension* as 'having it'! This artifact is my destiny, my pact with power! To you, it's a curiosity; to me, it's the key to Bolothamogg's inner circle. So, no. You can't have it. And now that you've asked so... *pointedly*... I'm afraid your curiosity has become a liability.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "A liability? Sounds like fighting words to me.",
+                            "nextNode": -1,
+                            "triggersInteraction": true,
+                            "interactionType": "Combat",
+                            "outcomeOnPass": "Combat_PlayerInitiated_Piggy",
+                            "outcomeOnFail": ""
+                        },
+                        {
+                            "nodeResponseText": "Perhaps I was mistaken. I'll leave you to your... destiny. (Attempt to leave)",
+                            "nextNode": 5
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "speakerName": "Alera",
+            "exhausted": false,
+            "dialogueNodes": [
+                {
+                    "id": 0,
+                    "nodeText": "Ah, my intrepid purveyor of the profound! You return! And I trust your hands aren't... disappointingly empty? Does the star of our show – our bony leading 'man' – await his cue?",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Your leading 'man' is secured. A fine specimen, if I do say so myself.",
+                            "nextNode": 1,
+                            "triggersInteraction": false
+                        },
+                        {
+                            "nodeResponseText": "The previous owner was... reluctant. Still working on it.",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Oh, *divine*! Let me gaze upon its empty sockets, its silent scream frozen for eternity! This isn't just a prop, my dear, it's an *epiphany* in calcium! It whispers tales of woe and... well, mostly just looks impressively dead. Perfect!",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Glad its... 'deadness' meets your high artistic standards.",
+                            "nextNode": 3
+                        },
+                        {
+                            "nodeResponseText": "It's certainly seen better days. Or, well, days with more flesh.",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Tsk, tsk! Reluctant, you say? Some 'actors' just don't understand the call of the stage! One must be firm. Gently firm, of course... like a director coaxing a forgotten line from a particularly dense leading man. Do hurry, the drama waits for no one!",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "I'll redouble my efforts.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Indeed! It captures the exquisite agony of existence so much better than that dreadful papier-mâché one I was considering. You, my resourceful friend, have saved 'Whamlet' from becoming a farcical puppet show! My gratitude is as boundless as the abyss... of my genius!",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Always happy to contribute to high art. About my reward... and that premiere invitation?",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "But of course, darling! A hefty pouch of glittering persuasion for your troubles, and a seat so close to the stage, you'll practically *smell* the tragedy! Do try not to upstage the skull, won't you? He's terribly sensitive.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Wouldn't dream of it. Until the premiere, then!",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

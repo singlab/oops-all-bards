@@ -29,7 +29,7 @@ public class EnemyFactory : MonoBehaviour
     [SerializeField]
     private List<string> enemyNames;
     private List<string> enemyNamesTaken = new List<string>();
- 
+
     private void Awake()
     {
         if (_instance == null)
@@ -59,7 +59,7 @@ public class EnemyFactory : MonoBehaviour
 
     public BaseEnemy GenerateRandomEnemy()
     {
-        
+
         // Retrieve reference to the player
         List<BasePlayer> party = PartyManager.Instance.currentParty;
         BasePlayer player = new BasePlayer();
@@ -137,6 +137,34 @@ public class EnemyFactory : MonoBehaviour
         }
 
         return enemies;
+    }
+
+    public List<BaseEnemy> SpawnSpecificEnemies(List<string> enemies)
+    {
+        List<BaseEnemy> spawnedEnemies = new List<BaseEnemy>();
+
+        foreach (string enemyName in enemies)
+        {
+            EnemyData enemyData = FindEnemyDataByName(enemyName);
+            BaseEnemy enemy = GenerateEnemyFromObject(enemyData);
+            SpawnEnemyModel(enemy.Name, enemyData.EnemyModel);
+            spawnedEnemies.Add(enemy);
+            enemyNumber++;
+        }
+
+        return spawnedEnemies;
+    }
+
+    public EnemyData FindEnemyDataByName(string name)
+    {
+        foreach (EnemyData enemyData in enemyDataList)
+        {
+            if (enemyData.EnemyName == name)
+            {
+                return enemyData;
+            }
+        }
+        return null;
     }
 
     public BaseEnemy GenerateEnemyFromObject(EnemyData enemyData)

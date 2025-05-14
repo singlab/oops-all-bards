@@ -75,9 +75,15 @@
                 },
                 {
                     "id": 1,
-                    "npcTargetName": "Very Normal Human Skull",
+                    "npcTargetName": "Piggy",
                     "complete": false,
                     "displayText": "Find a suitable skull for Alera's production"
+                },
+                {
+                    "id": 2,
+                    "npcTargetName": "Alera",
+                    "complete": false,
+                    "displayText": "Return to Alera with the Totally Normal Skull"
                 }
             ],
             "complete": false,
