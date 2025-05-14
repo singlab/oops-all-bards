@@ -19,7 +19,8 @@ public class PartyManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-        } else if (_instance != null)
+        }
+        else if (_instance != null)
         {
             Destroy(gameObject);
         }
@@ -52,7 +53,7 @@ public class PartyManager : MonoBehaviour
 
     public BasePlayer FindPartyMemberById(int id)
     {
-        foreach (BasePlayer p in currentParty) 
+        foreach (BasePlayer p in currentParty)
         {
             if (p.ID == id)
             {
@@ -64,7 +65,7 @@ public class PartyManager : MonoBehaviour
 
     public BasePlayer FindPartyMemberByName(string name)
     {
-        foreach (BasePlayer p in currentParty) 
+        foreach (BasePlayer p in currentParty)
         {
             if (p.Name == name)
             {
@@ -85,7 +86,7 @@ public class PartyManager : MonoBehaviour
         ClearPartyUI();
 
         Transform container = partyUI.transform.GetChild(0).Find("PartyMembers");
-        
+
         foreach (BasePlayer p in currentParty)
         {
             GameObject toInstantiate = Instantiate(partyMemberPrefab, container.position, Quaternion.identity);

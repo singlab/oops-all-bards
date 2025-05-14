@@ -52,9 +52,9 @@ public class VictoryManager : MonoBehaviour
         player.CiFData.AddAffinity(quinton);
     }
 
-    public void RedirectToTavern()
+    public void RedirectToPreviousScene()
     {
-        DemoManager.Instance.LoadScene("TavernDemo");
+        GameManager.Instance.ReturnToWorldAfterCombat();
     }
 
     public void IncrementTavernVisits()

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571336, b: 0.3069219, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -298,7 +298,7 @@ PrefabInstance:
     - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: RedirectToTavern
+      value: RedirectToPreviousScene
       objectReference: {fileID: 0}
     - target: {fileID: 6980642160132700203, guid: 5fff9fc439eb23040b389b5c2be44fe6,
         type: 3}

@@ -8,12 +8,12 @@ public class LossManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
-    public void RedirectToTavern()
+    public void RedirectToPreviousScene()
     {
-        DemoManager.Instance.LoadScene("TavernDemo");
+        GameManager.Instance.ReturnToWorldAfterCombat();
     }
 
     public void IncrementTavernVisits()

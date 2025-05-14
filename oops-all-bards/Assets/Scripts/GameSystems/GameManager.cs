@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     public bool completedGame = false;
 
     // Public fields for combat scene management
+    public string previousSceneName;
+    public Vector3 playerPositionBeforeCombat;
+    public Quaternion playerRotationBeforeCombat;
     public List<GameObject> combatants_playerParty = new List<GameObject>();
     public List<string> combatants_enemyParty = new List<string>();
 
@@ -184,8 +187,9 @@ public class GameManager : MonoBehaviour
         // Check if this is one of our defined combat start outcomes
         if (interactionType == InteractionTypes.Combat &&
             (outcome == OutcomeStrings.Combat.Combat_PlayerInitiated_Piggy ||
-             outcome == OutcomeStrings.Combat.Combat_PlayerInitiated_QuestNPC || // For the other guard
-             outcome == OutcomeStrings.Combat.Combat_WurguthAttacksPlayer)) // Anticipating Wurguth
+             outcome == OutcomeStrings.Combat.Combat_PlayerInitiated_QuestNPC ||
+             outcome == OutcomeStrings.Combat.Combat_WurguthAttacksPlayer ||
+             outcome == OutcomeStrings.Combat.Combat_LocationTrigger_Quinton))
         {
             GameObject eventActor = data.TryGetValue("actor", out object actorObj) ? actorObj as GameObject : null;
             GameObject eventTarget = data.TryGetValue("target", out object targetObj) ? targetObj as GameObject : null;
@@ -212,6 +216,12 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.LogError("CombatStartInteraction: Could not determine Player from event actor/target.");
                     return;
+                }
+
+                // HACK: If the Combat_LocationTrigger_Quinton outcome is used, set enemyCombatant to null to allow CombatManager to spawn random enemies.
+                if (outcome == OutcomeStrings.Combat.Combat_LocationTrigger_Quinton)
+                {
+                    enemyCombatant = null;
                 }
 
                 StartCombatEncounter(new List<GameObject> { playerCombatant }, new List<string> { enemyCombatant });
@@ -248,7 +258,51 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Preparing to start combat. Player Party Count: {combatants_playerParty.Count}, Enemy Party Count: {combatants_enemyParty.Count}");
 
+        // Set previous scene information
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        playerPositionBeforeCombat = player.transform.position;
+        playerRotationBeforeCombat = player.transform.rotation;
+        previousSceneName = SceneManager.GetActiveScene().name;
+        Debug.Log($"Previous Scene: {previousSceneName}, Player Position: {playerPositionBeforeCombat}, Player Rotation: {playerRotationBeforeCombat}");
+
         // Load the combat scene
         SceneManager.LoadScene("GigDemo");
+    }
+
+    public void ReturnToWorldAfterCombat()
+    {
+        if (string.IsNullOrEmpty(previousSceneName))
+        {
+            Debug.LogError("ReturnToWorldAfterCombat called without a previous scene.");
+            return;
+        }
+        StartCoroutine(LoadPreviousSceneAndRepositionPlayer());
+    }
+
+    IEnumerator LoadPreviousSceneAndRepositionPlayer()
+    {
+        // Load the previous scene
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(previousSceneName);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        // Reposition the player
+        TogglePlayerControls();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            player.transform.position = playerPositionBeforeCombat;
+            player.transform.rotation = playerRotationBeforeCombat;
+            Debug.Log($"Player repositioned to: {player.transform.position}, Rotation: {player.transform.rotation}");
+        }
+
+        // Re-enable player controls
+        TogglePlayerControls();
+        previousSceneName = string.Empty; // Clear the previous scene name
+        playerPositionBeforeCombat = Vector3.zero; // Reset player position
+        playerRotationBeforeCombat = Quaternion.identity; // Reset player rotation
+        Debug.Log("Player controls re-enabled and combat scene unloaded.");
     }
 }

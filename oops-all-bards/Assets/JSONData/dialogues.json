@@ -172,7 +172,10 @@
                     "nodeResponses": [
                         {
                             "nodeResponseText": "Oh, for --",
-                            "nextNode": -999
+                            "triggersInteraction": true,
+                            "interactionType": "Combat",
+                            "outcomeOnPass": "Combat_LocationTrigger_Quinton",
+                            "outcomeOnFail": ""
                         }
                     ]
                 }

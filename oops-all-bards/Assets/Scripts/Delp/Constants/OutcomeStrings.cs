@@ -36,6 +36,7 @@ public static class OutcomeStrings
         public const string Combat_PlayerInitiated_Piggy = "Combat_PlayerInitiated_Piggy";
         public const string Combat_PlayerInitiated_QuestNPC = "Combat_PlayerInitiated_QuestNPC";
         public const string Combat_WurguthAttacksPlayer = "Combat_WurguthAttacksPlayer";
+        public const string Combat_LocationTrigger_Quinton = "Combat_LocationTrigger_Quinton";
         // ... other combat outcomes
     }
 
