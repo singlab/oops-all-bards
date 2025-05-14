@@ -20,5 +20,5 @@ MonoBehaviour:
   questStageID: 2
   checkCondition:
     conditionType: 3
-    relatedID: 1
+    relatedID: 2
   exhausted: 0

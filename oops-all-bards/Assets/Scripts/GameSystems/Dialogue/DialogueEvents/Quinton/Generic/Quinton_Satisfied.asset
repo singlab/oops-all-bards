@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a68d1a0d2afbd7419856866a5cab175, type: 3}
-  m_Name: Piggy_0
+  m_Name: Quinton_Satisfied
   m_EditorClassIdentifier: 
-  eventType: 1
-  dialogueBubblePrefab: {fileID: 8965773036395080770, guid: 9f28fc0edb82b054e9bd374d69bbc967,
-    type: 3}
-  dialogueID: 11
-  questID: 2
-  questStageID: 1
+  eventType: 3
+  dialogueBubblePrefab: {fileID: 0}
+  dialogueID: 4
+  questID: 0
+  questStageID: 0
   checkCondition:
-    conditionType: 3
-    relatedID: 2
+    conditionType: 0
+    relatedID: 0
   exhausted: 0

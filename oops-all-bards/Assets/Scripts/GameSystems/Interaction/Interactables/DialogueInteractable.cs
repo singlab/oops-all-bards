@@ -18,9 +18,9 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
             DialogueManager.Instance.StartDialogue(selectedEvent.dialogueID);
 
             // Handle quest stage progression if applicable and questStageID is valid
-            if (selectedEvent.eventType == DialogueEvent.DialogueEventType.QuestContinue && selectedEvent.questStageID != -1) 
+            if (selectedEvent.eventType == DialogueEvent.DialogueEventType.QuestContinue && selectedEvent.questStageID != -1)
             {
-                QuestManager.Instance.MarkStageComplete(); 
+                QuestManager.Instance.MarkStageComplete();
             }
 
             // Handle quest acceptance if applicable
@@ -31,11 +31,17 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
                 QuestManager.Instance.MarkStageComplete();
             }
 
+            // Handle quest completion if applicable
+            if (selectedEvent.eventType == DialogueEvent.DialogueEventType.QuestComplete)
+            {
+                QuestManager.Instance.MarkQuestComplete();
+            }
+
             selectedEvent.exhausted = true;
         }
         else
         {
-            DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse); 
+            DialogueManager.Instance.SpawnTextBubble(gameObject, exhaustedDialogueResponse);
         }
     }
 
@@ -43,8 +49,8 @@ public class DialogueInteractable : MonoBehaviour, IInteractable
     {
         foreach (DialogueEvent dialogueEvent in dialogueEvents)
         {
-            if (!dialogueEvent.exhausted && CheckConditions(dialogueEvent.checkCondition) && 
-                (dialogueEvent.questID == QuestManager.Instance.GetCurrentQuestID() || dialogueEvent.questStageID == -99)) 
+            if (!dialogueEvent.exhausted && CheckConditions(dialogueEvent.checkCondition) &&
+                (dialogueEvent.questID == QuestManager.Instance.GetCurrentQuestID() || dialogueEvent.questStageID == -99))
             {
                 return dialogueEvent;
             }
