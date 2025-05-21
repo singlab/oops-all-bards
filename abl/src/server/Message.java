@@ -19,9 +19,9 @@ public class Message {
 		this.msg = msg;
 		this.data = data;
 	}
-	
+
 	public Message(JSONObject jo) {
-		this.code = (int)(long) jo.get("code");
+		this.code = (int) (long) jo.get("code");
 		this.msg = (String) jo.get("msg");
 		JSONParser parser = new JSONParser();
 		try {
@@ -33,7 +33,7 @@ public class Message {
 			System.out.println("Error parsing data field.");
 		}
 	}
-	
+
 	public JSONObject toJSON() {
 		JSONObject jo = new JSONObject();
 		jo.put("code", code);
@@ -41,7 +41,7 @@ public class Message {
 		jo.put("data", data);
 		return jo;
 	}
-	
+
 	WME parseData() {
 		// 1 -- AllyWME
 		if (this.code == 1) {
@@ -52,6 +52,12 @@ public class Message {
 		// 2 -- VivWME
 		if (this.code == 2) {
 			VivWME wme = new VivWME(this.data);
+			return wme;
+		}
+
+		// 3 -- BehaviorStatusWME
+		if (this.code == 3) {
+			BehaviorStatusWME wme = new BehaviorStatusWME(this.data);
 			return wme;
 		}
 		return null;

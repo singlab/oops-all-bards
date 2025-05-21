@@ -863,18 +863,15 @@ public class VivCharacterController : MonoBehaviour
     /// <param name="behaviorName">The name of the behavior that completed/ended.</param>
     /// <param name="success">True if the behavior completed successfully, false otherwise.</param>
     /// <param name="interrupted">True if the behavior was interrupted before natural completion.</param>
-    protected virtual void SignalActionCompletionToABL(string behaviorName, bool success, bool interrupted = false)
+    protected virtual void SignalActionCompletionToABL(string behName, bool success, bool interrupted = false)
     {
-        string status = success ? "Success" : (interrupted ? "Interrupted" : "Failure");
-        Debug.Log($"SignalToABL: {vivCharacter.characterName} behavior '{behaviorName}' ended with status: {status}", this);
+        string stat = success ? "Success" : (interrupted ? "Interrupted" : "Failure");
+        Debug.Log($"SignalToABL: {vivCharacter.characterName} behavior '{behName}' ended with status: {stat}");
 
-        // --- YOUR ABL WME UPDATE LOGIC GOES HERE ---
-        // Example (pseudo-code, depends on your ABL Java Action / WME update mechanism):
-        // ActionStatusWME wme = new ActionStatusWME(vivCharacter.characterID, behaviorName, status);
-        // YourAblBridge.Instance.UpdateWME(wme); // Or however you send WMEs to ABL
-        // This is crucial for ABL's success_test_wait conditions.
+        BehaviorStatusWME statusWME = new BehaviorStatusWME(vivCharacter.characterID, behName, stat);
+        ABLMessage messageToSend = statusWME.ToABLMessage();
+        TCPTestClient.Instance.SendMessage<ABLMessage>(messageToSend);
     }
-
 
     // --- Public Action Methods ---
     // These will be simpler. They find the right ICharacterBehavior component
