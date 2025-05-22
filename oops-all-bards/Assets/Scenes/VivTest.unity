@@ -496,6 +496,12 @@ MonoBehaviour:
     val:
     - DuelPlayer
     - RefuseHelp
+  - key: ProtectGuildOfShadows
+    val:
+    - InvestigateSuspiciousActivity
+    - NeutralizeThreat
+    - GatherInformation
+    - MaintainGuildSecrecy
   behaviorBindings:
   - key: DuelPlayer
     val:
@@ -506,6 +512,14 @@ MonoBehaviour:
     - InParty
     - InCombat
     - CanHelp
+  - key: InvestigateSuspiciousActivity
+    val: []
+  - key: NeutralizeThreat
+    val: []
+  - key: GatherInformation
+    val: []
+  - key: MaintainGuildSecrecy
+    val: []
   characterBindings:
   - key: 1
     val: Quinton
@@ -795,6 +809,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6059823600080305899, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
+      propertyPath: availableBehaviorComponents.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059823600080305899, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
+      propertyPath: availableBehaviorComponents.Array.data[0]
+      value: 
+      objectReference: {fileID: 6059823600744273372}
+    - target: {fileID: 6059823600080305899, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
+      propertyPath: availableBehaviorComponents.Array.data[1]
+      value: 
+      objectReference: {fileID: 6059823600744273371}
+    - target: {fileID: 6059823600080305899, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
+      propertyPath: availableBehaviorComponents.Array.data[2]
+      value: 
+      objectReference: {fileID: 6059823600744273370}
+    - target: {fileID: 6059823600080305899, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
+      propertyPath: availableBehaviorComponents.Array.data[3]
+      value: 
+      objectReference: {fileID: 6059823600744273369}
     - target: {fileID: 6402351363428025278, guid: fe3f165249544ae4ea103c69ac869a5d,
         type: 3}
       propertyPath: m_Name
@@ -802,3 +841,59 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe3f165249544ae4ea103c69ac869a5d, type: 3}
+--- !u!1 &6059823600744273368 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6402351363428025278, guid: fe3f165249544ae4ea103c69ac869a5d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6059823600744273367}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6059823600744273369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059823600744273368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df841f33983b24242a5e1bf073b8eabb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6059823600744273370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059823600744273368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2a75c4d425a6b346ac64ef1e2bb72ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6059823600744273371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059823600744273368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8532cb4c486874428d85aa915081099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueIDToStart: 14
+--- !u!114 &6059823600744273372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059823600744273368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cac207a89fead38459ba8a55df32197b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueIDToStart: 13

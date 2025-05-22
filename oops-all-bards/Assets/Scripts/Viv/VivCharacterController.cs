@@ -718,8 +718,12 @@ public class VivCharacterController : MonoBehaviour
     public Animator animator;         // Made public for behavior components
     public NavMeshAgent navMeshAgent;   // Made public
     public VivCharacter vivCharacter;   // Made public
+    // --- Behavior Management ---
+    [Header("Available Behaviors")]
+    [Tooltip("Drag ICharacterBehavior components (e.g., MoveBehavior, ObserveBehavior scripts attached to this GameObject) here.")]
+    public List<MonoBehaviour> availableBehaviorComponents = new List<MonoBehaviour>(); // Use MonoBehaviour to allow dragging in Inspector
 
-    // --- Current Active Behavior ---
+    private Dictionary<System.Type, ICharacterBehavior> behaviorMap = new Dictionary<System.Type, ICharacterBehavior>();
     private ICharacterBehavior currentActiveBehavior;
     private GameObject currentBehaviorTarget;
 
@@ -739,6 +743,27 @@ public class VivCharacterController : MonoBehaviour
         animator = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         vivCharacter = GetComponent<VivCharacter>();
+
+        // Populate the behaviorMap from the Inspector list
+        behaviorMap.Clear();
+        foreach (var monoBehaviour in availableBehaviorComponents)
+        {
+            if (monoBehaviour is ICharacterBehavior characterBehavior)
+            {
+                if (!behaviorMap.ContainsKey(characterBehavior.GetType()))
+                {
+                    behaviorMap.Add(characterBehavior.GetType(), characterBehavior);
+                }
+                else
+                {
+                    Debug.LogWarning($"Duplicate behavior type {characterBehavior.GetType()} found in availableBehaviorComponents for {gameObject.name}. Using the first one encountered.", this);
+                }
+            }
+            else if (monoBehaviour != null)
+            {
+                Debug.LogWarning($"Component {monoBehaviour.GetType().Name} in availableBehaviorComponents for {gameObject.name} does not implement ICharacterBehavior.", this);
+            }
+        }
 
         if (animator == null || navMeshAgent == null || vivCharacter == null)
         {
@@ -774,6 +799,17 @@ public class VivCharacterController : MonoBehaviour
             // If no active behavior, ensure character is visually idle
             UpdateAnimatorSpeed();
         }
+    }
+
+    // Helper method to get a behavior from the map
+    private T GetBehavior<T>() where T : class, ICharacterBehavior
+    {
+        if (behaviorMap.TryGetValue(typeof(T), out ICharacterBehavior behavior))
+        {
+            return behavior as T;
+        }
+        Debug.LogError($"{typeof(T).Name} not found in the behavior map for {vivCharacter.characterName}. Ensure it's added to the 'Available Behaviors' list in the Inspector and implements ICharacterBehavior.", this);
+        return null;
     }
 
     protected virtual void UpdateAnimatorSpeed()
@@ -874,51 +910,43 @@ public class VivCharacterController : MonoBehaviour
     }
 
     // --- Public Action Methods ---
-    // These will be simpler. They find the right ICharacterBehavior component
-    // on this GameObject and call SetActiveBehavior.
-
-    public virtual void Action_ObserveTarget(GameObject target)
+    public virtual void Action_ObserveTarget(GameObject target, float duration = 10f)
     {
-        ObserveBehavior observeComp = GetComponent<ObserveBehavior>(); // Or manage a list/dictionary of behaviors
+        ObserveBehavior observeComp = GetBehavior<ObserveBehavior>();
         if (observeComp != null)
         {
-            SetActiveBehavior(observeComp, target);
+            Debug.Log($"{vivCharacter.characterName}: VCC - Activating ObserveBehavior for target {target?.name}");
+            SetActiveBehavior(observeComp, target, duration);
         }
-        else Debug.LogError("ObserveBehavior component not found!", this);
     }
 
     public virtual void Action_AggressiveConfrontation(GameObject target)
     {
-        AggressiveConfrontationBehavior aggroConfrontComp = GetComponent<AggressiveConfrontationBehavior>();
+        AggressiveConfrontationBehavior aggroConfrontComp = GetBehavior<AggressiveConfrontationBehavior>();
         if (aggroConfrontComp != null)
         {
+            Debug.Log($"{vivCharacter.characterName}: VCC - Activating AggressiveConfrontationBehavior for target {target?.name}");
             SetActiveBehavior(aggroConfrontComp, target);
         }
-        else Debug.LogError("AggressiveConfrontationBehavior component not found!", this);
     }
 
     public virtual void Action_CalmConfrontation(GameObject target)
     {
-        CalmConfrontationBehavior calmConfrontComp = GetComponent<CalmConfrontationBehavior>();
+        CalmConfrontationBehavior calmConfrontComp = GetBehavior<CalmConfrontationBehavior>();
         if (calmConfrontComp != null)
         {
+            Debug.Log($"{vivCharacter.characterName}: VCC - Activating CalmConfrontationBehavior for target {target?.name}");
             SetActiveBehavior(calmConfrontComp, target);
         }
-        else Debug.LogError("CalmConfrontationBehavior component not found!", this);
     }
 
     public virtual void Action_MoveToPosition(Vector3 destination)
     {
-        MoveBehavior moveBehavior = GetComponent<MoveBehavior>();
-        if (moveBehavior != null)
+        MoveBehavior moveComp = GetBehavior<MoveBehavior>();
+        if (moveComp != null)
         {
             Debug.Log($"{vivCharacter.characterName}: VCC - Activating MoveBehavior for position {destination}");
-            // Pass the destination as optionalData
-            SetActiveBehavior(moveBehavior, null, destination);
-        }
-        else
-        {
-            Debug.LogError("MoveBehavior component not found!", this);
+            SetActiveBehavior(moveComp, null, destination);
         }
     }
 

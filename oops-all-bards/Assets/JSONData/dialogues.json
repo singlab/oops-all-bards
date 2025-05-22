@@ -872,6 +872,188 @@
                     ]
                 }
             ]
+        },
+        {
+            "id": 13,
+            "speakerName": "Wurguth",
+            "exhausted": false,
+            "dialogueNodes": [
+                {
+                    "id": 0,
+                    "nodeText": "You! I've seen you skulking about, sniffing around places you've got no business being. Well, congratulations, you wanted to find the Guild of Shadows? You found us.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "I was just curious. I don't want any trouble.",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "And what if I did? What are you going to do about it?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "Curiosity? Trouble's what you get when you poke your nose into Guild affairs. We don't like spies, and we *really* don't like loose ends. It's a bit late to say you want no trouble now.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Look, I'll leave. You won't see me again.",
+                            "nextNode": 3
+                        },
+                        {
+                            "nodeResponseText": "So, that's a threat then?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "Consider it a statement of fact. You came looking for the heart of the shadows, and you found it. But the price of entry is steep. Especially for those who aren't invited. Time to pay up.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "If you mean a fight, I'm ready.",
+                            "nextNode": -1,
+                            "triggersInteraction": true,
+                            "interactionType": "Combat",
+                            "outcomeOnPass": "Combat_WurguthAggro_Path1",
+                            "outcomeOnFail": ""
+                        },
+                        {
+                            "nodeResponseText": "There must be another way. I don't want to fight.",
+                            "nextNode": 4
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "Leave? After you've pinpointed our territory and nosed around our business? I don't think so. The Guild values its secrecy above all. You've become a liability.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Then I guess you leave me no choice.",
+                            "nextNode": -1,
+                            "triggersInteraction": true,
+                            "interactionType": "Combat",
+                            "outcomeOnPass": "Combat_WurguthAggro_Path1",
+                            "outcomeOnFail": ""
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "There *was* another way: not sticking your nose where it doesn't belong. Too late for that now. The Guild has decided your little adventure ends here. Prepare yourself!",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Alright then. Let's get this over with.",
+                            "nextNode": -1,
+                            "triggersInteraction": true,
+                            "interactionType": "Combat",
+                            "outcomeOnPass": "Combat_WurguthAggro_Path1",
+                            "outcomeOnFail": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "speakerName": "Wurguth",
+            "exhausted": false,
+            "dialogueNodes": [
+                {
+                    "id": 0,
+                    "nodeText": "Hold a moment. You carry yourself with a certain... weight. You're the newcomer, correct? Your commendable actions concerning Alera have not gone unnoticed.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "That's me. And you are?",
+                            "nextNode": 1
+                        },
+                        {
+                            "nodeResponseText": "I am. News travels. What's your interest in my business?",
+                            "nextNode": 2
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "nodeText": "I am Wurguth. Let's just say I'm... a keeper of the peace for the Guild in these parts. I ensure things remain orderly. Now, this is Guild of Shadows territory. What is your purpose here?",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "My purpose is to gather information. Specifically, about the Followers of Bolothamogg. Has your Guild heard of them?",
+                            "nextNode": 3
+                        },
+                        {
+                            "nodeResponseText": "I'm assessing the situation. There are rumors of a new cult: the Followers of Bolothamogg. What's the Guild's stance?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "nodeText": "My interest is ensuring the Guild's affairs remain undisturbed, especially when individuals of note appear. I am Wurguth; I handle matters that require a... firm hand. Now, this is Guild territory. State your purpose.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "Very well, Wurguth. I'm investigating the Followers of Bolothamogg. What does the Guild know?",
+                            "nextNode": 3
+                        },
+                        {
+                            "nodeResponseText": "I need to understand the threat posed by the Followers of Bolothamogg. Is your Guild aware of them?",
+                            "nextNode": 3
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "nodeText": "The Followers of Bolothamogg... Yes, their shadow has begun to fall even here. A fanatical and dangerous element. The Guild monitors all such groups that could destabilize... the natural order of things.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "So the Guild considers them a significant threat?",
+                            "nextNode": 4
+                        },
+                        {
+                            "nodeResponseText": "Do you know anything about their specific plans or where they might be operating?",
+                            "nextNode": 5
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "nodeText": "Any cult dedicated to... *him*... is a significant concern. They are disruptive, and their aims are antithetical to the kind of stability the Guild prefers. We are watching them closely.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "It seems our interests might align in opposing them. Thank you for the insight, Wurguth.",
+                            "nextNode": 6
+                        },
+                        {
+                            "nodeResponseText": "Good to know the Guild is aware. That's all I needed for now.",
+                            "nextNode": -1
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "nodeText": "Detailed intelligence on their operations is not something the Guild shares lightly, even with those of good standing. Know that we are aware, and we are prepared. Their fanaticism is a blight.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "I understand the need for discretion. I appreciate what you've shared.",
+                            "nextNode": -1
+                        },
+                        {
+                            "nodeResponseText": "If you ever need an outside party to assist against them, Wurguth, you know I'm capable.",
+                            "nextNode": 6
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "nodeText": "The Guild always remembers those who are capable... and those who understand the delicate balance of power. Your concern about Bolothamogg's fanatics is noted. Go safely, and be wary. They are not to be underestimated.",
+                    "nodeResponses": [
+                        {
+                            "nodeResponseText": "I will. Thank you, Wurguth.",
+                            "nextNode": -1
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
