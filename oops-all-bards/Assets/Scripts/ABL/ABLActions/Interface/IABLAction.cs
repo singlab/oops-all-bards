@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IABLAction
 {
-    void Execute(ActionData data);
+    void Execute(string jsonData);
 }

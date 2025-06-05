@@ -10,21 +10,5 @@ public class ABLResponse
     // The message returned by the Java server.
     public string msg;
     // The data represented as a string returned by the Java server.
-    public ActionData data;
-}
-
-// A class used to hold various things sent as part of the data field of an ABLResponse.
-[System.Serializable]
-public class ActionData 
-{
-    // The character ID of the acting character, if any
-    public int actingCharacter;
-    // The character ID of the target character, if any
-    public int targetCharacter;
-    // The name of the NPC on which the character is acting, if any
-    public string npcName;
-    // Whether or not the acting character is in combat, if relevant
-    public bool inCombat;
-    // The location of the action, if relevant
-    public string location;
+    public string data;
 }

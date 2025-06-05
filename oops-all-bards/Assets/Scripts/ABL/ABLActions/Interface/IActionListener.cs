@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IActionListener
 {
-    void OnActionExecuted(string actionName, ActionData data);
+    void OnActionExecuted(string actionName, ActionEventData data);
 }

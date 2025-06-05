@@ -62,7 +62,7 @@ public class DemoManager : MonoBehaviour, IActionListener
     // Update is called once per frame
     void Update()
     {
-      
+
         if (completedDemo)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -93,7 +93,7 @@ public class DemoManager : MonoBehaviour, IActionListener
         enemies.Add(enemy);
         return enemies;
     }
-    
+
 
     public void RecruitQuinton()
     {
@@ -119,12 +119,12 @@ public class DemoManager : MonoBehaviour, IActionListener
             if (child.gameObject == toDestroy)
             {
                 Destroy(child.gameObject);
-                
+
             }
 
             //Locks cursor when help messages are not shown
             //Code also prevent premature locking if a help message is displayed during dialogue
-            if(GameObject.Find("SignpostContainer").transform.childCount == 1 && !DialogueManager.Instance.dialogueUI.activeInHierarchy)
+            if (GameObject.Find("SignpostContainer").transform.childCount == 1 && !DialogueManager.Instance.dialogueUI.activeInHierarchy)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 GameManager.Instance.TogglePlayerControls();
@@ -139,32 +139,41 @@ public class DemoManager : MonoBehaviour, IActionListener
         if (signpostContainer == null)
         { signpostContainer = GameObject.Find("SignpostContainer"); }
         GameObject toInstantiate = Instantiate(signpostPrefab, signpostContainer.transform.position, Quaternion.identity);
-        toInstantiate.transform.SetParent(signpostContainer.transform, false); 
+        toInstantiate.transform.SetParent(signpostContainer.transform, false);
         toInstantiate.transform.position = toInstantiate.transform.parent.position;
         toInstantiate.GetComponentInChildren<TMP_Text>().text = text;
         GameManager.Instance.StartCoroutine(GameManager.togglePlayerPause());
         toInstantiate.GetComponentInChildren<Button>().onClick.AddListener(delegate { DestroySignpostMessage(toInstantiate); });
     }
-    
-    public void OnActionExecuted(string actionName, ActionData data)
+
+    public void OnActionExecuted(string actionName, ActionEventData eventData)
     {
         if (actionName == "Protect" && !hasBeenProtectedOnce)
         {
             CreateSignpostMessage(help6);
             hasBeenProtectedOnce = true;
         }
-        else if (actionName == "RequestAssistance" && !hasRequestAidOnce)
+        else if (actionName == "RequestAssistance")
         {
-            CreateSignpostMessage(help7);
-            hasRequestAidOnce = true;
+            RequestAssistanceData assistanceData = eventData as RequestAssistanceData;
+            if (assistanceData == null) return;
+
+            if (!hasRequestAidOnce)
+            {
+                CreateSignpostMessage(help7);
+                hasRequestAidOnce = true;
+            }
+            else
+            {
+                DialogueManager.Instance.TriggerAssistanceQuip(assistanceData.characterId);
+            }
         }
-        else if(actionName == "RequestAssistance")
+        else if (actionName == "Quip")
         {
-             DialogueManager.Instance.TriggerAssistanceQuip(data.actingCharacter);
-        }
-        else if(actionName == "Quip")
-        {
-            DialogueManager.Instance.ChooseAppropriateQuip(data.actingCharacter, data.inCombat);
+            QuipData quipData = eventData as QuipData;
+            if (quipData == null) return;
+
+            DialogueManager.Instance.ChooseAppropriateQuip(quipData.characterId, quipData.inCombat);
         }
     }
 }

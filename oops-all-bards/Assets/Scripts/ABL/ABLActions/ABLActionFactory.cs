@@ -6,11 +6,13 @@ public static class ABLActionFactory
 {
     private static Dictionary<string, IABLAction> _actionMap = new Dictionary<string, IABLAction>()
     {
+        { "moveToPosition", new MoveToPositionAction() },
+        { "observeTarget", new ObserveTargetAction() },
+        { "calmConfrontation", new CalmConfrontationAction() },
+        { "aggressiveConfrontation", new AggressiveConfrontationAction() },
         { "Protect", new ProtectAction() },
         { "RequestAssistance", new RequestAssistanceAction() },
         { "Quip", new QuipAction() },
-        { "QuestionLocals", new QuestionLocalsAction() },
-        // Add other actions here...
     };
 
     public static IABLAction CreateAction(string actionName)

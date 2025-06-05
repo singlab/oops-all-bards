@@ -4,22 +4,28 @@ import org.json.simple.JSONObject;
 import server.Message;
 import server.TCPServer;
 
-// Wurguth confronts the player.
-// Args:
-//  [0] - int characterId (Wurguth's ID)
-public class ConfrontPlayer extends BaseAction {
+/**
+ * Triggers the ObserveBehavior on a character in Unity.
+ * Args:
+ * [0] - int characterId
+ * [1] - int targetId
+ * [2] - float duration
+ */
+public class ObserveTarget extends BaseAction {
 
     @Override
     public void execute(Object[] args) {
         int characterId = (int) args[0];
+        int targetId = (int) args[1];
+        float duration = ((Number) args[2]).floatValue();
 
-        System.out.println("Wurguth (ID " + characterId + ") is confronting the player.");
+        int code = 2;
+        String msg = "observeTarget";
 
-        int code = 2; // Could be combat or non-combat, depending on how you handle it.
-        String msg = "ConfrontPlayer";
         JSONObject data = new JSONObject();
         data.put("characterId", characterId);
-		//Could add more to send here.
+        data.put("targetId", targetId);
+        data.put("duration", duration);
 
         Message toSend = new Message(code, msg, data);
         JSONObject jo = toSend.toJSON();

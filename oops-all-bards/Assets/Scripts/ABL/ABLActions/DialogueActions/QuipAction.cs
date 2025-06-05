@@ -1,12 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class QuipAction : IABLAction
 {
-    public void Execute(ActionData data)
+    public void Execute(string jsonData)
     {
-        // Dialogue trigger?
+        QuipData data = JsonUtility.FromJson<QuipData>(jsonData);
+
+        if (data == null)
+        {
+            Debug.LogError("QuipAction: Failed to parse action data.");
+            return;
+        }
+
+        Debug.Log($"QuipAction executed for character ID: {data.characterId}. In combat: {data.inCombat}");
+
         return;
     }
 }
