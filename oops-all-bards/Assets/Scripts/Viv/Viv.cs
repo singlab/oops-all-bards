@@ -10,10 +10,6 @@ namespace Viv
     {
         // A reference to the bindings between supertasks, behaviors, and assumptions.
         [SerializeField] private CustomDictionary bindings;
-        // The current supertask Viv is managing.
-        private Supertask currentSupertask;
-        // Whether or not Viv should use simulated CiF input.
-        [SerializeField] private bool simulateCif = true;
         private static Viv _instance;
         public static Viv Instance => Viv._instance;
         // A registry that maps the integer ID of a character to the VivCharacter object associated with that ID.
@@ -33,31 +29,21 @@ namespace Viv
             DontDestroyOnLoad(gameObject);
         }
 
-        void Start()
+        // A character calls this method to get a new instance of a supertask by name.
+        public Supertask CreateSupertaskForCharacter(string supertaskName, VivCharacter character)
         {
-            if (simulateCif)
+            if (bindings.SupertaskDict.ContainsKey(supertaskName))
             {
-                SimulateCiFStart();
+                // For now, we assume the target is the player (ID 0) as a default.
+                int targetCharacterId = 0;
+
+                Supertask newTask = new Supertask(supertaskName, character.characterID, targetCharacterId, bindings);
+                return newTask;
             }
-        }
-
-        void Update()
-        {
-
-        }
-
-        private void InitiateSupertask(Supertask supertask)
-        {
-            supertask.InProgress = true;
-            this.currentSupertask = supertask;
-            EvaluateCurrentSupertask();
-        }
-
-        public void EvaluateCurrentSupertask()
-        {
-            if (this.currentSupertask != null)
+            else
             {
-                this.currentSupertask.Evaluate();
+                Debug.LogError($"Supertask name '{supertaskName}' not found in Viv bindings! Cannot create task for {character.characterName}.");
+                return null;
             }
         }
 
@@ -99,19 +85,6 @@ namespace Viv
         public IEnumerable<VivCharacter> GetAllRegisteredCharacters()
         {
             return new List<VivCharacter>(characterRegistry.Values);
-        }
-
-        // A testing function that emulates CiF assigning a supertask for a given character.
-        void SimulateCiFStart()
-        {
-            TestQuintonsRevenge();
-        }
-
-        // A testing function that simulates the "Quinton's Revenge" scenario.
-        void TestQuintonsRevenge()
-        {
-            Supertask testST = new Supertask("SabotagePlayer", 1, 0, bindings);
-            InitiateSupertask(testST);
         }
 
         private void DebugSupertask(Supertask st)
@@ -184,19 +157,57 @@ namespace Viv
         }
 
         // A function that dispatches all behaviors that are not built on false assumptions to the ABL agent.
-        public void DispatchAllBehaviors()
+        public void SelectAndDispatchBehaviors()
         {
-            VivWME wme = this.ToVivWME();
-            string[] behaviors = new string[this.behaviors.Count];
-            for (int i = 0; i < this.behaviors.Count; i++)
-            {
-                behaviors[i] = this.behaviors[i].Name;
-            }
-            wme.ToSpawn = behaviors;
-            ABLMessage msg = wme.ToABLMessage();
-            TCPTestClient.Instance.SendMessage<ABLMessage>(msg);
+            // Ensure the evaluation is current.
+            this.Evaluate();
 
-            this.inProgress = true;
+            // Create a list to hold only the behaviors that pass criteria.
+            var validBehaviors = new List<Behavior>();
+
+            for (int i = 0; i < behaviors.Count; i++)
+            {
+                // Core decision-making rule:
+                if (evaluation[i].Falsities == 0)
+                {
+                    validBehaviors.Add(behaviors[i]);
+                    Debug.Log($"Behavior '{behaviors[i].Name}' is valid for dispatch (T/F/U: {evaluation[i].Truths}/{evaluation[i].Falsities}/{evaluation[i].Uncertainties}).");
+                }
+                else
+                {
+                    Debug.Log($"Behavior '{behaviors[i].Name}' is INVALID for dispatch (T/F/U: {evaluation[i].Truths}/{evaluation[i].Falsities}/{evaluation[i].Uncertainties}).");
+                }
+            }
+
+            // If there are any valid behaviors, dispatch them.
+            if (validBehaviors.Count > 0)
+            {
+                Debug.Log($"Dispatching {validBehaviors.Count} valid behavior(s) to ABL...");
+
+                // Create the WME with the necessary parameters.
+                VivWME wme = new VivWME(this.actingCharacter);
+
+                // Create the list of goals to spawn with parameters.
+                List<SpawnGoalData> goalsToSpawn = new List<SpawnGoalData>();
+                foreach (Behavior validBehavior in validBehaviors)
+                {
+                    goalsToSpawn.Add(new SpawnGoalData
+                    {
+                        name = validBehavior.Name,
+                        actingCharacter = this.actingCharacter,
+                        targetCharacter = this.targetCharacter
+                    });
+                }
+                wme.ToSpawn = goalsToSpawn.ToArray();
+
+                // Send the message to the server.
+                ABLMessage msg = wme.ToABLMessage();
+                TCPTestClient.Instance.SendMessage<ABLMessage>(msg);
+            }
+            else
+            {
+                Debug.Log("No valid behaviors to dispatch for this supertask at this time.");
+            }
         }
 
         // A function that evaluates the given supertask with respect to its component behaviors.
@@ -333,17 +344,42 @@ namespace Viv
 
         private List<Assumption> FormAssumptions(string name, int actingCharacter, int targetCharacter, CustomDictionary bindings)
         {
-            // TODO: Change this to get string from targetCharacter ID. For now, only target is Player.
-            string targetCharacterName = "Player";
-
             List<Assumption> assumptions = new List<Assumption>();
-            List<string> assumptionNames = bindings.BehaviorDict[name];
 
-            foreach (string predicate in assumptionNames)
+            // Get the assumption templates from the bindings
+            List<string> assumptionTemplates = bindings.BehaviorDict[name];
+
+            // Create the role bindings dict
+            var roleBindings = new Dictionary<string, string>();
+
+            // Get the acting character's name for the {self} role
+            VivCharacter selfChar = Viv.Instance.FindVivCharacter(actingCharacter);
+            if (selfChar != null)
             {
-                Assumption toAdd = new Assumption(actingCharacter, predicate, targetCharacterName);
+                // e.g., "{self}" -> "Wurguth"
+                roleBindings.Add("{self}", selfChar.characterName);
+            }
+
+            // Get the target character's name for the {target} role
+            // TODO: This lookup should probably use a universal registry
+            string targetCharacterName = "Player"; // Default placeholder
+            VivCharacter targetChar = Viv.Instance.FindVivCharacter(targetCharacter);
+            if (targetChar != null)
+            {
+                targetCharacterName = targetChar.characterName;
+            }
+            // e.g., "{target}" -> "Player"
+            roleBindings.Add("{target}", targetCharacterName);
+
+            // TODO: Add other roles here in the future, like {eventActor}, {location}, etc.
+
+            // Create an Assumption for each template, passing the bindings to resolve it
+            foreach (string template in assumptionTemplates)
+            {
+                Assumption toAdd = new Assumption(template, actingCharacter, roleBindings);
                 assumptions.Add(toAdd);
             }
+
             return assumptions;
         }
 
@@ -383,10 +419,8 @@ namespace Viv
     {
         // An int ID representing the character making this assumption, so that the correct knowledgebase can be queried.
         [SerializeField] private int actingCharacter;
-        // The predicate used in the assumption, i.e. "StrongerThan".
-        [SerializeField] private string predicate;
-        // The subject on which the predicate is meant to be compared, usually the name of another character.
-        [SerializeField] private string subject;
+        [SerializeField] private string template; // e.g., "isHostile({target})"
+        [SerializeField] private string resolvedQuery; // e.g., "isHostile(Player)"
         // A temporary DELPResponse to store a returned message from the server.
         [SerializeField] private DELPResponse tmpResponse;
         // Whether or not the assumption holds true for the given owner, predicate, and subject.
@@ -396,27 +430,29 @@ namespace Viv
         // private fields for event management
         private Action<object> assignDelpResponseLambda;
 
-        public Assumption()
+        public Assumption(string template, int actingCharacter, Dictionary<string, string> roleBindings)
         {
-            this.actingCharacter = 0;
-            this.predicate = "default";
-            this.subject = "default";
-            this.isValid = Validity.DEFAULT;
-        }
-
-        public Assumption(int actingCharacter, string predicate, string subject)
-        {
+            this.template = template;
             this.actingCharacter = actingCharacter;
-            this.predicate = predicate;
-            this.subject = subject;
             this.isValid = Validity.DEFAULT;
+
+            // Resolve the template immediately upon creation
+            this.resolvedQuery = ResolveTemplate(template, roleBindings);
         }
 
-        // A utility function to transform the given assumption into a string format parsable by a DELP knowledgebase.
         public override string ToString()
         {
-            string toBuild = string.Format("{0}({1})", predicate, subject);
-            return toBuild;
+            return this.resolvedQuery;
+        }
+
+        private string ResolveTemplate(string template, Dictionary<string, string> roleBindings)
+        {
+            string result = template;
+            foreach (var binding in roleBindings)
+            {
+                result = result.Replace(binding.Key, binding.Value);
+            }
+            return result;
         }
 
         // A utility function to query a DELP knowledgebase with the given assumption and validate it.

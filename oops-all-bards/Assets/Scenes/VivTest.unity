@@ -834,6 +834,11 @@ PrefabInstance:
       propertyPath: availableBehaviorComponents.Array.data[3]
       value: 
       objectReference: {fileID: 6059823600744273369}
+    - target: {fileID: 6059823600080305900, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
+      propertyPath: characterID
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6402351363428025278, guid: fe3f165249544ae4ea103c69ac869a5d,
         type: 3}
       propertyPath: m_Name

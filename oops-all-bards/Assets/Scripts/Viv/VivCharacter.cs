@@ -10,6 +10,9 @@ namespace Viv
         public string characterName = "DefaultName";
         [Tooltip("Unique ID for this character used by AI systems.")]
         public int characterID = -1;
+        [Tooltip("The current supertask assigned to this character.")]
+        [SerializeField] private Supertask currentSupertask;
+        public Supertask CurrentSupertask => currentSupertask;
 
         [Header("AI Components")]
         [Tooltip("The DELP knowledge base asset for this character.")]
@@ -53,6 +56,48 @@ namespace Viv
             else
             {
                 Debug.LogError($"Viv instance not found when trying to register {characterName}. Make sure Viv initializes first.");
+            }
+
+            // After registration, this character determines and acquires its own task.
+            string desiredSupertaskName = null;
+
+            // Logic to determine which supertask this specific character should perform.
+            if (this.characterID == 1) // Quinton
+            {
+                desiredSupertaskName = "SabotagePlayer";
+            }
+            else if (this.characterID == 2) // Wurguth
+            {
+                desiredSupertaskName = "ProtectGuildOfShadows";
+            }
+
+            // If this character has a task defined...
+            if (!string.IsNullOrEmpty(desiredSupertaskName))
+            {
+                // ...ask the central Viv library to create an instance of that task.
+                Supertask myTask = Viv.Instance.CreateSupertaskForCharacter(desiredSupertaskName, this);
+
+                // If the task was created successfully, assign it.
+                if (myTask != null)
+                {
+                    this.AssignSupertask(myTask);
+                }
+            }
+        }
+
+        public void AssignSupertask(Supertask task)
+        {
+            this.currentSupertask = task;
+            Debug.Log($"VivCharacter: Supertask '{task.Name}' assigned to {this.name}.");
+
+            EvaluateTask();
+        }
+
+        public void EvaluateTask()
+        {
+            if (CurrentSupertask != null)
+            {
+                CurrentSupertask.SelectAndDispatchBehaviors();
             }
         }
 

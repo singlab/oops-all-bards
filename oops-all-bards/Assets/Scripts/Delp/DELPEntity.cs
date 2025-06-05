@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DELP;
-using Viv;
 
 [CreateAssetMenu]
 public class DELPEntity : ScriptableObject
@@ -95,7 +94,7 @@ public class DELPEntity : ScriptableObject
 
     public void UpdateKnowledgeBase()
     {
-        while (preparedData.Count != 0 )
+        while (preparedData.Count != 0)
         {
             DELPMessage msg = preparedData.Dequeue();
             TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
@@ -106,7 +105,6 @@ public class DELPEntity : ScriptableObject
     {
         PrepareEntityData();
         UpdateKnowledgeBase();
-        Viv.Viv.Instance.EvaluateCurrentSupertask();
     }
 
     public void QueryKnowledgeBase(string query)

@@ -6,13 +6,13 @@ using UnityEngine;
 public class VivWME
 {
     [SerializeField] private int id;
-    [SerializeField] private string[] toSpawn;
+    [SerializeField] private SpawnGoalData[] toSpawn;
     [SerializeField] private string[] toStop;
 
     public VivWME(int id)
     {
         this.id = id;
-        this.toSpawn = new string[0];
+        this.toSpawn = new SpawnGoalData[0];
         this.toStop = new string[0];
     }
 
@@ -25,7 +25,7 @@ public class VivWME
         return message;
     }
 
-    public string[] ToSpawn
+    public SpawnGoalData[] ToSpawn
     {
         get { return this.toSpawn; }
         set { this.toSpawn = value; }
@@ -36,4 +36,13 @@ public class VivWME
         get { return this.toStop; }
         set { this.toStop = value; }
     }
+}
+
+[System.Serializable]
+public class SpawnGoalData
+{
+    public string name;
+    public int actingCharacter;
+    public int targetCharacter;
+    // TODO: Add a Dictionary<string, object> here for more complex params
 }

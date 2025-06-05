@@ -17,7 +17,7 @@ MonoBehaviour:
   factToAdd: considersPotentialThreat({self}, {eventActor})
   factToRemove: 
   applicability: 1
-  specificCharacterID: -1
+  specificCharacterID: 2
   specificFaction: 
   proximityRadius: 10
   actorMatters: 1
