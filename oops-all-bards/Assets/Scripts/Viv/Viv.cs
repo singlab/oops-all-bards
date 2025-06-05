@@ -357,18 +357,18 @@ namespace Viv
             if (selfChar != null)
             {
                 // e.g., "{self}" -> "Wurguth"
-                roleBindings.Add("{self}", selfChar.characterName);
+                roleBindings.Add("{self}", selfChar.characterName.ToLower());
             }
 
             // Get the target character's name for the {target} role
             // TODO: This lookup should probably use a universal registry
-            string targetCharacterName = "Player"; // Default placeholder
+            string targetCharacterName = "player"; // Default placeholder
             VivCharacter targetChar = Viv.Instance.FindVivCharacter(targetCharacter);
             if (targetChar != null)
             {
-                targetCharacterName = targetChar.characterName;
+                targetCharacterName = targetChar.characterName.ToLower();
             }
-            // e.g., "{target}" -> "Player"
+            // e.g., "{target}" -> "player"
             roleBindings.Add("{target}", targetCharacterName);
 
             // TODO: Add other roles here in the future, like {eventActor}, {location}, etc.

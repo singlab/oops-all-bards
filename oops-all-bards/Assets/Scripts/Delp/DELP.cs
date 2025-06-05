@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DELP 
+namespace DELP
 {
     [System.Serializable]
     public class DELPBelief
@@ -70,5 +70,11 @@ namespace DELP
     public class DELPAnswer
     {
         public string answer;
+    }
+
+    [System.Serializable]
+    public class KnowledgeUpdateEventData
+    {
+        public int characterID;
     }
 }

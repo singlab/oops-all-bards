@@ -251,7 +251,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bindings: {fileID: 1216771529}
-  simulateCif: 1
 --- !u!4 &319780884
 Transform:
   m_ObjectHideFlags: 0
@@ -513,13 +512,19 @@ MonoBehaviour:
     - InCombat
     - CanHelp
   - key: InvestigateSuspiciousActivity
-    val: []
+    val:
+    - isSuspiciousOf({self}, {target})
+    - ~shouldAttackPlayerAtMeetingSpot({self})
   - key: NeutralizeThreat
-    val: []
+    val:
+    - shouldAttackPlayerAtMeetingSpot({self})
   - key: GatherInformation
-    val: []
+    val:
+    - considersPotentialThreat({self}, {target})
+    - ~isSuspiciousOf({self}, {target})
   - key: MaintainGuildSecrecy
-    val: []
+    val:
+    - shouldConfrontPlayerInstead({self})
   characterBindings:
   - key: 1
     val: Quinton

@@ -146,7 +146,9 @@ public class KnowledgeUpdater : MonoBehaviour
             if (!string.IsNullOrEmpty(processedFact))
             {
                 delp.AddFact(processedFact);
-                // PrepareAndUpdate is called within DELPEntity's AddFact
+                Debug.Log($"Firing DELP_KnowledgeBaseUpdated event for character ID: {recipient.characterID}");
+                var eventData = new KnowledgeUpdateEventData { characterID = recipient.characterID };
+                EventManager.Instance.InvokeEvent(EventType.DELP_KnowledgeBaseUpdated, eventData);
             }
         }
     }
@@ -159,7 +161,9 @@ public class KnowledgeUpdater : MonoBehaviour
             if (!string.IsNullOrEmpty(processedFact))
             {
                 delp.RemoveFact(processedFact);
-                // PrepareAndUpdate is called within DELPEntity's RemoveFact
+                Debug.Log($"Firing DELP_KnowledgeBaseUpdated event for character ID: {recipient.characterID}");
+                var eventData = new KnowledgeUpdateEventData { characterID = recipient.characterID };
+                EventManager.Instance.InvokeEvent(EventType.DELP_KnowledgeBaseUpdated, eventData);
             }
         }
     }

@@ -101,12 +101,35 @@ namespace Viv
             }
         }
 
+        void OnEnable()
+        {
+            EventManager.Instance.SubscribeToEvent(EventType.DELP_KnowledgeBaseUpdated, OnKnowledgeBaseUpdated);
+        }
+
+        void OnDisable()
+        {
+            EventManager.Instance.UnsubscribeToEvent(EventType.DELP_KnowledgeBaseUpdated, OnKnowledgeBaseUpdated);
+        }
+
         protected virtual void OnDestroy()
         {
             // Unregister when the GameObject is destroyed
             if (Viv.Instance != null && characterID != -1)
             {
                 Viv.UnregisterCharacter(characterID);
+            }
+        }
+
+        private void OnKnowledgeBaseUpdated(object eventData)
+        {
+            KnowledgeUpdateEventData knowledgeUpdate = eventData as KnowledgeUpdateEventData;
+            if (knowledgeUpdate == null) return;
+
+            if (knowledgeUpdate.characterID == this.characterID)
+            {
+                Debug.Log($"Character '{this.characterName}' detected an update to its own knowledge base. Re-evaluating supertask.");
+
+                EvaluateTask();
             }
         }
     }

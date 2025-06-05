@@ -135,7 +135,8 @@ public enum EventType
     AwaitPlayerInput,
     CombatLoss,
     CombatWin,
-    OnInteraction
+    OnInteraction,
+    DELP_KnowledgeBaseUpdated, // Event for when the DELP knowledge base is updated
 };
 
 /// <summary>
