@@ -17,80 +17,87 @@ public class GameAgent_ArgumentStepExecute {
    static public Object[] argumentExecute0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
          case 5: {
-            // lookForAllyAgent-0->ConditionalStep3_IF_MentalStep_GoalStep_1Step2
+            // lookForVivCommands-1->ConditionalStep4_IF_GoalStep_1Step1
             final Object[] args = new Object[2];
             args[0] = ((ParallelBehaviorWME)__$behaviorFrame[1]);
-            args[1] = ((AllyWME)__$behaviorFrame[0]);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
             return args;
          }
-         case 9: {
-            // manageAllyAgent_1Step2
+         case 7: {
+            // lookForVivCommands_1Step6
             final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
             return args;
          }
-         case 10: {
-            // manageAllyAgent_1Step3
-            final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
-            return args;
-         }
-         case 11: {
-            // manageAllyAgent_1Step4
-            final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
-            return args;
-         }
-         case 15: {
-            // manageCombat_1Step4
-            final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+         case 13: {
+            // processSpawnGoals-4->ConditionalStep11_IF_MentalStep_GoalStep_1Step2
+            final Object[] args = new Object[3];
+            args[0] = ((ParallelBehaviorWME)__$behaviorFrame[3]);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[2] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[4]).i);
             return args;
          }
          case 16: {
-            // manageCombat_1Step5
-            final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            // processSpawnGoals-4->ConditionalStep14_IF_MentalStep_GoalStep_1Step2
+            final Object[] args = new Object[3];
+            args[0] = ((ParallelBehaviorWME)__$behaviorFrame[3]);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[2] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[4]).i);
             return args;
          }
-         case 17: {
-            // manageCombat_1Step6
-            final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+         case 19: {
+            // processSpawnGoals-4->ConditionalStep17_IF_MentalStep_GoalStep_1Step2
+            final Object[] args = new Object[3];
+            args[0] = ((ParallelBehaviorWME)__$behaviorFrame[3]);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[2] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[4]).i);
             return args;
          }
-         case 20: {
-            // lookForAssistance_1Step3
-            final Object[] args = new Object[1];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+         case 22: {
+            // processSpawnGoals-4->ConditionalStep20_IF_MentalStep_GoalStep_1Step2
+            final Object[] args = new Object[3];
+            args[0] = ((ParallelBehaviorWME)__$behaviorFrame[3]);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[2] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[4]).i);
             return args;
          }
          case 25: {
-            // lookToAssist_1Step3
-            final Object[] args = new Object[2];
-            args[0] = ((AllyWME)__$behaviorFrame[2]);
-            args[1] = ((AllyWME)__$behaviorFrame[1]);
+            // investigateSuspiciousActivity_1Step2
+            final Object[] args = new Object[4];
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[1] = new Float(10.0);
+            args[2] = new Float(0.0);
+            args[3] = new Float(25.5);
             return args;
          }
-         case 28: {
-            // assistAlly_1Step2
-            final Object[] args = new Object[2];
-            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
-            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
+         case 27: {
+            // investigateSuspiciousActivity_1Step4
+            final Object[] args = new Object[3];
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
+            args[2] = new Float(15.0);
             return args;
          }
-         case 35: {
-            // lookForQuip_1Step5
+         case 30: {
+            // neutralizeThreat_1Step2
             final Object[] args = new Object[2];
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
-            args[1] = new Boolean(((__ValueTypes.BooleanVar)__$behaviorFrame[2]).b);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             return args;
          }
-         case 41: {
-            // lookToGossip-14->ConditionalStep40_IF_PrimitiveStep_1Step1
+         case 33: {
+            // gatherInformation_1Step2
+            final Object[] args = new Object[3];
+            args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
+            args[2] = new Float(30.0);
+            return args;
+         }
+         case 36: {
+            // maintainGuildSecrecy_1Step2
             final Object[] args = new Object[2];
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
-            args[1] = ((ArrayHolder)__$behaviorFrame[4]);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             return args;
          }
       default:

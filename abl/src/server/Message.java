@@ -7,6 +7,7 @@ import org.json.simple.parser.ParseException;
 import wm.WME;
 import abl.wmes.AllyWME;
 import abl.wmes.VivWME;
+import abl.wmes.BehaviorStatusWME;
 import handler.*;
 
 public class Message {

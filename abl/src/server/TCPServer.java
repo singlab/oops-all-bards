@@ -6,8 +6,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import abl.generated.GameAgent;
+import abl.runtime.Behavior;
 import abl.wmes.AllyWME;
 import abl.wmes.VivWME;
+import abl.wmes.BehaviorStatusWME;
 import handler.*;
 /**
  * This program demonstrates a simple TCP/IP socket server.
@@ -105,6 +107,13 @@ public class TCPServer {
 			VivWME wme = (VivWME) toHandle.parseData();
 			agent.addWME(wme);
 			System.out.println("Received VivWME.");
+			System.out.println(wme.toString());
+		}
+
+		if (toHandle.code == 3) {
+			BehaviorStatusWME wme = (BehaviorStatusWME) toHandle.parseData();
+			agent.addWME(wme);
+			System.out.println("Received BehaviorStatusWME.");
 			System.out.println(wme.toString());
 		}
     }

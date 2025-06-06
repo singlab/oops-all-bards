@@ -15,7 +15,7 @@ import abl.sensors.*;
 import abl.util.*;
 
 public class GameAgent extends BehavingEntity {
-   WMEDictionary dict = new WMEDictionary();
+   VivWMEDictionary dict = new VivWMEDictionary();
    public final static Rule[] __$allRuleArray = {};
    public final static Rulegroup[] __$allRulegroupArray = {};
    private final static Object[] __$tempObjArray = new Object[1];
@@ -304,25 +304,21 @@ public class GameAgent extends BehavingEntity {
 
 
    private static void registerBehaviors_0(BehaviorLibrary behaviorLibrary) {
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(0, __$behaviorFactory0_rfield, null, null, "lookForAllyAgent()", new String[] {"lookForAllyAgent()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(1, __$behaviorFactory0_rfield, null, null, "lookForAllyAgent-0->ConditionalStep3_IF_MentalStep_GoalStep()", new String[] {"lookForAllyAgent-0->ConditionalStep3_IF_MentalStep_GoalStep()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(2, __$behaviorFactory0_rfield, null, null, "allyAgentRoot()", new String[] {"allyAgentRoot()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(3, __$behaviorFactory0_rfield, null, null, "manageAllyAgent(AllyWME)", new String[] {"manageAllyAgent(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(4, __$behaviorFactory0_rfield, null, null, "manageCombat(int)", new String[] {"manageCombat(int)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(5, __$behaviorFactory0_rfield, null, null, "manageCombat-4->ConditionalStep12_IF_FailStep()", new String[] {"manageCombat-4->ConditionalStep12_IF_FailStep()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(6, __$behaviorFactory0_rfield, null, null, "lookForAssistance(int)", new String[] {"lookForAssistance(int)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(7, __$behaviorFactory0_rfield, null, null, "waitForTurn(int)", new String[] {"waitForTurn(int)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(8, __$behaviorFactory0_rfield, null, null, "lookToAssist(int)", new String[] {"lookToAssist(int)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(9, __$behaviorFactory0_rfield, null, null, "takeTurn(int)", new String[] {"takeTurn(int)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(10, __$behaviorFactory0_rfield, null, null, "assistAlly(AllyWME, AllyWME)", new String[] {"assistAlly(AllyWME, AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(11, __$behaviorFactory0_rfield, null, null, "manageNoncombat(AllyWME)", new String[] {"manageNoncombat(AllyWME)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(12, __$behaviorFactory0_rfield, null, null, "lookForQuip(int)", new String[] {"lookForQuip(int)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(13, __$behaviorFactory0_rfield, null, null, "lookForQuip-12->ConditionalStep33_IF_FailStep()", new String[] {"lookForQuip-12->ConditionalStep33_IF_FailStep()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(14, __$behaviorFactory0_rfield, null, null, "lookToGossip(int)", new String[] {"lookToGossip(int)"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(15, __$behaviorFactory0_rfield, null, null, "lookToGossip-14->ConditionalStep38_IF_FailStep()", new String[] {"lookToGossip-14->ConditionalStep38_IF_FailStep()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(16, __$behaviorFactory0_rfield, null, null, "lookToGossip-14->ConditionalStep40_IF_PrimitiveStep()", new String[] {"lookToGossip-14->ConditionalStep40_IF_PrimitiveStep()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(17, __$behaviorFactory0_rfield, null, null, "GameAgent_RootCollectionBehavior()", new String[] {"GameAgent_RootCollectionBehavior()"}, null, (short)0), __$analysis0_rfield);
-      behaviorLibrary.registerBehavior(new __BehaviorDesc(18, __$behaviorFactory0_rfield, null, null, "__$defaultMemoryExecuteBehavior()", new String[] {"__$defaultMemoryExecuteBehavior()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(0, __$behaviorFactory0_rfield, null, null, "vivAgentRoot()", new String[] {"vivAgentRoot()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(1, __$behaviorFactory0_rfield, null, null, "lookForVivCommands()", new String[] {"lookForVivCommands()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(2, __$behaviorFactory0_rfield, null, null, "lookForVivCommands-1->ConditionalStep4_IF_GoalStep()", new String[] {"lookForVivCommands-1->ConditionalStep4_IF_GoalStep()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(3, __$behaviorFactory0_rfield, null, null, "manageVivCharacter(int)", new String[] {"manageVivCharacter(int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(4, __$behaviorFactory0_rfield, null, null, "processSpawnGoals(int)", new String[] {"processSpawnGoals(int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(5, __$behaviorFactory0_rfield, null, null, "processSpawnGoals-4->ConditionalStep11_IF_MentalStep_GoalStep()", new String[] {"processSpawnGoals-4->ConditionalStep11_IF_MentalStep_GoalStep()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(6, __$behaviorFactory0_rfield, null, null, "processSpawnGoals-4->ConditionalStep14_IF_MentalStep_GoalStep()", new String[] {"processSpawnGoals-4->ConditionalStep14_IF_MentalStep_GoalStep()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(7, __$behaviorFactory0_rfield, null, null, "processSpawnGoals-4->ConditionalStep17_IF_MentalStep_GoalStep()", new String[] {"processSpawnGoals-4->ConditionalStep17_IF_MentalStep_GoalStep()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(8, __$behaviorFactory0_rfield, null, null, "processSpawnGoals-4->ConditionalStep20_IF_MentalStep_GoalStep()", new String[] {"processSpawnGoals-4->ConditionalStep20_IF_MentalStep_GoalStep()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(9, __$behaviorFactory0_rfield, null, null, "investigateSuspiciousActivity(int, int)", new String[] {"investigateSuspiciousActivity(int, int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(10, __$behaviorFactory0_rfield, null, null, "neutralizeThreat(int, int)", new String[] {"neutralizeThreat(int, int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(11, __$behaviorFactory0_rfield, null, null, "gatherInformation(int, int)", new String[] {"gatherInformation(int, int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(12, __$behaviorFactory0_rfield, null, null, "maintainGuildSecrecy(int, int)", new String[] {"maintainGuildSecrecy(int, int)"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(13, __$behaviorFactory0_rfield, null, null, "GameAgent_RootCollectionBehavior()", new String[] {"GameAgent_RootCollectionBehavior()"}, null, (short)0), __$analysis0_rfield);
+      behaviorLibrary.registerBehavior(new __BehaviorDesc(14, __$behaviorFactory0_rfield, null, null, "__$defaultMemoryExecuteBehavior()", new String[] {"__$defaultMemoryExecuteBehavior()"}, null, (short)0), __$analysis0_rfield);
    }
 
    private static void registerBehaviors_1(BehaviorLibrary behaviorLibrary) {
@@ -334,13 +330,13 @@ public class GameAgent extends BehavingEntity {
    }
 
    public GameAgent() {
-      individualBehaviorLibrary = new BehaviorLibrary(38);
+      individualBehaviorLibrary = new BehaviorLibrary(30);
       jointBehaviorLibrary = new BehaviorLibrary(0);
       debugLevel = 2;
       debuggerGUI = new Debugger(this);
       registerBehaviors_0(individualBehaviorLibrary);
       registerBehaviors_1(jointBehaviorLibrary);
-      ABT = (CollectionBehavior)GameAgent_BehaviorFactories.behaviorFactory0(17, null, null, null, "GameAgent_RootCollectionBehavior()", this, (__BehaviorDesc)((List)individualBehaviorLibrary.lookupBehavior("GameAgent_RootCollectionBehavior()")).get(0));
+      ABT = (CollectionBehavior)GameAgent_BehaviorFactories.behaviorFactory0(13, null, null, null, "GameAgent_RootCollectionBehavior()", this, (__BehaviorDesc)((List)individualBehaviorLibrary.lookupBehavior("GameAgent_RootCollectionBehavior()")).get(0));
       startWMEReflection(ABT);
       registerEntity("GameAgent", this);
    }

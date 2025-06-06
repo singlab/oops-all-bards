@@ -16,10 +16,10 @@ import abl.util.*;
 public class GameAgent_ConditionalTests {
    static public boolean conditionalTest0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
-         case 3: {
-            // lookForAllyAgent_1Step4
+         case 4: {
+            // lookForVivCommands_1Step4
                if (
-                  ! ((GameAgent)__$thisEntity).dict.containsKey(((AllyWME)__$behaviorFrame[0]).getID())
+                  ! ((GameAgent)__$thisEntity).dict.containsKey(((__ValueTypes.IntVar)__$behaviorFrame[2]).i)
                )
 
                {
@@ -29,10 +29,10 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 12: {
-            // manageCombat_1Step1
+         case 11: {
+            // processSpawnGoals_1Step3
                if (
-                  ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i) == null
+                  ((VivWME)__$behaviorFrame[1]).hasGoal("investigateSuspiciousActivity")
                )
 
                {
@@ -42,10 +42,10 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 33: {
-            // lookForQuip_1Step3
+         case 14: {
+            // processSpawnGoals_1Step4
                if (
-                  ((AllyWME)__$behaviorFrame[1]) == null
+                  ((VivWME)__$behaviorFrame[1]).hasGoal("neutralizeThreat")
                )
 
                {
@@ -55,10 +55,10 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 38: {
-            // lookToGossip_1Step3
+         case 17: {
+            // processSpawnGoals_1Step5
                if (
-                  ((AllyWME)__$behaviorFrame[1]) == null
+                  ((VivWME)__$behaviorFrame[1]).hasGoal("gatherInformation")
                )
 
                {
@@ -68,10 +68,10 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 40: {
-            // lookToGossip_1Step5
+         case 20: {
+            // processSpawnGoals_1Step6
                if (
-                  ((CalDistanceWME)__$behaviorFrame[3]).isNPCAround(((ArrayHolder)__$behaviorFrame[4]) , ((AllyWME)__$behaviorFrame[1]) , ((GameAgent)__$thisEntity).dict)
+                  ((VivWME)__$behaviorFrame[1]).hasGoal("maintainGuildSecrecy")
                )
 
                {
