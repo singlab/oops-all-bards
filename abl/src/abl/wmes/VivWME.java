@@ -1,50 +1,84 @@
 package abl.wmes;
 
+import abl.util.*;
 import java.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import com.google.gson.Gson;
 import wm.WME;
 
 public class VivWME extends WME {
     /** Whether or not this WME is on an active behavior tree */
-	private boolean onTree;
+    private boolean onTree;
     /** ID of the acting character */
-	private int id;
+    private int id;
     /** An array of strings representing behaviors to be spawned */
-    private String[] toSpawn;
+    private SpawnGoalData[] toSpawn;
     /** An array of strings representing behaviors to be stopped */
     private String[] toStop;
 
     public VivWME(JSONObject data) {
         this.onTree = false;
-        this.id = (int)(long) data.get("id");
-        JSONArray jsonArray = (JSONArray) data.get("toSpawn");
-        this.toSpawn = new String[jsonArray.size()];
-		for (int i = 0; i < jsonArray.size(); i++) {
-		    this.toSpawn[i] = (String) jsonArray.get(i);
-		}
-        jsonArray = (JSONArray) data.get("toStop");
+        this.id = (int) (long) data.get("id");
+        Gson gson = new Gson();
+        JSONArray spawnArray = (JSONArray) data.get("toSpawn");
+        this.toSpawn = gson.fromJson(spawnArray.toJSONString(), SpawnGoalData[].class);
+        JSONArray jsonArray = (JSONArray) data.get("toStop");
         this.toStop = new String[jsonArray.size()];
-		for (int i = 0; i < jsonArray.size(); i++) {
-		    this.toStop[i] = (String) jsonArray.get(i);
-		}
+        for (int i = 0; i < jsonArray.size(); i++) {
+            this.toStop[i] = (String) jsonArray.get(i);
+        }
     }
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("VivWME: \n")
-            .append("ID: " + this.id + "\n")
-            .append("ToSpawn: " + Arrays.toString(this.toSpawn) + "\n")
-            .append("ToStop: " + Arrays.toString(this.toStop));
+                .append("ID: " + this.id + "\n")
+                .append("ToSpawn: " + Arrays.toString(this.toSpawn) + "\n")
+                .append("ToStop: " + Arrays.toString(this.toStop));
         String result = builder.toString();
         return result;
     }
 
-    public boolean getOnTree() { return onTree; }
-	
-	public int getID() { return id; }
+    public boolean hasGoal(String goalName) {
+        if (toSpawn == null)
+            return false;
+        for (SpawnGoalData goal : toSpawn) {
+            if (goal.name.equalsIgnoreCase(goalName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public String[] getToSpawn() { return toSpawn; }
+    public int getTargetIdForGoal(String goalName) {
+        if (toSpawn == null)
+            return -1;
+        for (SpawnGoalData goal : toSpawn) {
+            if (goal.name.equalsIgnoreCase(goalName)) {
+                return goal.targetCharacter;
+            }
+        }
+        return -1;
+    }
 
-    public String[] getToStop() { return toStop; }
+    public boolean getOnTree() {
+        return onTree;
+    }
+
+    public void setOnTree(boolean onTree) {
+        this.onTree = onTree;
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public SpawnGoalData[] getToSpawn() {
+        return toSpawn;
+    }
+
+    public String[] getToStop() {
+        return toStop;
+    }
 }

@@ -25,7 +25,8 @@ public class AgentCompiler {
 
 		 if (debugMode) {
 		 	System.out.println("In debug mode...");
-		 	Abl.main(new String[] { "-g2", "-d", "src", "src\\abl\\agents\\GameAgent.abl" });
+		 	Abl.main(new String[] { "-g2", "-d", "src", 
+					"C:\\Users\\kdavi\\oops-all-bards\\abl\\src\\abl\\agents\\GameAgent.abl" });
 		 }
 		 else {
 		 	Abl.main(new String[] { "-d", "src", "src\\abl\\agents\\GameAgent.abl" });

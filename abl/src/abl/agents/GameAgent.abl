@@ -8,185 +8,302 @@ import abl.util.*;
 
 behaving_entity GameAgent {
 
-	register act protect(int, int) with Protect;
-	register act quip(int, boolean) with Quip;
-	register act requestAssistance(int) with RequestAssistance;
-	register act gossip(int, ArrayHolder) with Gossip;
+	// register act protect(int, int) with Protect;
+	// register act quip(int, boolean) with Quip;
+	// register act requestAssistance(int) with RequestAssistance;
+	// register act gossip(int, ArrayHolder) with Gossip;
 	
-	// Declare utility class that holds most up-to-date copies of WME for given char by ID
-	WMEDictionary dict = new WMEDictionary();
+	// // Declare utility class that holds most up-to-date copies of WME for given char by ID
+	// WMEDictionary dict = new WMEDictionary();
 
-    sequential behavior lookForAllyAgent() {
-        AllyWME newAllyWME;
-        ParallelBehaviorWME spawnLocation;
+    // sequential behavior lookForAllyAgent() {
+    //     AllyWME newAllyWME;
+    //     ParallelBehaviorWME spawnLocation;
         
-        mental_act {
-        	System.out.println("Looking for ally agent...");
-        }
+    //     mental_act {
+    //     	System.out.println("Looking for ally agent...");
+    //     }
 		
-        with ( success_test { newAllyWME = (AllyWME OnTree==false ID!=0) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
+    //     with ( success_test { newAllyWME = (AllyWME OnTree==false ID!=0) spawnLocation = (ParallelBehaviorWME signature=="allyAgentRoot()") } ) wait;
         
-        mental_act {
-        	System.out.println("AllyWME has been added to memory. Setting on tree.");
-        	newAllyWME.setOnTree(true);
-        }
+    //     mental_act {
+    //     	System.out.println("AllyWME has been added to memory. Setting on tree.");
+    //     	newAllyWME.setOnTree(true);
+    //     }
         
-        if { (!dict.containsKey(newAllyWME.getID())) } {
-        	mental_act {
-	            System.out.println("New ally being added to ally manager.");
-	        }
-        	spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
-	    }
+    //     if { (!dict.containsKey(newAllyWME.getID())) } {
+    //     	mental_act {
+	//             System.out.println("New ally being added to ally manager.");
+	//         }
+    //     	spawngoal manageAllyAgent(newAllyWME) at spawnLocation;
+	//     }
 	    
-	    mental_act {
-	    	System.out.println("Updating ally wme in dictionary."+newAllyWME.getID());
-            dict.addCharacter(newAllyWME.getID(), newAllyWME);
-        }
-    }
+	//     mental_act {
+	//     	System.out.println("Updating ally wme in dictionary."+newAllyWME.getID());
+    //         dict.addCharacter(newAllyWME.getID(), newAllyWME);
+    //     }
+    // }
 
-    parallel behavior allyAgentRoot() {  	
- 		with ( success_test { ( !dict.isEmpty() ) } ) wait;
-    }
+    // parallel behavior allyAgentRoot() {  	
+ 	// 	with ( success_test { ( !dict.isEmpty() ) } ) wait;
+    // }
 
-    parallel behavior manageAllyAgent(AllyWME allyAgent) {
-    	int id;
-    	mental_act {
-    		id = allyAgent.getID();
-    	}
+    // parallel behavior manageAllyAgent(AllyWME allyAgent) {
+    // 	int id;
+    // 	mental_act {
+    // 		id = allyAgent.getID();
+    // 	}
     	
-    	with (persistent, priority 1) subgoal lookForQuip(id);
-    	with (persistent) subgoal lookToGossip(id);
-        with (persistent) subgoal manageCombat(id);
-        // with (persistent) subgoal manageNoncombat(allyAgent); 
-    }
+    // 	with (persistent, priority 1) subgoal lookForQuip(id);
+    // 	with (persistent) subgoal lookToGossip(id);
+    //     with (persistent) subgoal manageCombat(id);
+    //     // with (persistent) subgoal manageNoncombat(allyAgent); 
+    // }
 
-    sequential behavior manageCombat(int id) {
-    	if { ( dict.getCharacter(id) == null ) } {
-    		fail_step;
-    	}
+    // sequential behavior manageCombat(int id) {
+    // 	if { ( dict.getCharacter(id) == null ) } {
+    // 		fail_step;
+    // 	}
 		
-		with ( success_test { ( dict.getCharacter(id).getInCombat() == true ) } ) wait;
-		mental_act {
-			System.out.println("Ally is in combat.");
-		}
+	// 	with ( success_test { ( dict.getCharacter(id).getInCombat() == true ) } ) wait;
+	// 	mental_act {
+	// 		System.out.println("Ally is in combat.");
+	// 	}
 
-        subgoal lookToAssist(id);
-        subgoal waitForTurn(id);
-        subgoal lookForAssistance(id);
-    }
+    //     subgoal lookToAssist(id);
+    //     subgoal waitForTurn(id);
+    //     subgoal lookForAssistance(id);
+    // }
     
-    sequential behavior lookForAssistance(int id) {
-    	with ( success_test { ( dict.getCharacter(id).getHealth() <= 5 ) } ) wait;
-    	mental_act {
-    		System.out.println("Ally is in need of assistance.");
-    	}
+    // sequential behavior lookForAssistance(int id) {
+    // 	with ( success_test { ( dict.getCharacter(id).getHealth() <= 5 ) } ) wait;
+    // 	mental_act {
+    // 		System.out.println("Ally is in need of assistance.");
+    // 	}
     	
-    	act requestAssistance(id);
-    }
+    // 	act requestAssistance(id);
+    // }
 
-    sequential behavior waitForTurn(int id) {
-    	mental_act {
-    		System.out.println("I am waiting to take my turn.");
-    	}
+    // sequential behavior waitForTurn(int id) {
+    // 	mental_act {
+    // 		System.out.println("I am waiting to take my turn.");
+    // 	}
 
-        with ( success_test { ( dict.getCharacter(id).getOwnsTurn()==true ) } ) wait;
-		// subgoal takeTurn(id);
-    }
+    //     with ( success_test { ( dict.getCharacter(id).getOwnsTurn()==true ) } ) wait;
+	// 	// subgoal takeTurn(id);
+    // }
 
-    sequential behavior lookToAssist(int id) {
-        AllyWME otherAlly;
-        AllyWME agent;
+    // sequential behavior lookToAssist(int id) {
+    //     AllyWME otherAlly;
+    //     AllyWME agent;
         
-        mental_act {
-    		System.out.println("I am looking to assist.");
-    		agent = dict.getCharacter(id);
-    	}
+    //     mental_act {
+    // 		System.out.println("I am looking to assist.");
+    // 		agent = dict.getCharacter(id);
+    // 	}
 
-        with ( success_test { otherAlly = ( AllyWME ownsTurn==true ) ( agent.getOwnsTurn()==false ) } ) wait;
-		subgoal assistAlly(agent, otherAlly);
-    }
+    //     with ( success_test { otherAlly = ( AllyWME ownsTurn==true ) ( agent.getOwnsTurn()==false ) } ) wait;
+	// 	subgoal assistAlly(agent, otherAlly);
+    // }
 
-    sequential behavior takeTurn(int id) {
-        mental_act {
-            System.out.println("I am taking my turn.");
-        }
-    }
+    // sequential behavior takeTurn(int id) {
+    //     mental_act {
+    //         System.out.println("I am taking my turn.");
+    //     }
+    // }
 
-    sequential behavior assistAlly(AllyWME allyAgent, AllyWME otherAlly) {
-    	int actingCharacter;
-    	int targetCharacter;
+    // sequential behavior assistAlly(AllyWME allyAgent, AllyWME otherAlly) {
+    // 	int actingCharacter;
+    // 	int targetCharacter;
     	
-        mental_act {
-        	actingCharacter = allyAgent.getID();
-        	targetCharacter = otherAlly.getID();
-            System.out.println("I am assisting.");
-        }
-        act protect(actingCharacter, targetCharacter);
-    }
+    //     mental_act {
+    //     	actingCharacter = allyAgent.getID();
+    //     	targetCharacter = otherAlly.getID();
+    //         System.out.println("I am assisting.");
+    //     }
+    //     act protect(actingCharacter, targetCharacter);
+    // }
     
-    sequential behavior manageNoncombat(AllyWME allyAgent) {
-        with ( success_test { ( allyAgent.getInCombat()==false ) } ) wait;
-        mental_act {
-        	System.out.println("Ally is not in combat.");
-        }
-    }
+    // sequential behavior manageNoncombat(AllyWME allyAgent) {
+    //     with ( success_test { ( allyAgent.getInCombat()==false ) } ) wait;
+    //     mental_act {
+    //     	System.out.println("Ally is not in combat.");
+    //     }
+    // }
     
-    sequential behavior lookForQuip(int id) {
-    	AllyWME agent;
-    	boolean inCombat;
-    	long startTime = System.currentTimeMillis();
+    // sequential behavior lookForQuip(int id) {
+    // 	AllyWME agent;
+    // 	boolean inCombat;
+    // 	long startTime = System.currentTimeMillis();
     	
-    	with ( success_test { ( System.currentTimeMillis() > startTime + 10000 ) } ) wait;
+    // 	with ( success_test { ( System.currentTimeMillis() > startTime + 10000 ) } ) wait;
     	
-    	mental_act {
-    		agent = dict.getCharacter(id);
-    	}
+    // 	mental_act {
+    // 		agent = dict.getCharacter(id);
+    // 	}
     	
-    	if { (agent == null) } {
-    		fail_step;
-    	}
+    // 	if { (agent == null) } {
+    // 		fail_step;
+    // 	}
     	
-    	mental_act {
-    		inCombat = agent.getInCombat();
-			System.out.println("Starting quip.");
-    	}
+    // 	mental_act {
+    // 		inCombat = agent.getInCombat();
+	// 		System.out.println("Starting quip.");
+    // 	}
     	
-    	act quip(id, inCombat);
-    }
+    // 	act quip(id, inCombat);
+    // }
     
-    sequential behavior lookToGossip(int id) {
-    	AllyWME agent;
-    	long startTime = System.currentTimeMillis();
-    	CalDistanceWME calDisWME = new CalDistanceWME();
-    	ArrayHolder aroundChars = new ArrayHolder(15);
+    // sequential behavior lookToGossip(int id) {
+    // 	AllyWME agent;
+    // 	long startTime = System.currentTimeMillis();
+    // 	CalDistanceWME calDisWME = new CalDistanceWME();
+    // 	ArrayHolder aroundChars = new ArrayHolder(15);
     	
-    	with ( success_test { ( System.currentTimeMillis() > startTime + 5000 ) } ) wait;
+    // 	with ( success_test { ( System.currentTimeMillis() > startTime + 5000 ) } ) wait;
     	
-    	mental_act {
-    		agent = dict.getCharacter(id);
-    	}
+    // 	mental_act {
+    // 		agent = dict.getCharacter(id);
+    // 	}
     	
-    	if { (agent == null) } {
-    		fail_step;
-    	}
+    // 	if { (agent == null) } {
+    // 		fail_step;
+    // 	}
     	
-    	mental_act {
-			System.out.println("Look to gossip.");
-    	}
+    // 	mental_act {
+	// 		System.out.println("Look to gossip.");
+    // 	}
     	
-    	if{ (calDisWME.isNPCAround(aroundChars, agent, dict)) } {
-    		act gossip(id, aroundChars);
-    	}
+    // 	if{ (calDisWME.isNPCAround(aroundChars, agent, dict)) } {
+    // 		act gossip(id, aroundChars);
+    // 	}
     	
-    }
+    // }
 
-    // This is a collection behavior s.t. all children act in parallel and never result in failure
-    initial_tree {
-    	with (priority 3) mental_act {
-			System.out.println("Starting game agent...");
-    	}
+    // // This is a collection behavior s.t. all children act in parallel and never result in failure
+    // initial_tree {
+    // 	with (priority 3) mental_act {
+	// 		System.out.println("Starting game agent...");
+    // 	}
 		
-		with (persistent) subgoal allyAgentRoot();
-		with (persistent) subgoal lookForAllyAgent();
+	// 	with (persistent) subgoal allyAgentRoot();
+	// 	with (persistent) subgoal lookForAllyAgent();
+    // }
+
+	// Register all low-level physical acts that map to ICharacterBehaviors in Unity.
+    register act moveToPosition(int, float, float, float) with MoveToPosition;
+    register act observeTarget(int, int, float) with ObserveTarget;
+    register act calmConfrontation(int, int) with CalmConfrontation;
+    register act aggressiveConfrontation(int, int) with AggressiveConfrontation;
+
+    // A utility class (defined in Java) to hold the most recent WME for each character.
+    VivWMEDictionary dict = new VivWMEDictionary();
+
+    parallel behavior vivAgentRoot() {
+        with (success_test { (true) }) wait;
+    }
+
+    sequential behavior lookForVivCommands() {
+        VivWME vivCommand;
+        ParallelBehaviorWME rootSpawnPoint;
+        int characterId;
+
+        with (success_test {
+                vivCommand = (VivWME OnTree==false)
+                rootSpawnPoint = (ParallelBehaviorWME signature=="vivAgentRoot()")
+            }) wait;
+        
+        mental_act { vivCommand.setOnTree(true); }
+        mental_act { characterId = vivCommand.getID(); }
+
+        if { (!dict.containsKey(characterId)) } {
+            spawngoal manageVivCharacter(characterId) at rootSpawnPoint;
+        }
+
+        mental_act { dict.addCharacter(characterId, vivCommand); }
+        subgoal processSpawnGoals(characterId);
+    }
+
+    parallel behavior manageVivCharacter(int characterId) {
+        mental_act {
+            abl.wmes.ParallelBehaviorWME me = getBehaviorWME();
+            System.out.println("ABL: Linking manager behavior " + me.getID() + " to character " + characterId);
+            addWME(new CharacterManagerWME(characterId, me.getID()));
+        }
+    }
+
+    sequential behavior processSpawnGoals(int characterId) {
+        VivWME vivCommand;
+        CharacterManagerWME linkWME;
+        ParallelBehaviorWME characterSpawnPoint;
+		int targetId;
+
+        mental_act { vivCommand = dict.getCharacter(characterId); }
+        with (success_test {
+                linkWME = (CharacterManagerWME characterId==characterId)
+                characterSpawnPoint = (ParallelBehaviorWME behaviorID==linkWME.managerBehaviorId)
+            }) wait;
+
+		if { (vivCommand.hasGoal("investigateSuspiciousActivity")) } {
+			mental_act { targetId = vivCommand.getTargetIdForGoal("investigateSuspiciousActivity"); }
+			spawngoal investigateSuspiciousActivity(characterId, targetId) at characterSpawnPoint;
+		}
+	
+		if { (vivCommand.hasGoal("neutralizeThreat")) } {
+			mental_act { targetId = vivCommand.getTargetIdForGoal("neutralizeThreat"); }
+			spawngoal neutralizeThreat(characterId, targetId) at characterSpawnPoint;
+		}
+	
+		if { (vivCommand.hasGoal("gatherInformation")) } {
+			mental_act { targetId = vivCommand.getTargetIdForGoal("gatherInformation"); }
+			spawngoal gatherInformation(characterId, targetId) at characterSpawnPoint;
+		}
+	
+		if { (vivCommand.hasGoal("maintainGuildSecrecy")) } {
+			mental_act { targetId = vivCommand.getTargetIdForGoal("maintainGuildSecrecy"); }
+			spawngoal maintainGuildSecrecy(characterId, targetId) at characterSpawnPoint;
+		}
+		
+		mental_act {
+			System.out.println("ABL: Finished processing spawn goals, deleting command WME.");
+			deleteWME(vivCommand);
+		}
+    }
+
+    //
+    // HIGH-LEVEL TACTIC IMPLEMENTATIONS (The "Plans")
+    //
+    sequential behavior investigateSuspiciousActivity(int characterId, int targetId) {
+        mental_act { System.out.println("ABL Tactic: Character " + characterId + " is investigating " + targetId); }
+        act moveToPosition(characterId, 10.0f, 0.0f, 25.5f); // Example coordinates
+        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Move" status=="Success") }) wait;
+        act observeTarget(characterId, targetId, 15.0f);
+        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Observe" status=="Success") }) wait;
+    }
+
+    sequential behavior neutralizeThreat(int characterId, int targetId) {
+        mental_act { System.out.println("ABL Tactic: Character " + characterId + " is neutralizing threat " + targetId); }
+        act aggressiveConfrontation(characterId, targetId);
+        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="AggressiveConfrontation" status=="Success") }) wait;
+    }
+
+    sequential behavior gatherInformation(int characterId, int targetId) {
+        mental_act { System.out.println("ABL Tactic: Character " + characterId + " is gathering info on " + targetId); }
+        act observeTarget(characterId, targetId, 30.0f);
+        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Observe" status=="Success") }) wait;
+    }
+
+    sequential behavior maintainGuildSecrecy(int characterId, int targetId) {
+        mental_act { System.out.println("ABL Tactic: Character " + characterId + " is maintaining secrecy from " + targetId); }
+        act calmConfrontation(characterId, targetId);
+        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="CalmConfrontation" status=="Success") }) wait;
+    }
+
+	// The root of the ABL program. It runs two persistent, parallel behaviors:
+    //  1. vivAgentRoot: The container where all character-specific managers are spawned.
+    //  2. lookForVivCommands: The "listener" that waits for commands from Viv.
+    initial_tree {
+        with (persistent) subgoal vivAgentRoot();
+        with (persistent) subgoal lookForVivCommands();
     }
 }

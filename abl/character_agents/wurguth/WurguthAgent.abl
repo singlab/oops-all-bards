@@ -1,70 +1,135 @@
-package abl.generated;
+// package abl.generated;
 
-import abl.wmes.*;
-import abl.actions.*;
-import abl.sensors.*;
-import abl.util.*;
-import java.util.*;
+// import abl.wmes.*;
+// import abl.actions.*;
+// import abl.sensors.*;
+// import abl.util.*;
+// import java.util.*;
 
-behaving_entity WurguthAgent {
+// behaving_entity WurguthAgent {
 
-    register act moveToPosition(int, float, float, float) with MoveToPosition;
-    register act observeTarget(int, int, float) with ObserveTarget;
-    register act calmConfrontation(int, int) with CalmConfrontation;
-    register act aggressiveConfrontation(int, int) with AggressiveConfrontation;
+//     // Register all low-level physical acts that map to ICharacterBehaviors in Unity.
+//     register act moveToPosition(int, float, float, float) with MoveToPosition;
+//     register act observeTarget(int, int, float) with ObserveTarget;
+//     register act calmConfrontation(int, int) with CalmConfrontation;
+//     register act aggressiveConfrontation(int, int) with AggressiveConfrontation;
 
-    sequential behavior protectGuild(int characterId) {
-        mental_act {
-            System.out.println("Wurguth: Top-level goal 'protectGuild' activated for characterID = " + characterId);
-        }
-        with (persistent) subgoal manageGuildProtection(characterId);
-    }
+//     // A utility class (defined in Java) to hold the most recent WME for each character.
+//     WMEDictionary dict = new WMEDictionary();
 
-    parallel behavior manageGuildProtection(int characterId) {
-        with(success_test{ (1 == 2) }) wait;
-    }
+//     // The root of the ABL program. It runs two persistent, parallel behaviors:
+//     //  1. vivAgentRoot: The container where all character-specific managers are spawned.
+//     //  2. lookForVivCommands: The "listener" that waits for commands from Viv.
+//     initial_tree {
+//         with (persistent) subgoal vivAgentRoot();
+//         with (persistent) subgoal lookForVivCommands();
+//     }
 
-    sequential behavior performCalmConfrontation(int characterId, int targetId) {
-        mental_act {
-            System.out.println("ABL: Wurguth is starting performCalmConfrontation with targetID = " + targetId);
-        }
-        act calmConfrontation(characterId, targetId);
-        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="CalmConfrontation" status=="Success") }) wait;
-        mental_act {
-            System.out.println("ABL: Wurguth has successfully completed performCalmConfrontation.");
-        }
-    }
+//     // The main parallel behavior that will contain a manager for each active Viv character.
+//     parallel behavior vivAgentRoot() {
+//         with (success_test { (true) }) wait;
+//     }
 
-    sequential behavior performAggressiveConfrontation(int characterId, int targetId) {
-        mental_act {
-            System.out.println("ABL: Wurguth is starting performAggressiveConfrontation with targetID = " + targetId);
-        }
-        act aggressiveConfrontation(characterId, targetId);
-        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="AggressiveConfrontation" status=="Success") }) wait;
-        mental_act {
-            System.out.println("ABL: Wurguth has successfully completed performAggressiveConfrontation.");
-        }
-    }
+//     // THE LISTENER: Constantly looks for new commands (VivWME) from the C# Viv system.
+//     sequential behavior lookForVivCommands() {
+//         VivWME vivCommand;
+//         ParallelBehaviorWME rootSpawnPoint;
 
-    sequential behavior performObservation(int characterId, int targetId, float duration) {
-        mental_act {
-            System.out.println("ABL: Wurguth is starting performObservation of targetID = " + targetId);
-        }
-        act observeTarget(characterId, targetId, duration);
-        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Observe" status=="Success") }) wait;
-        mental_act {
-            System.out.println("ABL: Wurguth has completed performObservation.");
-        }
-    }
+//         // Wait for a VivWME that has NOT been processed yet (OnTree==false).
+//         with (success_test {
+//                 vivCommand = (VivWME OnTree==false)
+//                 rootSpawnPoint = (ParallelBehaviorWME signature=="vivAgentRoot()")
+//             }) wait;
 
-    sequential behavior performMoveTo(int characterId, float x, float y, float z) {
-        mental_act {
-            System.out.println("ABL: Wurguth is starting performMoveTo location " + x + "," + y + "," + z);
-        }
-        act moveToPosition(characterId, x, y, z);
-        with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Move" status=="Success") }) wait;
-        mental_act {
-            System.out.println("ABL: Wurguth has completed performMoveTo.");
-        }
-    }
-}
+//         // Mark the WME as processed so this behavior doesn't pick it up again.
+//         mental_act {
+//             System.out.println("ABL: New VivWME received. Setting OnTree=true for character " + vivCommand.getID());
+//             vivCommand.setOnTree(true);
+//         }
+
+//         // Check if we are already managing this character. If not, spawn a new manager for them.
+//         if { (!dict.containsKey(vivCommand.getID())) } {
+//             mental_act {
+//                 System.out.println("ABL: First command for character " + vivCommand.getID() + ". Spawning new manager.");
+//             }
+//             spawngoal manageVivCharacter(vivCommand.getID()) at rootSpawnPoint;
+//         }
+
+//         // Update the dictionary with the latest command WME for this character.
+//         mental_act {
+//             System.out.println("ABL: Updating WME dictionary for character " + vivCommand.getID());
+//             dict.addCharacter(vivCommand.getID(), vivCommand);
+//         }
+        
+//         // Process the tactics listed inside the WME.
+//         subgoal processSpawnGoals(vivCommand.getID());
+//     }
+
+//     // THE CHARACTER MANAGER: A persistent, parallel behavior for EACH Viv character.
+//     // It acts as the container for all tactics spawned for that specific character.
+//     parallel behavior manageVivCharacter(int characterId) {
+//         mental_act { System.out.println("ABL: Manager for character " + characterId + " is now active."); }
+//     }
+
+//     // THE COMMAND PROCESSOR: Unpacks the VivWME and spawns the chosen tactics.
+//     sequential behavior processSpawnGoals(int characterId) {
+//         VivWME vivCommand;
+//         ParallelBehaviorWME characterSpawnPoint;
+
+//         // Get the command WME from our dictionary and find the character's specific spawn point.
+//         mental_act { vivCommand = dict.getCharacter(characterId); }
+//         with (success_test {
+//             characterSpawnPoint = (ParallelBehaviorWME signature=="manageVivCharacter(int)" getAninstantiator(0)==characterId)
+//             }) wait;
+
+//         // --- Declarative, hardcoded check for each possible tactic ---
+
+//         if { (vivCommand.hasGoal("investigateSuspiciousActivity")) } {
+//             spawngoal investigateSuspiciousActivity(characterId, vivCommand.getTargetIdForGoal("investigateSuspiciousActivity")) at characterSpawnPoint;
+//         }
+
+//         if { (vivCommand.hasGoal("neutralizeThreat")) } {
+//             spawngoal neutralizeThreat(characterId, vivCommand.getTargetIdForGoal("neutralizeThreat")) at characterSpawnPoint;
+//         }
+
+//         if { (vivCommand.hasGoal("gatherInformation")) } {
+//             spawngoal gatherInformation(characterId, vivCommand.getTargetIdForGoal("gatherInformation")) at characterSpawnPoint;
+//         }
+
+//         if { (vivCommand.hasGoal("maintainGuildSecrecy")) } {
+//             spawngoal maintainGuildSecrecy(characterId, vivCommand.getTargetIdForGoal("maintainGuildSecrecy")) at characterSpawnPoint;
+//         }
+        
+//         // Note: This logic assumes we want to process the command WME immediately and then discard it.
+//         // It does not delete the WME, as it is now stored in the dictionary for state tracking.
+//     }
+
+//     //
+//     // HIGH-LEVEL TACTIC IMPLEMENTATIONS (The "Plans")
+//     //
+//     sequential behavior investigateSuspiciousActivity(int characterId, int targetId) {
+//         mental_act { System.out.println("ABL Tactic: Character " + characterId + " is investigating " + targetId); }
+//         act moveToPosition(characterId, 10.0f, 0.0f, 25.5f); // Example coordinates
+//         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Move" status=="Success") }) wait;
+//         act observeTarget(characterId, targetId, 15.0f);
+//         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Observe" status=="Success") }) wait;
+//     }
+
+//     sequential behavior neutralizeThreat(int characterId, int targetId) {
+//         mental_act { System.out.println("ABL Tactic: Character " + characterId + " is neutralizing threat " + targetId); }
+//         act aggressiveConfrontation(characterId, targetId);
+//         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="AggressiveConfrontation" status=="Success") }) wait;
+//     }
+
+//     sequential behavior gatherInformation(int characterId, int targetId) {
+//         mental_act { System.out.println("ABL Tactic: Character " + characterId + " is gathering info on " + targetId); }
+//         act observeTarget(characterId, targetId, 30.0f);
+//         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Observe" status=="Success") }) wait;
+//     }
+
+//     sequential behavior maintainGuildSecrecy(int characterId, int targetId) {
+//         mental_act { System.out.println("ABL Tactic: Character " + characterId + " is maintaining secrecy from " + targetId); }
+//         act calmConfrontation(characterId, targetId);
+//         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="CalmConfrontation" status=="Success") }) wait;
+//     }
+// }
