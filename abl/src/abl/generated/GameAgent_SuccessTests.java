@@ -13,24 +13,12 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_SuccessTests {
    static public boolean successTest0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
-         case 0: {
-            // vivAgentRoot_1Step1
-               if (
-                  true
-               )
-
-               {
-                  return true;
-               }
-
-
-            return false;
-         }
          case 1: {
-            // lookForVivCommands_1Step1
+            // lookForVivCommands_1Step2
                List wmeList0;
                ListIterator wmeIter0;
                wmeList0 = BehavingEntity.getBehavingEntity().lookupWME("VivWME");
@@ -68,46 +56,20 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 10: {
-            // processSpawnGoals_1Step2
-               List wmeList0;
-               ListIterator wmeIter0;
-               wmeList0 = BehavingEntity.getBehavingEntity().lookupWME("CharacterManagerWME");
-               wmeIter0 = wmeList0.listIterator();
-               while(wmeIter0.hasNext()) {
-                  CharacterManagerWME wme__0 = (CharacterManagerWME)wmeIter0.next();
-                  __$behaviorFrame[2] = wme__0;
-                  if (
-                     ( wme__0.getCharacterId() == ((__ValueTypes.IntVar)__$behaviorFrame[0]).i )
-                  )
+         case 17: {
+            // vivAgentRoot_1Step1
+               if (
+                  1 == 2
+               )
 
-                  {
-                        List wmeList1;
-                        ListIterator wmeIter1;
-                        wmeList1 = BehavingEntity.getBehavingEntity().lookupWME("ParallelBehaviorWME");
-                        wmeIter1 = wmeList1.listIterator();
-                        while(wmeIter1.hasNext()) {
-                           ParallelBehaviorWME wme__1 = (ParallelBehaviorWME)wmeIter1.next();
-                           __$behaviorFrame[3] = wme__1;
-                           if (
-                              ( wme__1.getBehaviorID() == ((CharacterManagerWME)__$behaviorFrame[2]).managerBehaviorId )
-                           )
-
-                           {
-                              return true;
-                           }
-
-                        }
-
-
-                  }
-
+               {
+                  return true;
                }
 
 
             return false;
          }
-         case 26: {
+         case 20: {
             // investigateSuspiciousActivity_1Step3
                List wmeList0;
                ListIterator wmeIter0;
@@ -132,7 +94,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 28: {
+         case 22: {
             // investigateSuspiciousActivity_1Step5
                List wmeList0;
                ListIterator wmeIter0;
@@ -157,7 +119,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 31: {
+         case 25: {
             // neutralizeThreat_1Step3
                List wmeList0;
                ListIterator wmeIter0;
@@ -182,7 +144,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 34: {
+         case 28: {
             // gatherInformation_1Step3
                List wmeList0;
                ListIterator wmeIter0;
@@ -207,7 +169,7 @@ public class GameAgent_SuccessTests {
 
             return false;
          }
-         case 37: {
+         case 31: {
             // maintainGuildSecrecy_1Step3
                List wmeList0;
                ListIterator wmeIter0;

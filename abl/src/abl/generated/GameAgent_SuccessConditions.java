@@ -13,6 +13,7 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_SuccessConditions {
    static public boolean successCondition0(int __$behaviorID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$behaviorID) {

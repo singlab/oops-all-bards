@@ -13,13 +13,14 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_ConditionalTests {
    static public boolean conditionalTest0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$stepID) {
          case 4: {
-            // lookForVivCommands_1Step4
+            // lookForVivCommands_1Step5
                if (
-                  ! ((GameAgent)__$thisEntity).dict.containsKey(((__ValueTypes.IntVar)__$behaviorFrame[2]).i)
+                  ((VivWME)__$behaviorFrame[0]).hasGoal("investigateSuspiciousActivity")
                )
 
                {
@@ -29,10 +30,10 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 11: {
-            // processSpawnGoals_1Step3
+         case 7: {
+            // lookForVivCommands_1Step6
                if (
-                  ((VivWME)__$behaviorFrame[1]).hasGoal("investigateSuspiciousActivity")
+                  ((VivWME)__$behaviorFrame[0]).hasGoal("neutralizeThreat")
                )
 
                {
@@ -42,10 +43,10 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 14: {
-            // processSpawnGoals_1Step4
+         case 10: {
+            // lookForVivCommands_1Step7
                if (
-                  ((VivWME)__$behaviorFrame[1]).hasGoal("neutralizeThreat")
+                  ((VivWME)__$behaviorFrame[0]).hasGoal("gatherInformation")
                )
 
                {
@@ -55,23 +56,10 @@ public class GameAgent_ConditionalTests {
 
             return false;
          }
-         case 17: {
-            // processSpawnGoals_1Step5
+         case 13: {
+            // lookForVivCommands_1Step8
                if (
-                  ((VivWME)__$behaviorFrame[1]).hasGoal("gatherInformation")
-               )
-
-               {
-                  return true;
-               }
-
-
-            return false;
-         }
-         case 20: {
-            // processSpawnGoals_1Step6
-               if (
-                  ((VivWME)__$behaviorFrame[1]).hasGoal("maintainGuildSecrecy")
+                  ((VivWME)__$behaviorFrame[0]).hasGoal("maintainGuildSecrecy")
                )
 
                {

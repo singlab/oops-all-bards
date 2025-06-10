@@ -13,6 +13,7 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_PreconditionSensorFactories {
    static public SensorActivation[] preconditionSensorFactory0(int __$behaviorID) {
       switch (__$behaviorID) {

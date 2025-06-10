@@ -22,7 +22,17 @@ public class VivWME extends WME {
         this.id = (int) (long) data.get("id");
         Gson gson = new Gson();
         JSONArray spawnArray = (JSONArray) data.get("toSpawn");
+        System.out.println("[VivWME DEBUG] Received toSpawn JSON: " + spawnArray.toJSONString());
         this.toSpawn = gson.fromJson(spawnArray.toJSONString(), SpawnGoalData[].class);
+        if (this.toSpawn != null) {
+            System.out.println("[VivWME DEBUG] Successfully parsed " + this.toSpawn.length + " goal(s). Contents:");
+            for (int i = 0; i < this.toSpawn.length; i++) {
+                // Because SpawnGoalData now has a toString(), this will be very informative.
+                System.out.println("  - Goal[" + i + "]: " + this.toSpawn[i]);
+            }
+        } else {
+            System.out.println("[VivWME DEBUG] Parsing resulted in a NULL toSpawn array.");
+        }
         JSONArray jsonArray = (JSONArray) data.get("toStop");
         this.toStop = new String[jsonArray.size()];
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -41,13 +51,17 @@ public class VivWME extends WME {
     }
 
     public boolean hasGoal(String goalName) {
+        System.out.println(String.format("[VivWME DEBUG] ABL is checking hasGoal('%s')...", goalName));
         if (toSpawn == null)
             return false;
         for (SpawnGoalData goal : toSpawn) {
-            if (goal.name.equalsIgnoreCase(goalName)) {
+            // Check for null name property, which could be the source of the error
+            if (goal != null && goal.name != null && goal.name.equalsIgnoreCase(goalName)) {
+                System.out.println(String.format("[VivWME DEBUG] ...hasGoal('%s') returning TRUE.", goalName));
                 return true;
             }
         }
+        System.out.println(String.format("[VivWME DEBUG] ...hasGoal('%s') returning FALSE.", goalName));
         return false;
     }
 

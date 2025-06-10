@@ -13,6 +13,7 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_RLPolicy {
    static public int rlPolicy0(int __$behaviorID, Object prevLocation, int stepIndex, Object currLocation, double rewardValue, boolean isRewarding) {
       switch (__$behaviorID) {

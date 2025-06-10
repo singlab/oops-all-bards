@@ -13,6 +13,7 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_ConditionalTestSensorFactories {
    static public SensorActivation[] conditionalTestSensorFactory0(int __$stepID) {
       switch (__$stepID) {

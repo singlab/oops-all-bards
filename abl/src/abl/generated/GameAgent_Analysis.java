@@ -13,88 +13,72 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_Analysis {
    static public List<String> analysis0(int __$behaviorID) {
       switch (__$behaviorID) {
-         case 0: {
-            // vivAgentRoot_1
+         case 1: {
+            // lookForVivCommands-0->ConditionalStep4_IF_MentalStep_GoalStep_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
+            _$analysisStepIDs.add("investigateSuspiciousActivity(int, int)"); // stepID 6
             return _$analysisStepIDs;
          }
          case 2: {
-            // lookForVivCommands-1->ConditionalStep4_IF_GoalStep_1
+            // lookForVivCommands-0->ConditionalStep7_IF_MentalStep_GoalStep_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("manageVivCharacter(int)"); // stepID 5
-            return _$analysisStepIDs;
-         }
-         case 1: {
-            // lookForVivCommands_1
-            List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("processSpawnGoals(int)"); // stepID 7
+            _$analysisStepIDs.add("neutralizeThreat(int, int)"); // stepID 9
             return _$analysisStepIDs;
          }
          case 3: {
-            // manageVivCharacter_1
+            // lookForVivCommands-0->ConditionalStep10_IF_MentalStep_GoalStep_1
+            List<String> _$analysisStepIDs = new ArrayList<String>();
+            _$analysisStepIDs.add("gatherInformation(int, int)"); // stepID 12
+            return _$analysisStepIDs;
+         }
+         case 4: {
+            // lookForVivCommands-0->ConditionalStep13_IF_MentalStep_GoalStep_1
+            List<String> _$analysisStepIDs = new ArrayList<String>();
+            _$analysisStepIDs.add("maintainGuildSecrecy(int, int)"); // stepID 15
+            return _$analysisStepIDs;
+         }
+         case 0: {
+            // lookForVivCommands_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
          case 5: {
-            // processSpawnGoals-4->ConditionalStep11_IF_MentalStep_GoalStep_1
+            // vivAgentRoot_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("investigateSuspiciousActivity(int, int)"); // stepID 13
             return _$analysisStepIDs;
          }
          case 6: {
-            // processSpawnGoals-4->ConditionalStep14_IF_MentalStep_GoalStep_1
-            List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("neutralizeThreat(int, int)"); // stepID 16
-            return _$analysisStepIDs;
-         }
-         case 7: {
-            // processSpawnGoals-4->ConditionalStep17_IF_MentalStep_GoalStep_1
-            List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("gatherInformation(int, int)"); // stepID 19
-            return _$analysisStepIDs;
-         }
-         case 8: {
-            // processSpawnGoals-4->ConditionalStep20_IF_MentalStep_GoalStep_1
-            List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("maintainGuildSecrecy(int, int)"); // stepID 22
-            return _$analysisStepIDs;
-         }
-         case 4: {
-            // processSpawnGoals_1
-            List<String> _$analysisStepIDs = new ArrayList<String>();
-            return _$analysisStepIDs;
-         }
-         case 9: {
             // investigateSuspiciousActivity_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
-         case 10: {
+         case 7: {
             // neutralizeThreat_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
-         case 11: {
+         case 8: {
             // gatherInformation_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
-         case 12: {
+         case 9: {
             // maintainGuildSecrecy_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;
          }
-         case 13: {
+         case 10: {
             // GameAgent_RootCollectionBehavior
             List<String> _$analysisStepIDs = new ArrayList<String>();
-            _$analysisStepIDs.add("vivAgentRoot()"); // stepID 38
-            _$analysisStepIDs.add("lookForVivCommands()"); // stepID 39
+            _$analysisStepIDs.add("vivAgentRoot()"); // stepID 32
+            _$analysisStepIDs.add("lookForVivCommands()"); // stepID 33
             return _$analysisStepIDs;
          }
-         case 14: {
+         case 11: {
             // __$defaultMemoryExecuteBehavior_1
             List<String> _$analysisStepIDs = new ArrayList<String>();
             return _$analysisStepIDs;

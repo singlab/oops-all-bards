@@ -5,6 +5,7 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 
 behaving_entity GameAgent {
     
@@ -14,83 +15,74 @@ behaving_entity GameAgent {
     register act calmConfrontation(int, int) with CalmConfrontation;
     register act aggressiveConfrontation(int, int) with AggressiveConfrontation;
 
-    // A utility class (defined in Java) to hold the most recent WME for each character.
+    // A utility class to hold the most recent WME for each character.
     VivWMEDictionary dict = new VivWMEDictionary();
-
-    parallel behavior vivAgentRoot() {
-        with (success_test { (true) }) wait;
-    }
 
     sequential behavior lookForVivCommands() {
         VivWME vivCommand;
         ParallelBehaviorWME rootSpawnPoint;
         int characterId;
+        int targetId;
 
+        mental_act { System.out.println("[ABL DEBUG] lookForVivCommands: Starting and waiting for a new command..."); }
         with (success_test {
                 vivCommand = (VivWME OnTree==false)
                 rootSpawnPoint = (ParallelBehaviorWME signature=="vivAgentRoot()")
             }) wait;
         
-        mental_act { vivCommand.setOnTree(true); }
-        mental_act { characterId = vivCommand.getID(); }
-
-        if { (!dict.containsKey(characterId)) } {
-            spawngoal manageVivCharacter(characterId) at rootSpawnPoint;
+        mental_act { 
+            characterId = vivCommand.getID();
+            System.out.println("[ABL DEBUG] lookForVivCommands: Found VivWME for character ID " + characterId + ". Marking as OnTree=true.");
+            vivCommand.setOnTree(true);
         }
 
-        mental_act { dict.addCharacter(characterId, vivCommand); }
-        subgoal processSpawnGoals(characterId);
-    }
-
-    parallel behavior manageVivCharacter(int characterId) {
-        mental_act {
-            abl.wmes.ParallelBehaviorWME me = getBehaviorWME();
-            System.out.println("ABL: Linking manager behavior " + me.getID() + " to character " + characterId);
-            addWME(new CharacterManagerWME(characterId, me.getID()));
+        mental_act { 
+            System.out.println("[ABL DEBUG] lookForVivCommands: Updating dictionary for character " + characterId);
+            dict.addCharacter(characterId, vivCommand);
         }
-    }
-
-    sequential behavior processSpawnGoals(int characterId) {
-        VivWME vivCommand;
-        CharacterManagerWME linkWME;
-        ParallelBehaviorWME characterSpawnPoint;
-		int targetId;
-
-        mental_act { vivCommand = dict.getCharacter(characterId); }
-        with (success_test {
-                linkWME = (CharacterManagerWME characterId==characterId)
-                characterSpawnPoint = (ParallelBehaviorWME behaviorID==linkWME.managerBehaviorId)
-            }) wait;
-
-		if { (vivCommand.hasGoal("investigateSuspiciousActivity")) } {
-			mental_act { targetId = vivCommand.getTargetIdForGoal("investigateSuspiciousActivity"); }
-			spawngoal investigateSuspiciousActivity(characterId, targetId) at characterSpawnPoint;
-		}
+        
+        if { (vivCommand.hasGoal("investigateSuspiciousActivity")) } {
+            mental_act { 
+                targetId = vivCommand.getTargetIdForGoal("investigateSuspiciousActivity");
+                System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'investigateSuspiciousActivity' with target " + targetId);
+            }
+            spawngoal investigateSuspiciousActivity(characterId, targetId) at rootSpawnPoint;
+        }
 	
 		if { (vivCommand.hasGoal("neutralizeThreat")) } {
-			mental_act { targetId = vivCommand.getTargetIdForGoal("neutralizeThreat"); }
-			spawngoal neutralizeThreat(characterId, targetId) at characterSpawnPoint;
-		}
+            mental_act {
+                targetId = vivCommand.getTargetIdForGoal("neutralizeThreat");
+                System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'neutralizeThreat' with target " + targetId);
+            }
+            spawngoal neutralizeThreat(characterId, targetId) at rootSpawnPoint;
+        }
 	
 		if { (vivCommand.hasGoal("gatherInformation")) } {
-			mental_act { targetId = vivCommand.getTargetIdForGoal("gatherInformation"); }
-			spawngoal gatherInformation(characterId, targetId) at characterSpawnPoint;
+			mental_act { 
+                targetId = vivCommand.getTargetIdForGoal("gatherInformation"); 
+                System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'gatherInformation' with target " + targetId);
+            }
+			spawngoal gatherInformation(characterId, targetId) at rootSpawnPoint;
 		}
 	
 		if { (vivCommand.hasGoal("maintainGuildSecrecy")) } {
-			mental_act { targetId = vivCommand.getTargetIdForGoal("maintainGuildSecrecy"); }
-			spawngoal maintainGuildSecrecy(characterId, targetId) at characterSpawnPoint;
+			mental_act { 
+                targetId = vivCommand.getTargetIdForGoal("maintainGuildSecrecy");
+                System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'maintainGuildSecrecy' with target " + targetId);
+            }
+			spawngoal maintainGuildSecrecy(characterId, targetId) at rootSpawnPoint;
 		}
-		
-		mental_act {
-			System.out.println("ABL: Finished processing spawn goals, deleting command WME.");
-			deleteWME(vivCommand);
-		}
+
+        mental_act {
+            System.out.println("ABL: Finished processing command for character " + characterId + ", removing from dictionary.");
+            dict.deleteCharacter(characterId);
+        }
     }
 
-    //
-    // HIGH-LEVEL TACTIC IMPLEMENTATIONS (The "Plans")
-    //
+    parallel behavior vivAgentRoot() {
+        with (success_test { ( 1==2 ) }) wait;
+    }
+
     sequential behavior investigateSuspiciousActivity(int characterId, int targetId) {
         mental_act { System.out.println("ABL Tactic: Character " + characterId + " is investigating " + targetId); }
         act moveToPosition(characterId, 10.0f, 0.0f, 25.5f); // Example coordinates

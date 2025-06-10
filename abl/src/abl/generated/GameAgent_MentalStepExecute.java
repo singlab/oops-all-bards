@@ -13,78 +13,74 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_MentalStepExecute {
    static public void mentalExecute0(int __$stepID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity, MentalStep __$thisStep) {
       switch (__$stepID) {
+         case 0: {
+            // lookForVivCommands_1Step1
+            System.out.println("[ABL DEBUG] lookForVivCommands: Starting and waiting for a new command...");
+            break;
+         }
          case 2: {
-            // lookForVivCommands_1Step2
+            // lookForVivCommands_1Step3
+            ((__ValueTypes.IntVar)__$behaviorFrame[2]).i = ((VivWME)__$behaviorFrame[0]).getID();
+            System.out.println("[ABL DEBUG] lookForVivCommands: Found VivWME for character ID " + ((__ValueTypes.IntVar)__$behaviorFrame[2]).i + ". Marking as OnTree=true.");
             ((VivWME)__$behaviorFrame[0]).setOnTree(true);
             break;
          }
          case 3: {
-            // lookForVivCommands_1Step3
-            ((__ValueTypes.IntVar)__$behaviorFrame[2]).i = ((VivWME)__$behaviorFrame[0]).getID();
-            break;
-         }
-         case 6: {
-            // lookForVivCommands_1Step5
+            // lookForVivCommands_1Step4
+            System.out.println("[ABL DEBUG] lookForVivCommands: Updating dictionary for character " + ((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
             ((GameAgent)__$thisEntity).dict.addCharacter(((__ValueTypes.IntVar)__$behaviorFrame[2]).i , ((VivWME)__$behaviorFrame[0]));
             break;
          }
+         case 5: {
+            // lookForVivCommands-0->ConditionalStep4_IF_MentalStep_GoalStep_1Step1
+            ((__ValueTypes.IntVar)__$behaviorFrame[3]).i = ((VivWME)__$behaviorFrame[0]).getTargetIdForGoal("investigateSuspiciousActivity");
+            System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'investigateSuspiciousActivity' with target " + ((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
+            break;
+         }
          case 8: {
-            // manageVivCharacter_1Step1
-            abl.wmes.ParallelBehaviorWME me = getBehaviorWME();
-            System.out.println("ABL: Linking manager behavior " + me.getID() + " to character " + ((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
-            addWME(new CharacterManagerWME(((__ValueTypes.IntVar)__$behaviorFrame[0]).i , me.getID()));
+            // lookForVivCommands-0->ConditionalStep7_IF_MentalStep_GoalStep_1Step1
+            ((__ValueTypes.IntVar)__$behaviorFrame[3]).i = ((VivWME)__$behaviorFrame[0]).getTargetIdForGoal("neutralizeThreat");
+            System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'neutralizeThreat' with target " + ((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
             break;
          }
-         case 9: {
-            // processSpawnGoals_1Step1
-            __$behaviorFrame[1] = ((GameAgent)__$thisEntity).dict.getCharacter(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
+         case 11: {
+            // lookForVivCommands-0->ConditionalStep10_IF_MentalStep_GoalStep_1Step1
+            ((__ValueTypes.IntVar)__$behaviorFrame[3]).i = ((VivWME)__$behaviorFrame[0]).getTargetIdForGoal("gatherInformation");
+            System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'gatherInformation' with target " + ((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
             break;
          }
-         case 12: {
-            // processSpawnGoals-4->ConditionalStep11_IF_MentalStep_GoalStep_1Step1
-            ((__ValueTypes.IntVar)__$behaviorFrame[4]).i = ((VivWME)__$behaviorFrame[1]).getTargetIdForGoal("investigateSuspiciousActivity");
+         case 14: {
+            // lookForVivCommands-0->ConditionalStep13_IF_MentalStep_GoalStep_1Step1
+            ((__ValueTypes.IntVar)__$behaviorFrame[3]).i = ((VivWME)__$behaviorFrame[0]).getTargetIdForGoal("maintainGuildSecrecy");
+            System.out.println("[ABL DEBUG] processSpawnGoals: Spawning 'maintainGuildSecrecy' with target " + ((__ValueTypes.IntVar)__$behaviorFrame[3]).i);
             break;
          }
-         case 15: {
-            // processSpawnGoals-4->ConditionalStep14_IF_MentalStep_GoalStep_1Step1
-            ((__ValueTypes.IntVar)__$behaviorFrame[4]).i = ((VivWME)__$behaviorFrame[1]).getTargetIdForGoal("neutralizeThreat");
+         case 16: {
+            // lookForVivCommands_1Step9
+            System.out.println("ABL: Finished processing command for character " + ((__ValueTypes.IntVar)__$behaviorFrame[2]).i + ", removing from dictionary.");
+            ((GameAgent)__$thisEntity).dict.deleteCharacter(((__ValueTypes.IntVar)__$behaviorFrame[2]).i);
             break;
          }
          case 18: {
-            // processSpawnGoals-4->ConditionalStep17_IF_MentalStep_GoalStep_1Step1
-            ((__ValueTypes.IntVar)__$behaviorFrame[4]).i = ((VivWME)__$behaviorFrame[1]).getTargetIdForGoal("gatherInformation");
-            break;
-         }
-         case 21: {
-            // processSpawnGoals-4->ConditionalStep20_IF_MentalStep_GoalStep_1Step1
-            ((__ValueTypes.IntVar)__$behaviorFrame[4]).i = ((VivWME)__$behaviorFrame[1]).getTargetIdForGoal("maintainGuildSecrecy");
-            break;
-         }
-         case 23: {
-            // processSpawnGoals_1Step7
-            System.out.println("ABL: Finished processing spawn goals, deleting command WME.");
-            deleteWME(((VivWME)__$behaviorFrame[1]));
-            break;
-         }
-         case 24: {
             // investigateSuspiciousActivity_1Step1
             System.out.println("ABL Tactic: Character " + ((__ValueTypes.IntVar)__$behaviorFrame[0]).i + " is investigating " + ((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             break;
          }
-         case 29: {
+         case 23: {
             // neutralizeThreat_1Step1
             System.out.println("ABL Tactic: Character " + ((__ValueTypes.IntVar)__$behaviorFrame[0]).i + " is neutralizing threat " + ((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             break;
          }
-         case 32: {
+         case 26: {
             // gatherInformation_1Step1
             System.out.println("ABL Tactic: Character " + ((__ValueTypes.IntVar)__$behaviorFrame[0]).i + " is gathering info on " + ((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             break;
          }
-         case 35: {
+         case 29: {
             // maintainGuildSecrecy_1Step1
             System.out.println("ABL Tactic: Character " + ((__ValueTypes.IntVar)__$behaviorFrame[0]).i + " is maintaining secrecy from " + ((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             break;

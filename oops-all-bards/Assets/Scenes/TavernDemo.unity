@@ -19710,10 +19710,10 @@ MonoBehaviour:
     - RefuseHelp
   - key: ProtectGuildOfShadows
     val:
-    - InvestigateSuspiciousActivity
-    - NeutralizeThreat
-    - GatherInformation
-    - MaintainGuildSecrecy
+    - investigateSuspiciousActivity
+    - neutralizeThreat
+    - gatherInformation
+    - maintainGuildSecrecy
   behaviorBindings:
   - key: DuelPlayer
     val:
@@ -19724,18 +19724,18 @@ MonoBehaviour:
     - InParty
     - InCombat
     - CanHelp
-  - key: InvestigateSuspiciousActivity
+  - key: investigateSuspiciousActivity
     val:
     - isSuspiciousOf({self}, {target})
     - ~shouldAttackPlayerAtMeetingSpot({self})
-  - key: NeutralizeThreat
+  - key: neutralizeThreat
     val:
     - shouldAttackPlayerAtMeetingSpot({self})
-  - key: GatherInformation
+  - key: gatherInformation
     val:
     - considersPotentialThreat({self}, {target})
     - ~isSuspiciousOf({self}, {target})
-  - key: MaintainGuildSecrecy
+  - key: maintainGuildSecrecy
     val:
     - shouldConfrontPlayerInstead({self})
   characterBindings:

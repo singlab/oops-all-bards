@@ -13,6 +13,7 @@ import abl.wmes.*;
 import abl.actions.*;
 import abl.sensors.*;
 import abl.util.*;
+import java.util.HashMap;
 public class GameAgent_StateWMEs {
    static public Object stateWME0(int __$behaviorID, final Object[] __$behaviorFrame, final BehavingEntity __$thisEntity) {
       switch (__$behaviorID) {
