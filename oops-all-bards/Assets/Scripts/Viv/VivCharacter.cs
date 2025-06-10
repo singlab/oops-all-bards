@@ -58,6 +58,17 @@ namespace Viv
                 Debug.LogError($"Viv instance not found when trying to register {characterName}. Make sure Viv initializes first.");
             }
 
+            // Initialize the DELP knowledge base for this character
+            if (delpEntity != null)
+            {
+                delpEntity.PrepareAndUpdate();
+                Debug.Log($"VivCharacter: DELPEntity initialized for {characterName} with ID {characterID}.");
+            }
+            else
+            {
+                Debug.LogError($"VivCharacter: DELPEntity is null for {characterName}. Cannot initialize knowledge base.");
+            }
+
             // After registration, this character determines and acquires its own task.
             string desiredSupertaskName = null;
 
@@ -97,7 +108,7 @@ namespace Viv
         {
             if (CurrentSupertask != null)
             {
-                CurrentSupertask.SelectAndDispatchBehaviors();
+                CurrentSupertask.BeginEvaluation();
             }
         }
 

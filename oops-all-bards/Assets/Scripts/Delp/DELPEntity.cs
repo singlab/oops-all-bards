@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using DELP;
 
@@ -15,6 +16,7 @@ public class DELPEntity : ScriptableObject
     {
         if (!facts.Contains(fact))
         {
+            Debug.Log($"<color=green>[{this.name}] Adding Fact:</color> {fact}");
             facts.Add(fact);
             PrepareAndUpdate();
         }
@@ -24,6 +26,7 @@ public class DELPEntity : ScriptableObject
     {
         if (facts.Contains(fact))
         {
+            Debug.Log($"<color=red>[{this.name}] Removing Fact:</color> {fact}");
             facts.Remove(fact);
             PrepareAndUpdate();
         }
@@ -33,6 +36,7 @@ public class DELPEntity : ScriptableObject
     {
         if (!strictRules.Contains(strictRule))
         {
+            Debug.Log($"<color=green>[{this.name}] Adding Strict Rule:</color> {strictRule}");
             strictRules.Add(strictRule);
             PrepareAndUpdate();
         }
@@ -42,6 +46,7 @@ public class DELPEntity : ScriptableObject
     {
         if (strictRules.Contains(strictRule))
         {
+            Debug.Log($"<color=red>[{this.name}] Removing Strict Rule:</color> {strictRule}");
             strictRules.Remove(strictRule);
             PrepareAndUpdate();
         }
@@ -51,6 +56,7 @@ public class DELPEntity : ScriptableObject
     {
         if (!defeasibleRules.Contains(defeasibleRule))
         {
+            Debug.Log($"<color=green>[{this.name}] Adding Defeasible Rule:</color> {defeasibleRule}");
             defeasibleRules.Add(defeasibleRule);
             PrepareAndUpdate();
         }
@@ -60,6 +66,7 @@ public class DELPEntity : ScriptableObject
     {
         if (defeasibleRules.Contains(defeasibleRule))
         {
+            Debug.Log($"<color=red>[{this.name}] Removing Defeasible Rule:</color> {defeasibleRule}");
             defeasibleRules.Remove(defeasibleRule);
             PrepareAndUpdate();
         }
@@ -67,6 +74,8 @@ public class DELPEntity : ScriptableObject
 
     public void PrepareEntityData()
     {
+        preparedData.Clear();
+
         foreach (string fact in this.facts)
         {
             DELPBelief belief = new DELPBelief(fact);
@@ -103,6 +112,8 @@ public class DELPEntity : ScriptableObject
 
     public void PrepareAndUpdate()
     {
+        Debug.Log($"<color=orange>[{this.name}] Preparing and sending full knowledge base update to server...</color>");
+        Debug.Log(this.ToString());
         PrepareEntityData();
         UpdateKnowledgeBase();
     }
@@ -112,6 +123,27 @@ public class DELPEntity : ScriptableObject
         DELPQuery q = new DELPQuery(query);
         DELPMessage msg = q.PrepareQuery();
         TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"--- DELP Entity State Snapshot: {this.name} ---");
+
+        sb.AppendLine("\n== FACTS ==");
+        if (facts.Count == 0) sb.AppendLine(" (None)");
+        else foreach (var fact in facts) sb.AppendLine($" - {fact}");
+
+        sb.AppendLine("\n== STRICT RULES ==");
+        if (strictRules.Count == 0) sb.AppendLine(" (None)");
+        else foreach (var rule in strictRules) sb.AppendLine($" - {rule}");
+
+        sb.AppendLine("\n== DEFEASIBLE RULES ==");
+        if (defeasibleRules.Count == 0) sb.AppendLine(" (None)");
+        else foreach (var rule in defeasibleRules) sb.AppendLine($" - {rule}");
+
+        sb.AppendLine("------------------------------------");
+        return sb.ToString();
     }
 
     public List<string> Facts

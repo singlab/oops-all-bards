@@ -74,17 +74,20 @@ public class TCPTestClient : MonoBehaviour {
 
 						// TODO: ADD MROE DOCS
 						string result = System.Text.Encoding.UTF8.GetString(incomingData);
-						Debug.Log(result);
-						
-						if (result.Contains("answer"))
+						UnityMainThreadDispatcher.Instance().Enqueue(() =>
 						{
-							DELPResponse answer = JsonUtility.FromJson<DELPResponse>(result);
-							EventManager.Instance.InvokeEvent(EventType.DelpResponse, answer);
-							return;
-						}
+							Debug.Log(result);
 
-						// ABLResponse response = JsonUtility.FromJson<ABLResponse>(result);
-						ActionManager.Instance.HandleABLResponse(result);
+							if (result.Contains("answer"))
+							{
+								DELPResponse answer = JsonUtility.FromJson<DELPResponse>(result);
+								EventManager.Instance.InvokeEvent(EventType.DelpResponse, answer);
+								return;
+							}
+
+							// ABLResponse response = JsonUtility.FromJson<ABLResponse>(result);
+							ActionManager.Instance.HandleABLResponse(result);
+						});
 					} 				
 				} 			
 			}         

@@ -128,6 +128,11 @@ namespace Viv
         // The evaluation of the supertask in terms of its behaviors, containing the TFUs associated with each behavior.
         [SerializeField] private TFU[] evaluation;
 
+        // -- STATE MANAGEMENT --
+        public enum EvaluationState { Idle, Evaluating, ReadyToDispatch }
+        private EvaluationState currentState = EvaluationState.Idle;
+        private int pendingResponses = 0;
+
         public Supertask(string name, int actingCharacter, int targetCharacter, CustomDictionary bindings)
         {
             this.name = name;
@@ -150,7 +155,7 @@ namespace Viv
 
             foreach (string bname in behaviorNames)
             {
-                Behavior toAdd = new Behavior(bname, actingCharacter, targetCharacter, bindings);
+                Behavior toAdd = new Behavior(bname, actingCharacter, targetCharacter, this, bindings);
                 behaviors.Add(toAdd);
             }
             return behaviors;
@@ -159,8 +164,15 @@ namespace Viv
         // A function that dispatches all behaviors that are not built on false assumptions to the ABL agent.
         public void SelectAndDispatchBehaviors()
         {
-            // Ensure the evaluation is current.
-            this.Evaluate();
+            // Only proceed if we are in the correct state.
+            if (currentState != EvaluationState.ReadyToDispatch)
+            {
+                Debug.LogWarning($"SelectAndDispatchBehaviors called for '{this.Name}' but it is not in the ReadyToDispatch state.");
+                return;
+            }
+
+            // We must re-score the behaviors now that the assumptions have their real values.
+            ScoreAllBehaviors();
 
             // Create a list to hold only the behaviors that pass criteria.
             var validBehaviors = new List<Behavior>();
@@ -208,23 +220,39 @@ namespace Viv
             {
                 Debug.Log("No valid behaviors to dispatch for this supertask at this time.");
             }
+
+            currentState = EvaluationState.Idle;
         }
 
         // A function that evaluates the given supertask with respect to its component behaviors.
-        public void Evaluate()
+        public void BeginEvaluation()
         {
-            if (this.evaluation == null)
+            // Don't start a new evaluation if one is already in progress.
+            if (currentState == EvaluationState.Evaluating) return;
+
+            Debug.Log($"<color=yellow>Beginning evaluation for Supertask '{this.Name}'...</color>");
+            currentState = EvaluationState.Evaluating;
+
+            // Count how many assumptions we need answers for.
+            pendingResponses = 0;
+            foreach (var behavior in behaviors)
             {
-                // Create a new evaluation matrix, m x n, where m = the number of the behaviors belonging to the supertask, and n = 3 (storing truths, falsities, and uncertainties of the behavior).
-                this.evaluation = new TFU[behaviors.Count];
+                pendingResponses += behavior.Assumptions.Count;
             }
 
-            // Evaluate each behavior.
-            for (int i = 0; i < behaviors.Count; i++)
+            if (pendingResponses == 0)
             {
-                Behavior currentBehavior = behaviors[i];
-                currentBehavior.Evaluate();
-                evaluation[i] = ScoreBehavior(currentBehavior);
+                currentState = EvaluationState.ReadyToDispatch;
+                return;
+            }
+
+            // Tell all assumptions to validate themselves.
+            foreach (var behavior in behaviors)
+            {
+                foreach (var assumption in behavior.Assumptions)
+                {
+                    assumption.Validate();
+                }
             }
         }
 
@@ -232,26 +260,59 @@ namespace Viv
         private TFU ScoreBehavior(Behavior behavior)
         {
             TFU score = new TFU();
-            string[] eval = behavior.Evaluation;
 
-            for (int i = 0; i < eval.Length; i++)
+            // Loop directly through the assumptions, not a separate string array.
+            foreach (Assumption assumption in behavior.Assumptions)
             {
-                string current = eval[i];
-                if (current == "YES")
+                // Use a switch on the enum, which is cleaner and safer.
+                switch (assumption.IsValid)
                 {
-                    score.Truths += 1;
-                }
-                else if (current == "NO")
-                {
-                    score.Falsities += 1;
-                }
-                else
-                {
-                    score.Uncertainties += 1;
+                    case Assumption.Validity.YES:
+                        score.Truths++;
+                        break;
+                    case Assumption.Validity.NO:
+                        score.Falsities++;
+                        break;
+
+                    // Both UNDECIDED and the DEFAULT state count as uncertainties.
+                    case Assumption.Validity.UNDECIDED:
+                    case Assumption.Validity.DEFAULT:
+                        score.Uncertainties++;
+                        break;
                 }
             }
 
             return score;
+        }
+
+        // A utility function to score all behaviors in the supertask and return a TFU array representing the evaluation.
+        public void ScoreAllBehaviors()
+        {
+            if (this.evaluation == null)
+            {
+                this.evaluation = new TFU[this.behaviors.Count];
+            }
+
+            for (int i = 0; i < behaviors.Count; i++)
+            {
+                evaluation[i] = ScoreBehavior(this.behaviors[i]);
+            }
+        }
+
+        public void OnAssumptionValidated()
+        {
+            pendingResponses--;
+            Debug.Log($"Response received. {pendingResponses} responses still pending.");
+
+            // If all responses have been received, we are ready to make a decision.
+            if (pendingResponses <= 0)
+            {
+                Debug.Log($"<color=yellow>All responses received. Supertask '{this.Name}' is ready to dispatch.</color>");
+                currentState = EvaluationState.ReadyToDispatch;
+
+                // Now that we are ready, we can immediately try to dispatch.
+                SelectAndDispatchBehaviors();
+            }
         }
 
         public string Name
@@ -331,14 +392,15 @@ namespace Viv
         [SerializeField] private int actingCharacter;
         // A list of the assumptions on which each behavior is built.
         [SerializeField] private List<Assumption> assumptions = new List<Assumption>();
-        // The evaluation of the behavior in terms of its assumptions, represented as an array of strings, i.e. ["YES","NO","UNDECIDED"].
-        [SerializeField] private string[] evaluation;
+        // The parent supertask of the behavior.
+        [SerializeField] private Supertask parentSupertask;
 
 
-        public Behavior(string name, int actingCharacter, int targetCharacter, CustomDictionary bindings)
+        public Behavior(string name, int actingCharacter, int targetCharacter, Supertask parent, CustomDictionary bindings)
         {
             this.name = name;
             this.actingCharacter = actingCharacter;
+            this.parentSupertask = parent;
             this.assumptions = this.FormAssumptions(name, actingCharacter, targetCharacter, bindings);
         }
 
@@ -376,26 +438,11 @@ namespace Viv
             // Create an Assumption for each template, passing the bindings to resolve it
             foreach (string template in assumptionTemplates)
             {
-                Assumption toAdd = new Assumption(template, actingCharacter, roleBindings);
+                Assumption toAdd = new Assumption(template, actingCharacter, this.parentSupertask, roleBindings);
                 assumptions.Add(toAdd);
             }
 
             return assumptions;
-        }
-
-        // A function that evaluates the given behavior by validating/failing to validate the assumptions on which it is built.
-        public void Evaluate()
-        {
-            if (this.evaluation == null)
-            {
-                this.evaluation = new string[assumptions.Count];
-            }
-
-            for (int i = 0; i < assumptions.Count; i++)
-            {
-                assumptions[i].Validate();
-                evaluation[i] = assumptions[i].IsValid.ToString();
-            }
         }
 
         public string Name
@@ -407,16 +454,13 @@ namespace Viv
         {
             get { return this.assumptions; }
         }
-
-        public string[] Evaluation
-        {
-            get { return this.evaluation; }
-        }
     }
 
     [System.Serializable]
     public class Assumption
     {
+        // The parent supertask of the assumption.
+        public Supertask parentSupertask { get; set; }
         // An int ID representing the character making this assumption, so that the correct knowledgebase can be queried.
         [SerializeField] private int actingCharacter;
         [SerializeField] private string template; // e.g., "isHostile({target})"
@@ -428,16 +472,19 @@ namespace Viv
         [SerializeField] private Validity isValid;
 
         // private fields for event management
-        private Action<object> assignDelpResponseLambda;
+        private Action<object> onDelpResponse;
 
-        public Assumption(string template, int actingCharacter, Dictionary<string, string> roleBindings)
+        public Assumption(string template, int actingCharacter, Supertask parent, Dictionary<string, string> roleBindings)
         {
             this.template = template;
             this.actingCharacter = actingCharacter;
             this.isValid = Validity.DEFAULT;
+            this.parentSupertask = parent;
 
             // Resolve the template immediately upon creation
             this.resolvedQuery = ResolveTemplate(template, roleBindings);
+
+            this.onDelpResponse = (eventData) => { AssignDELPResponse(eventData); };
         }
 
         public override string ToString()
@@ -458,46 +505,35 @@ namespace Viv
         // A utility function to query a DELP knowledgebase with the given assumption and validate it.
         public void Validate()
         {
-            // Create lambda for event subscription
-            assignDelpResponseLambda = (eventData) => AssignDELPResponse();
-            EventManager.Instance.SubscribeToEvent(EventType.DelpResponse, assignDelpResponseLambda);
+            EventManager.Instance.SubscribeToEvent(EventType.DelpResponse, onDelpResponse);
 
             DELPQuery query = new DELPQuery(this.ToString());
             DELPMessage msg = query.PrepareQuery();
             TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
         }
 
-        private void AssignDELPResponse()
+        private void AssignDELPResponse(object eventData)
         {
-            Debug.Log("Received DELP response; assigning to assumption.");
-            this.tmpResponse = (DELPResponse)EventManager.Instance.EventData;
+            // Cast the generic event data to the specific type we expect.
+            DELPResponse response = eventData as DELPResponse;
+            if (response == null) return;
 
-            if (this.tmpResponse.msg == this.ToString())
+            // Check if this response is the one we are waiting for.
+            if (response.msg == this.resolvedQuery)
             {
-                if (this.tmpResponse.data.answer.Contains("YES"))
-                {
-                    this.isValid = Validity.YES;
-                }
-                else if (this.tmpResponse.data.answer.Contains("NO"))
-                {
-                    this.isValid = Validity.NO;
-                }
-                else if (this.tmpResponse.data.answer.Contains("UNDECIDED"))
-                {
-                    this.isValid = Validity.UNDECIDED;
-                }
-                else
-                {
-                    this.isValid = Validity.DEFAULT;
-                }
-                Debug.Log("Assumption validated: " + this.isValid.ToString());
-            }
-            else
-            {
-                Debug.Log("Assumption could not be validated; mismatching query.");
-            }
+                Debug.Log($"<color=cyan>Assumption '{this.resolvedQuery}' received a matching response.</color>");
 
-            EventManager.Instance.UnsubscribeToEvent(EventType.DelpResponse, null);
+                if (response.data.answer.Contains("YES")) this.isValid = Validity.YES;
+                else if (response.data.answer.Contains("NO")) this.isValid = Validity.NO;
+                else if (response.data.answer.Contains("UNDECIDED")) this.isValid = Validity.UNDECIDED;
+                else this.isValid = Validity.DEFAULT;
+
+                Debug.Log($"Assumption validated: {this.isValid}");
+
+                EventManager.Instance.UnsubscribeToEvent(EventType.DelpResponse, onDelpResponse);
+
+                parentSupertask.OnAssumptionValidated();
+            }
         }
 
         public Validity IsValid

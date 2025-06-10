@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
         // Add player to the party.
         PartyManager.Instance.AddCharacterToParty(DataManager.Instance.PlayerData);
-        TCPTestClient.Instance.RefreshWMEs();
+        // TCPTestClient.Instance.RefreshWMEs();
     }
 
     // Update is called once per frame
