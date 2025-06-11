@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using DELP;
 
@@ -34,15 +35,15 @@ namespace Viv
         {
             if (bindings.SupertaskDict.ContainsKey(supertaskName))
             {
-                // For now, we assume the target is the player (ID 0) as a default.
-                int targetCharacterId = 0;
+                int targetCharacterId = 0; // Assuming Player target for now
 
-                Supertask newTask = new Supertask(supertaskName, character.characterID, targetCharacterId, bindings);
+                // Create a new instance of the Supertask, passing the full 'character' object as the owner.
+                Supertask newTask = new Supertask(supertaskName, character, targetCharacterId, bindings);
                 return newTask;
             }
             else
             {
-                Debug.LogError($"Supertask name '{supertaskName}' not found in Viv bindings! Cannot create task for {character.characterName}.");
+                Debug.LogError($"Supertask name '{supertaskName}' not found in Viv bindings!");
                 return null;
             }
         }
@@ -119,6 +120,8 @@ namespace Viv
         [SerializeField] private string name;
         // The list of behaviors associated with the supertask.
         [SerializeField] private List<Behavior> behaviors = new List<Behavior>();
+        // A reference to the VivCharacter that owns this supertask.
+        [System.NonSerialized] private VivCharacter owner;
         // The integer ID of the character engaged in the supertask.
         [SerializeField] private int actingCharacter;
         // The integer ID of the character targeted by the supertask.
@@ -133,10 +136,11 @@ namespace Viv
         private EvaluationState currentState = EvaluationState.Idle;
         private int pendingResponses = 0;
 
-        public Supertask(string name, int actingCharacter, int targetCharacter, CustomDictionary bindings)
+        public Supertask(string name, VivCharacter owner, int targetCharacter, CustomDictionary bindings)
         {
             this.name = name;
-            this.actingCharacter = actingCharacter;
+            this.owner = owner;
+            this.actingCharacter = owner.characterID;
             this.targetCharacter = targetCharacter;
             this.behaviors = this.FormBehaviors(name, bindings);
         }
@@ -151,57 +155,86 @@ namespace Viv
         private List<Behavior> FormBehaviors(string name, CustomDictionary bindings)
         {
             List<Behavior> behaviors = new List<Behavior>();
+
+            // Get the list of behavior names associated with this supertask
             List<string> behaviorNames = bindings.SupertaskDict[name];
 
             foreach (string bname in behaviorNames)
             {
-                Behavior toAdd = new Behavior(bname, actingCharacter, targetCharacter, this, bindings);
+                BehaviorData data = bindings.BehaviorDict[bname];
+                Behavior toAdd = new Behavior(
+                    bname,
+                    this.actingCharacter,
+                    this.targetCharacter,
+                    this,         
+                    data.incompatibleWith,
+                    bindings
+                );
                 behaviors.Add(toAdd);
             }
             return behaviors;
         }
 
-        // A function that dispatches all behaviors that are not built on false assumptions to the ABL agent.
+        // A function that dispatches all suitable behaviors for the VivCharacter to the ABL agent.
         public void SelectAndDispatchBehaviors()
         {
-            // Only proceed if we are in the correct state.
-            if (currentState != EvaluationState.ReadyToDispatch)
+            if (currentState != EvaluationState.ReadyToDispatch) { return; }
+
+            ScoreAllBehaviors();
+
+            // Filter for all logically possible behaviors -- no falsities
+            var possibleBehaviors = new List<Behavior>();
+            for (int i = 0; i < behaviors.Count; i++)
             {
-                Debug.LogWarning($"SelectAndDispatchBehaviors called for '{this.Name}' but it is not in the ReadyToDispatch state.");
+                if (evaluation[i].Falsities == 0)
+                {
+                    possibleBehaviors.Add(behaviors[i]);
+                }
+            }
+
+            if (possibleBehaviors.Count == 0)
+            {
+                Debug.Log("No valid behaviors (all had false assumptions).");
+                currentState = EvaluationState.Idle;
                 return;
             }
 
-            // We must re-score the behaviors now that the assumptions have their real values.
-            ScoreAllBehaviors();
+            // Prioritize the list based on certainty and personality -- first, by highest number of truths (most certain), then by priority (lowest number)
+            var prioritizedList = possibleBehaviors
+                .OrderByDescending(b => ScoreBehavior(b).Truths)
+                .ThenBy(b => owner.persona.GetPriorityFor(b.Name))
+                .ToList();
 
-            // Create a list to hold only the behaviors that pass criteria.
-            var validBehaviors = new List<Behavior>();
-
-            for (int i = 0; i < behaviors.Count; i++)
+            // Filter for compatibility to build the final dispatch list -- some things cannot be done at the same time
+            var dispatchList = new List<Behavior>();
+            foreach (Behavior candidate in prioritizedList)
             {
-                // Core decision-making rule:
-                if (evaluation[i].Falsities == 0)
+                bool isCompatible = true;
+                foreach (Behavior selected in dispatchList)
                 {
-                    validBehaviors.Add(behaviors[i]);
-                    Debug.Log($"Behavior '{behaviors[i].Name}' is valid for dispatch (T/F/U: {evaluation[i].Truths}/{evaluation[i].Falsities}/{evaluation[i].Uncertainties}).");
+                    if (selected.incompatibleWith.Contains(candidate.Name) ||
+                        candidate.incompatibleWith.Contains(selected.Name))
+                    {
+                        isCompatible = false;
+                        break;
+                    }
                 }
-                else
+
+                if (isCompatible)
                 {
-                    Debug.Log($"Behavior '{behaviors[i].Name}' is INVALID for dispatch (T/F/U: {evaluation[i].Truths}/{evaluation[i].Falsities}/{evaluation[i].Uncertainties}).");
+                    dispatchList.Add(candidate);
                 }
             }
 
-            // If there are any valid behaviors, dispatch them.
-            if (validBehaviors.Count > 0)
+            // Dispatch the final set of behaviors
+            if (dispatchList.Count > 0)
             {
-                Debug.Log($"Dispatching {validBehaviors.Count} valid behavior(s) to ABL...");
+                Debug.Log($"<color=magenta>Viv has chosen {dispatchList.Count} compatible behavior(s) to dispatch.</color>");
+                foreach (var b in dispatchList) Debug.Log($" - '{b.Name}' (Priority: {owner.persona.GetPriorityFor(b.Name)}, Truths: {ScoreBehavior(b).Truths})");
 
-                // Create the WME with the necessary parameters.
                 VivWME wme = new VivWME(this.actingCharacter);
-
-                // Create the list of goals to spawn with parameters.
                 List<SpawnGoalData> goalsToSpawn = new List<SpawnGoalData>();
-                foreach (Behavior validBehavior in validBehaviors)
+                foreach (Behavior validBehavior in dispatchList)
                 {
                     goalsToSpawn.Add(new SpawnGoalData
                     {
@@ -212,13 +245,8 @@ namespace Viv
                 }
                 wme.ToSpawn = goalsToSpawn.ToArray();
 
-                // Send the message to the server.
                 ABLMessage msg = wme.ToABLMessage();
                 TCPTestClient.Instance.SendMessage<ABLMessage>(msg);
-            }
-            else
-            {
-                Debug.Log("No valid behaviors to dispatch for this supertask at this time.");
             }
 
             currentState = EvaluationState.Idle;
@@ -261,10 +289,9 @@ namespace Viv
         {
             TFU score = new TFU();
 
-            // Loop directly through the assumptions, not a separate string array.
+            // Loop directly through the assumptions
             foreach (Assumption assumption in behavior.Assumptions)
             {
-                // Use a switch on the enum, which is cleaner and safer.
                 switch (assumption.IsValid)
                 {
                     case Assumption.Validity.YES:
@@ -394,12 +421,15 @@ namespace Viv
         [SerializeField] private List<Assumption> assumptions = new List<Assumption>();
         // The parent supertask of the behavior.
         [SerializeField] private Supertask parentSupertask;
+        [Tooltip("A list of other Behavior names that this behavior cannot run at the same time as.")]
+        public List<string> incompatibleWith;
 
-        public Behavior(string name, int actingCharacter, int targetCharacter, Supertask parent, CustomDictionary bindings)
+        public Behavior(string name, int actingCharacter, int targetCharacter, Supertask parent, List<string> incompatibleWith, CustomDictionary bindings)
         {
             this.name = name;
             this.actingCharacter = actingCharacter;
             this.parentSupertask = parent;
+            this.incompatibleWith = incompatibleWith ?? new List<string>();
             this.assumptions = this.FormAssumptions(name, actingCharacter, targetCharacter, bindings);
         }
 
@@ -408,7 +438,7 @@ namespace Viv
             List<Assumption> assumptions = new List<Assumption>();
 
             // Get the assumption templates from the bindings
-            List<string> assumptionTemplates = bindings.BehaviorDict[name];
+            List<string> assumptionTemplates = bindings.BehaviorDict[name].assumptionTemplates;
 
             // Create the role bindings dict
             var roleBindings = new Dictionary<string, string>();
@@ -554,7 +584,17 @@ namespace Viv
     public class BehaviorBindings
     {
         public string key;
-        public List<string> val;
+        public BehaviorData val;
+    }
+
+    [System.Serializable]
+    public class BehaviorData
+    {
+        [Tooltip("A list of other Behavior names that this behavior cannot run at the same time as.")]
+        public List<string> incompatibleWith;
+
+        [Tooltip("The list of assumption templates required for this behavior to be valid.")]
+        public List<string> assumptionTemplates;
     }
 
     [System.Serializable]

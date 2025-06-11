@@ -26,7 +26,6 @@ public class CalmConfrontationAction : IABLAction
         {
             Debug.Log($"ObserveTargetAction: Could not find target with ID {data.targetId} or name {target.Name}. Falling back to Player tag");
             targetGO = GameObject.FindGameObjectWithTag("Player");
-            return;
         }
 
         if (controller != null && targetGO != null)

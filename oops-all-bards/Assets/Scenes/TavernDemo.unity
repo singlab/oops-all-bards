@@ -16290,6 +16290,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6059823600080305899, guid: fe3f165249544ae4ea103c69ac869a5d,
         type: 3}
+      propertyPath: sensitiveAreaTag
+      value: LocationTrigger_SensitiveArea
+      objectReference: {fileID: 0}
+    - target: {fileID: 6059823600080305899, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
       propertyPath: availableBehaviorComponents.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -16313,6 +16318,12 @@ PrefabInstance:
       propertyPath: availableBehaviorComponents.Array.data[3]
       value: 
       objectReference: {fileID: 696579698}
+    - target: {fileID: 6059823600080305900, guid: fe3f165249544ae4ea103c69ac869a5d,
+        type: 3}
+      propertyPath: persona
+      value: 
+      objectReference: {fileID: 11400000, guid: 8a07b002dca883242ad12b82e9a2f292,
+        type: 2}
     - target: {fileID: 6059823600080305900, guid: fe3f165249544ae4ea103c69ac869a5d,
         type: 3}
       propertyPath: characterID
@@ -19717,27 +19728,43 @@ MonoBehaviour:
   behaviorBindings:
   - key: DuelPlayer
     val:
-    - StrongerThanPlayer
-    - ~InCombat
+      incompatibleWith: []
+      assumptionTemplates: []
   - key: RefuseHelp
     val:
-    - InParty
-    - InCombat
-    - CanHelp
+      incompatibleWith: []
+      assumptionTemplates: []
   - key: investigateSuspiciousActivity
     val:
-    - isSuspiciousOf({self}, {target})
-    - ~shouldAttackPlayerAtMeetingSpot({self})
+      incompatibleWith:
+      - neutralizeThreat
+      - maintainGuildSecrecy
+      assumptionTemplates:
+      - isSuspiciousOf({self}, {target})
+      - ~shouldAttackPlayerAtMeetingSpot({self})
   - key: neutralizeThreat
     val:
-    - shouldAttackPlayerAtMeetingSpot({self})
+      incompatibleWith:
+      - investigateSuspiciousActivity
+      - gatherInformation
+      - maintainGuildSecrecy
+      assumptionTemplates:
+      - shouldAttackPlayerAtMeetingSpot({self})
+      - ~shouldConfrontPlayerInstead({self})
   - key: gatherInformation
     val:
-    - considersPotentialThreat({self}, {target})
-    - ~isSuspiciousOf({self}, {target})
+      incompatibleWith:
+      - neutralizeThreat
+      assumptionTemplates:
+      - ~isSuspiciousOf({self}, {target})
   - key: maintainGuildSecrecy
     val:
-    - shouldConfrontPlayerInstead({self})
+      incompatibleWith:
+      - investigateSuspiciousActivity
+      - neutralizeThreat
+      assumptionTemplates:
+      - shouldConfrontPlayerInstead({self})
+      - ~shouldAttackPlayerAtMeetingSpot({self})
   characterBindings:
   - key: 1
     val: Quinton

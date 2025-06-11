@@ -9,7 +9,7 @@ public class CustomDictionary : MonoBehaviour
     [SerializeField] private List<BehaviorBindings> behaviorBindings = new List<BehaviorBindings>();
     [SerializeField] private List<CharacterBindings> characterBindings = new List<CharacterBindings>();
     private Dictionary<string, List<string>> supertaskDict = new Dictionary<string, List<string>>();
-    private Dictionary<string, List<string>> behaviorDict = new Dictionary<string, List<string>>();
+    private Dictionary<string, BehaviorData> behaviorDict = new Dictionary<string, BehaviorData>();
     private Dictionary<int, string> characterDict = new Dictionary<int, string>();
 
     // Start is called before the first frame update
@@ -38,7 +38,7 @@ public class CustomDictionary : MonoBehaviour
         get { return supertaskDict; }
     }
 
-    public Dictionary<string, List<string>> BehaviorDict
+    public Dictionary<string, BehaviorData> BehaviorDict
     {
         get { return behaviorDict; }
     }

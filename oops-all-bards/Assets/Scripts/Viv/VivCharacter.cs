@@ -14,6 +14,9 @@ namespace Viv
         [SerializeField] private Supertask currentSupertask;
         public Supertask CurrentSupertask => currentSupertask;
 
+        [Header("Viv Persona")]
+        public VivPersona persona;
+
         [Header("AI Components")]
         [Tooltip("The DELP knowledge base asset for this character.")]
         public DELPEntity delpEntity;

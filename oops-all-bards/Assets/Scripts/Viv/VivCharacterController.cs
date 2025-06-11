@@ -17,6 +17,9 @@ public class VivCharacterController : MonoBehaviour
     [Header("Available Behaviors")]
     [Tooltip("Drag ICharacterBehavior components (e.g., MoveBehavior, ObserveBehavior scripts attached to this GameObject) here.")]
     public List<MonoBehaviour> availableBehaviorComponents = new List<MonoBehaviour>(); // Use MonoBehaviour to allow dragging in Inspector
+    private readonly Queue<ActionCommand> commandQueue = new Queue<ActionCommand>();
+    private ActionCommand currentCommand;
+    private bool isIdle = false;
 
     private Dictionary<System.Type, ICharacterBehavior> behaviorMap = new Dictionary<System.Type, ICharacterBehavior>();
     private ICharacterBehavior currentActiveBehavior;
@@ -28,7 +31,7 @@ public class VivCharacterController : MonoBehaviour
 
     // Perception settings might move to an ObserveBehavior component later
     [Header("Perception Settings (for internal use or ObserveBehavior)")]
-    [SerializeField] private string sensitiveAreaTag = "SensitiveArea";
+    [SerializeField] private string sensitiveAreaTag = "LocationTrigger_SensitiveArea";
     [SerializeField] private float observationTriggerCooldown = 5.0f;
     private bool canTriggerObservationEvent = true;
 
@@ -75,27 +78,47 @@ public class VivCharacterController : MonoBehaviour
 
     protected virtual void Update()
     {
-        // Update the active behavior
-        if (currentActiveBehavior != null)
+        // First, check if there's no active command.
+        if (currentCommand.Behavior == null)
         {
-            bool behaviorCompleted = currentActiveBehavior.UpdateBehavior(this);
-            if (behaviorCompleted)
+            // If there's no command, check if there's one waiting in the queue.
+            if (commandQueue.Count > 0)
             {
-                currentActiveBehavior.ExitBehavior(this);
-                Debug.Log($"{vivCharacter.characterName}: Behavior {currentActiveBehavior.GetType().Name} completed.");
+                currentCommand = commandQueue.Dequeue();
+                isIdle = false;
 
-                // Inform ABL that the action corresponding to this behavior is done (via WME update)
-                SignalActionCompletionToABL(currentActiveBehavior.GetType().Name, true);
-
-                currentActiveBehavior = null;
-                SetIdleStateVisuals();
+                Debug.Log($"<color=cyan>Dequeued and starting command: '{currentCommand.Behavior.GetBehaviorName()}'</color>");
+                currentCommand.Behavior.EnterBehavior(this, currentCommand.Target, currentCommand.OptionalData);
+            }
+            else
+            {
+                // The queue is empty and no command is running.
+                if (!isIdle)
+                {
+                    SetIdleStateVisuals();
+                    isIdle = true; // Mark that we are now idle.
+                }
             }
         }
-        else
+        else // A command is currently being executed.
         {
-            // If no active behavior, ensure character is visually idle
-            UpdateAnimatorSpeed();
+            isIdle = false;
+            bool behaviorCompleted = currentCommand.Behavior.UpdateBehavior(this);
+
+            if (behaviorCompleted)
+            {
+                // The behavior has finished. Clean it up.
+                Debug.Log($"Behavior '{currentCommand.Behavior.GetBehaviorName()}' completed.");
+                currentCommand.Behavior.ExitBehavior(this);
+                SignalActionCompletionToABL(currentCommand.Behavior.GetBehaviorName(), true);
+
+                // Clear the current command slot.
+                currentCommand = default;
+            }
         }
+
+        // This can always run, as it just syncs animation to the NavMeshAgent's velocity.
+        UpdateAnimatorSpeed();
     }
 
     // Helper method to get a behavior from the map
@@ -212,8 +235,13 @@ public class VivCharacterController : MonoBehaviour
         ObserveBehavior observeComp = GetBehavior<ObserveBehavior>();
         if (observeComp != null)
         {
-            Debug.Log($"{vivCharacter.characterName}: VCC - Activating ObserveBehavior for target {target?.name}");
-            SetActiveBehavior(observeComp, target, duration);
+            commandQueue.Enqueue(new ActionCommand
+            {
+                Behavior = observeComp,
+                Target = target,
+                OptionalData = duration
+            });
+            Debug.Log("Command 'Observe Target' added to queue.");
         }
     }
 
@@ -222,8 +250,13 @@ public class VivCharacterController : MonoBehaviour
         AggressiveConfrontationBehavior aggroConfrontComp = GetBehavior<AggressiveConfrontationBehavior>();
         if (aggroConfrontComp != null)
         {
-            Debug.Log($"{vivCharacter.characterName}: VCC - Activating AggressiveConfrontationBehavior for target {target?.name}");
-            SetActiveBehavior(aggroConfrontComp, target);
+            commandQueue.Enqueue(new ActionCommand
+            {
+                Behavior = aggroConfrontComp,
+                Target = target,
+                OptionalData = null
+            });
+            Debug.Log("Command 'AggressiveConfrontation' added to queue.");
         }
     }
 
@@ -232,8 +265,13 @@ public class VivCharacterController : MonoBehaviour
         CalmConfrontationBehavior calmConfrontComp = GetBehavior<CalmConfrontationBehavior>();
         if (calmConfrontComp != null)
         {
-            Debug.Log($"{vivCharacter.characterName}: VCC - Activating CalmConfrontationBehavior for target {target?.name}");
-            SetActiveBehavior(calmConfrontComp, target);
+            commandQueue.Enqueue(new ActionCommand
+            {
+                Behavior = calmConfrontComp,
+                Target = target,
+                OptionalData = null
+            });
+            Debug.Log("Command 'MoveToPosition' added to queue.");
         }
     }
 
@@ -242,8 +280,13 @@ public class VivCharacterController : MonoBehaviour
         MoveBehavior moveComp = GetBehavior<MoveBehavior>();
         if (moveComp != null)
         {
-            Debug.Log($"{vivCharacter.characterName}: VCC - Activating MoveBehavior for position {destination}");
-            SetActiveBehavior(moveComp, null, destination);
+            commandQueue.Enqueue(new ActionCommand
+            {
+                Behavior = moveComp,
+                Target = null,
+                OptionalData = destination
+            });
+            Debug.Log("Command 'MoveToPosition' added to queue.");
         }
     }
 
@@ -283,4 +326,12 @@ public class VivCharacterController : MonoBehaviour
     }
     public int GetCharacterID() => vivCharacter.characterID;
     public string GetCharacterName() => vivCharacter.characterName;
+
+    // A private struct to hold a behavior and its startup data
+    private struct ActionCommand
+    {
+        public ICharacterBehavior Behavior;
+        public GameObject Target;
+        public object OptionalData;
+    }
 }
