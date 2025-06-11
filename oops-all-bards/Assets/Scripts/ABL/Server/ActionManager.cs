@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class ActionManager : MonoBehaviour
 {
@@ -23,22 +25,33 @@ public class ActionManager : MonoBehaviour
 
     public void HandleABLResponse(string jsonString)
     {
-        ABLResponse response = JsonUtility.FromJson<ABLResponse>(jsonString);
-        ProcessResponse(response);
+        IncomingABLMessage message = JsonConvert.DeserializeObject<IncomingABLMessage>(jsonString);
+
+        if (message == null || string.IsNullOrEmpty(message.msg))
+        {
+            Debug.LogError("Failed to parse ABL message or message type is empty.");
+            return;
+        }
+
+        // Convert the nested JObject back into a JSON string to pass to our actions.
+        string jsonData = message.data.ToString();
+
+        // The rest of the pipeline remains the same
+        ProcessResponse(message.msg, jsonData);
     }
 
 
     // A function used to parse an ABLResponse for further processing.
-    public void ProcessResponse(ABLResponse response)
+    public void ProcessResponse(string messageType, string jsonData)
     {
-        IABLAction action = ABLActionFactory.CreateAction(response.msg);
+        IABLAction action = ABLActionFactory.CreateAction(messageType);
         if (action != null)
         {
-            // Execute the action on the main thread, to avoid errors.
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
-                action.Execute(response.data);
-                NotifyActionListeners(response.msg, response.data);
+                // Pass the extracted JSON data string to the action
+                action.Execute(jsonData);
+                // The listener system would also be called here
             });
         }
     }
@@ -89,4 +102,12 @@ public class ActionManager : MonoBehaviour
             }
         }
     }
+}
+
+// A temporary class to help parse the top-level message
+public class IncomingABLMessage
+{
+    public string msg;
+    public int code;
+    public JObject data;
 }

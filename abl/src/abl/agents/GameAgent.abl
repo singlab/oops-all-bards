@@ -85,7 +85,7 @@ behaving_entity GameAgent {
 
     sequential behavior investigateSuspiciousActivity(int characterId, int targetId) {
         mental_act { System.out.println("ABL Tactic: Character " + characterId + " is investigating " + targetId); }
-        act moveToPosition(characterId, 10.0f, 0.0f, 25.5f); // Example coordinates
+        act moveToPosition(characterId, 10.0f, 0.0f, 25.5f);
         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Move" status=="Success") }) wait;
         act observeTarget(characterId, targetId, 15.0f);
         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Observe" status=="Success") }) wait;

@@ -7,6 +7,14 @@ public class CalmConfrontationAction : IABLAction
     {
         ConfrontationData data = JsonUtility.FromJson<ConfrontationData>(jsonData);
 
+        if (data == null)
+        {
+            Debug.LogError("CalmConfrontationAction: Received null data.");
+            return;
+        }
+
+        Debug.Log($"CalmConfrontationAction: Executing action for character ID {data.characterId} to confront target ID {data.targetId}.");
+
         VivCharacter vivCharacter = Viv.Viv.Instance.FindVivCharacter(data.characterId);
         VivCharacterController controller = vivCharacter?.Controller;
 
@@ -16,7 +24,8 @@ public class CalmConfrontationAction : IABLAction
         GameObject targetGO = GameObject.Find(target.Name);
         if (target == null || targetGO == null)
         {
-            Debug.LogError($"ObserveTargetAction: Could not find target with ID {data.targetId} or name {target.Name}.");
+            Debug.Log($"ObserveTargetAction: Could not find target with ID {data.targetId} or name {target.Name}. Falling back to Player tag");
+            targetGO = GameObject.FindGameObjectWithTag("Player");
             return;
         }
 

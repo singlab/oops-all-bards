@@ -7,6 +7,14 @@ public class ObserveTargetAction : IABLAction
     {
         ObserveTargetData data = JsonUtility.FromJson<ObserveTargetData>(jsonData);
 
+        if (data == null)
+        {
+            Debug.LogError("ObserveTargetAction: Received null data.");
+            return;
+        }
+
+        Debug.Log($"ObserveTargetAction: Executing action for character ID {data.characterId} to observe target ID {data.targetId} for {data.duration} seconds.");
+
         VivCharacter vivCharacter = Viv.Viv.Instance.FindVivCharacter(data.characterId);
         VivCharacterController controller = vivCharacter?.Controller;
 
@@ -16,7 +24,8 @@ public class ObserveTargetAction : IABLAction
         GameObject targetGO = GameObject.Find(target.Name);
         if (target == null || targetGO == null)
         {
-            Debug.LogError($"ObserveTargetAction: Could not find target with ID {data.targetId} or name {target.Name}.");
+            Debug.Log($"ObserveTargetAction: Could not find target with ID {data.targetId} or name {target.Name}. Falling back to Player tag");
+            targetGO = GameObject.FindGameObjectWithTag("Player");
             return;
         }
 

@@ -395,7 +395,6 @@ namespace Viv
         // The parent supertask of the behavior.
         [SerializeField] private Supertask parentSupertask;
 
-
         public Behavior(string name, int actingCharacter, int targetCharacter, Supertask parent, CustomDictionary bindings)
         {
             this.name = name;
