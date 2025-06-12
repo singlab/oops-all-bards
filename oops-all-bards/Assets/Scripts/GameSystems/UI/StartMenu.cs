@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class StartMenu : MonoBehaviour
 {
-    public BlackFade fader;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +20,7 @@ public class StartMenu : MonoBehaviour
 
     public void PlayGame()
     {
-        fader.FadeToLevel("CharacterCreation");
+        SceneTransitionManager.Instance.TransitionToScene("CharacterCreation", null);
     }
 
     public void QuitGame()

@@ -12342,7 +12342,7 @@ GameObject:
   - component: {fileID: 518614101}
   m_Layer: 0
   m_Name: ToVillage
-  m_TagString: Untagged
+  m_TagString: PlayerSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12359,8 +12359,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4146a28bef892fb4586b5652ff6767ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fader: {fileID: 0}
-  sceneName: VillageSample
+  targetSceneName: VillageSample
+  targetSpawnPointTag: PlayerSpawnPoint
 --- !u!65 &518614102
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39090,6 +39090,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1679764396}
   - component: {fileID: 1679764395}
+  - component: {fileID: 1679764397}
   m_Layer: 0
   m_Name: TavernManager
   m_TagString: Untagged
@@ -39126,6 +39127,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1679764397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679764394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a273790080a8247a793dad154eb935, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1685640319
 PrefabInstance:
   m_ObjectHideFlags: 0

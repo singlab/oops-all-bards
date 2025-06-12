@@ -11894,6 +11894,7 @@ GameObject:
   m_Component:
   - component: {fileID: 433418426}
   - component: {fileID: 433418427}
+  - component: {fileID: 433418428}
   m_Layer: 0
   m_Name: VillageManager
   m_TagString: Untagged
@@ -11930,6 +11931,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpawnPoint: {fileID: 456179130}
   playerCamera: {fileID: 2017151802}
+--- !u!114 &433418428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433418424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a273790080a8247a793dad154eb935, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &435436889
 GameObject:
   m_ObjectHideFlags: 0
@@ -12508,7 +12521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 456179130}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 498.75, y: 3.516, z: 495.882}
+  m_LocalPosition: {x: 496.53, y: 3.91, z: 508.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42318,6 +42331,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tavernVisits: 1
   completedGame: 0
+  previousSceneName: 
+  playerPositionBeforeCombat: {x: 0, y: 0, z: 0}
+  playerRotationBeforeCombat: {x: 0, y: 0, z: 0, w: 0}
   combatants_playerParty: []
   combatants_enemyParty: []
 --- !u!4 &1504326800
@@ -49605,7 +49621,7 @@ GameObject:
   - component: {fileID: 1781374127}
   m_Layer: 0
   m_Name: ToTavern
-  m_TagString: Untagged
+  m_TagString: PlayerSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49622,8 +49638,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4146a28bef892fb4586b5652ff6767ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fader: {fileID: 0}
-  sceneName: TavernDemo
+  targetSceneName: TavernDemo
+  targetSpawnPointTag: PlayerSpawnPoint
 --- !u!65 &1781374128
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -52550,7 +52566,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1622324882}
   m_HandleRect: {fileID: 1622324881}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

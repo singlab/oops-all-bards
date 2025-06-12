@@ -10,6 +10,9 @@ public class DELPEntity : ScriptableObject
     [SerializeField] private List<string> facts;
     [SerializeField] private List<string> strictRules;
     [SerializeField] private List<string> defeasibleRules;
+
+    [System.NonSerialized]
+    private List<string> runtimeAddedFacts = new List<string>();
     private Queue<DELPMessage> preparedData = new Queue<DELPMessage>();
 
     public void AddFact(string fact)
@@ -17,6 +20,7 @@ public class DELPEntity : ScriptableObject
         if (!facts.Contains(fact))
         {
             Debug.Log($"<color=green>[{this.name}] Adding Fact:</color> {fact}");
+            runtimeAddedFacts.Add(fact);
             facts.Add(fact);
             PrepareAndUpdate();
         }
@@ -144,6 +148,26 @@ public class DELPEntity : ScriptableObject
 
         sb.AppendLine("------------------------------------");
         return sb.ToString();
+    }
+
+    public void ClearRuntimeFacts()
+    {
+        if (runtimeAddedFacts == null || runtimeAddedFacts.Count == 0)
+        {
+            Debug.Log($"<color=orange>[{this.name}] No runtime facts to reset.");
+            return;
+        }
+
+        Debug.Log($"<color=orange>[{this.name}] Resetting state. Removing {runtimeAddedFacts.Count} runtime fact(s)...");
+
+        // Remove each runtime-added fact from the main facts list
+        foreach (var factToRemove in runtimeAddedFacts)
+        {
+            facts.Remove(factToRemove);
+        }
+
+        // Clear the tracking list for the next session
+        runtimeAddedFacts.Clear();
     }
 
     public List<string> Facts

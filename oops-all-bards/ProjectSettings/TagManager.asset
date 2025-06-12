@@ -8,6 +8,7 @@ TagManager:
   - Interactable
   - Light
   - LocationTrigger_SensitiveArea
+  - PlayerSpawnPoint
   layers:
   - Default
   - TransparentFX

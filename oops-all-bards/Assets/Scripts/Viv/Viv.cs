@@ -232,6 +232,9 @@ namespace Viv
                 Debug.Log($"<color=magenta>Viv has chosen {dispatchList.Count} compatible behavior(s) to dispatch.</color>");
                 foreach (var b in dispatchList) Debug.Log($" - '{b.Name}' (Priority: {owner.persona.GetPriorityFor(b.Name)}, Truths: {ScoreBehavior(b).Truths})");
 
+                var behaviorNames = dispatchList.Select(b => b.Name).ToList();
+                this.owner.UpdateActiveBehaviors(behaviorNames);
+
                 VivWME wme = new VivWME(this.actingCharacter);
                 List<SpawnGoalData> goalsToSpawn = new List<SpawnGoalData>();
                 foreach (Behavior validBehavior in dispatchList)
@@ -247,6 +250,12 @@ namespace Viv
 
                 ABLMessage msg = wme.ToABLMessage();
                 TCPTestClient.Instance.SendMessage<ABLMessage>(msg);
+            }
+            else
+            {
+                // If no behaviors are dispatched, we can clear the list.
+                this.owner.ActiveBehaviorNames.Clear();
+                Debug.Log("<color=magenta>Viv has determined that there are no valid behaviors to dispatch at this time.");
             }
 
             currentState = EvaluationState.Idle;

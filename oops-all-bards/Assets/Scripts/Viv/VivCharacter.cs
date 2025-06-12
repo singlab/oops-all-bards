@@ -1,5 +1,6 @@
 using UnityEngine;
 using DELP;
+using System.Collections.Generic;
 
 namespace Viv
 {
@@ -10,9 +11,13 @@ namespace Viv
         public string characterName = "DefaultName";
         [Tooltip("Unique ID for this character used by AI systems.")]
         public int characterID = -1;
+        [Tooltip("Path to the prefab for this character in Resources, used for instantiation in the Viv system.")]
+        public string prefabPath;
         [Tooltip("The current supertask assigned to this character.")]
         [SerializeField] private Supertask currentSupertask;
         public Supertask CurrentSupertask => currentSupertask;
+        [Tooltip("List of active behavior names for this character. Used to track behaviors in the Viv system.")]
+        public List<string> ActiveBehaviorNames { get; private set; } = new List<string>();
 
         [Header("Viv Persona")]
         public VivPersona persona;
@@ -115,6 +120,17 @@ namespace Viv
             }
         }
 
+        public void UpdateActiveBehaviors(List<string> newBehaviorNames)
+        {
+            ActiveBehaviorNames.Clear();
+            ActiveBehaviorNames.AddRange(newBehaviorNames);
+        }
+
+        public bool IsRunningBehavior(string behaviorName)
+        {
+            return ActiveBehaviorNames.Contains(behaviorName);
+        }
+
         void OnEnable()
         {
             EventManager.Instance.SubscribeToEvent(EventType.DELP_KnowledgeBaseUpdated, OnKnowledgeBaseUpdated);
@@ -144,6 +160,29 @@ namespace Viv
                 Debug.Log($"Character '{this.characterName}' detected an update to its own knowledge base. Re-evaluating supertask.");
 
                 EvaluateTask();
+            }
+        }
+
+        public void InitializeFromState(PersistentCharacterState state)
+        {
+            Debug.Log($"Re-initializing {this.characterName} from persistent state.");
+
+            if (this.delpEntity != null)
+            {
+                this.delpEntity.ClearRuntimeFacts();
+            }
+
+            // Re-apply runtime facts to the DELPEntity ScriptableObject instance
+            foreach (var fact in state.runtimeFacts)
+            {
+                this.delpEntity.AddFact(fact);
+            }
+
+            // Re-assign the supertask
+            if (!string.IsNullOrEmpty(state.activeSupertaskName))
+            {
+                Supertask myTask = Viv.Instance.CreateSupertaskForCharacter(state.activeSupertaskName, this);
+                this.AssignSupertask(myTask);
             }
         }
     }
