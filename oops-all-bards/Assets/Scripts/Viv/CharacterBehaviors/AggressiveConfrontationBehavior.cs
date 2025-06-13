@@ -104,6 +104,7 @@ public class AggressiveConfrontationBehavior : MonoBehaviour, ICharacterBehavior
         {
             case Phase.Approaching:
                 if (controller.navMeshAgent.enabled) controller.navMeshAgent.updateRotation = true;
+                controller.navMeshAgent.isStopped = false;
                 break;
             case Phase.Yelling:
                 if (controller.navMeshAgent.enabled)

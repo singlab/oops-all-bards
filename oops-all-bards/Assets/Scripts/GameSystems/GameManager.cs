@@ -14,12 +14,13 @@ public class GameManager : MonoBehaviour
     public int tavernVisits = 1;
     public bool completedGame = false;
 
-    // Public fields for combat scene management
+    // Public/private fields for combat scene management
     public string previousSceneName;
     public Vector3 playerPositionBeforeCombat;
     public Quaternion playerRotationBeforeCombat;
     public List<GameObject> combatants_playerParty = new List<GameObject>();
     public List<string> combatants_enemyParty = new List<string>();
+    private List<PersistentCharacterState> charactersInSceneBeforeCombat = new List<PersistentCharacterState>();
 
     // private fields for event management
     private Action<object> checkQueueLambda;
@@ -231,6 +232,17 @@ public class GameManager : MonoBehaviour
 
     public void StartCombatEncounter(List<GameObject> playerUnits, List<string> enemyUnits)
     {
+        charactersInSceneBeforeCombat.Clear();
+
+        IEnumerable<Viv.VivCharacter> allVivCharacters = Viv.Viv.Instance.GetAllRegisteredCharacters();
+
+        Debug.Log($"Found {((List<Viv.VivCharacter>)allVivCharacters).Count} VivCharacters to save before combat.");
+
+        foreach (Viv.VivCharacter character in allVivCharacters)
+        {
+            charactersInSceneBeforeCombat.Add(new PersistentCharacterState(character, SpawnMethod.Instant));
+        }
+
         if (playerUnits == null || playerUnits.Count == 0 || enemyUnits == null || enemyUnits.Count == 0)
         {
             Debug.LogError("StartCombatEncounter called with empty player or enemy units.");
@@ -288,6 +300,53 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        var spawnedCharacters = new List<Viv.VivCharacter>();
+        var characterStates = new List<PersistentCharacterState>(charactersInSceneBeforeCombat);
+        charactersInSceneBeforeCombat.Clear();
+
+        Debug.Log("Spawner Pass 1: Instantiating all characters...");
+        foreach (var charState in characterStates)
+        {
+            GameObject prefab = Resources.Load<GameObject>(charState.prefabResourcePath);
+            if (prefab != null)
+            {
+                GameObject newCharGO = Instantiate(prefab, charState.lastPosition, charState.lastRotation);
+                Viv.VivCharacter newChar = newCharGO.GetComponent<Viv.VivCharacter>();
+                if (newChar != null)
+                {
+                    // Add the newly created character to our temporary list
+                    spawnedCharacters.Add(newChar);
+                }
+            }
+        }
+
+        yield return null;
+
+        Debug.Log("Spawner Pass 2: Initializing state for all characters...");
+        for (int i = 0; i < spawnedCharacters.Count; i++)
+        {
+            spawnedCharacters[i].InitializeFromState(characterStates[i]);
+        }
+
+        Debug.Log($"Returning to world. Re-spawning {charactersInSceneBeforeCombat.Count} VivCharacters.");
+
+        foreach (var charState in charactersInSceneBeforeCombat)
+        {
+            GameObject prefab = Resources.Load<GameObject>(charState.prefabResourcePath);
+            if (prefab != null)
+            {
+                GameObject newCharGO = Instantiate(prefab, charState.lastPosition, charState.lastRotation);
+                Viv.VivCharacter newChar = newCharGO.GetComponent<Viv.VivCharacter>();
+
+                if (newChar != null)
+                {
+                    newChar.InitializeFromState(charState);
+                }
+            }
+        }
+        // Clear the list now that we're done with it.
+        charactersInSceneBeforeCombat.Clear();
+
         // Reposition the player
         TogglePlayerControls();
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -304,5 +363,8 @@ public class GameManager : MonoBehaviour
         playerPositionBeforeCombat = Vector3.zero; // Reset player position
         playerRotationBeforeCombat = Quaternion.identity; // Reset player rotation
         Debug.Log("Player controls re-enabled and combat scene unloaded.");
+        // Check if fame thresholds were crossed AFTER reloading
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        FameManager.Instance.CheckAndTriggerFameThresholds(playerObject, FameManager.Instance.OldFame, FameManager.Instance.CurrentPlayerFame);
     }
 }

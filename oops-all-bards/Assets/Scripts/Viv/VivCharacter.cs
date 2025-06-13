@@ -32,7 +32,6 @@ namespace Viv
         private VivCharacterController characterController;
         public VivCharacterController Controller => characterController;
 
-
         protected virtual void Awake()
         {
             if (characterController == null)
@@ -146,7 +145,7 @@ namespace Viv
             // Unregister when the GameObject is destroyed
             if (Viv.Instance != null && characterID != -1)
             {
-                Viv.UnregisterCharacter(characterID);
+                Viv.UnregisterCharacter(this);
             }
         }
 

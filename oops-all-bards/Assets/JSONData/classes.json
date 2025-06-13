@@ -225,7 +225,7 @@
                     "description": "A basic attack.",
                     "type": 0,
                     "combatType": 1,
-                    "damage": 3,
+                    "damage": 6,
                     "cost": 0,
                     "currentRank": 1,
                     "maxRank": 5,

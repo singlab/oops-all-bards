@@ -16,6 +16,7 @@ public class FameManager : MonoBehaviour
 
     // Runtime fame value - consider saving/loading this data
     private int currentPlayerFame = 0;
+    private int oldFame = 0;
 
     void Awake()
     {
@@ -33,29 +34,21 @@ public class FameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets the player's current Fame score.
-    /// </summary>
-    public int GetCurrentFame()
-    {
-        return currentPlayerFame;
-    }
-
-    /// <summary>
     /// Adds (or removes, if negative) Fame to the player's score and checks thresholds.
     /// Call this method from any system that grants/removes Fame (Combat rewards, Quests, etc.).
     /// </summary>
     /// <param name="amount">The amount of Fame to add (can be negative).</param>
     public void AddFame(int amount, BasePlayer player)
     {
-        int oldFame = player.Fame;
-        int currentPlayerFame = player.Fame += amount;
+        this.oldFame = player.Fame;
+        this.currentPlayerFame = player.Fame += amount;
         currentPlayerFame = Mathf.Max(0, currentPlayerFame); // Ensure non-negative
 
         Debug.Log($"Player Fame changed from {oldFame} to {currentPlayerFame}. Added: {amount}");
 
-        // Check if thresholds were crossed AFTER updating
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        CheckAndTriggerFameThresholds(playerObject, oldFame, currentPlayerFame);
+        // // Check if thresholds were crossed AFTER updating
+        // GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        // CheckAndTriggerFameThresholds(playerObject, oldFame, currentPlayerFame);
 
         // TODO: Save currentPlayerFame to save data if applicable
         // SaveFameData();
@@ -64,7 +57,7 @@ public class FameManager : MonoBehaviour
     /// <summary>
     /// Checks if any defined Fame thresholds were crossed and triggers events.
     /// </summary>
-    private void CheckAndTriggerFameThresholds(GameObject playerObject, int oldFame, int newFame)
+    public void CheckAndTriggerFameThresholds(GameObject playerObject, int oldFame, int newFame)
     {
         // Check for crossing HIGH COMBAT FAME threshold (going up)
         if (oldFame < fameThresholdHighCombat && newFame >= fameThresholdHighCombat)
@@ -92,6 +85,18 @@ public class FameManager : MonoBehaviour
         // {
         //     EventManager.Instance?.TriggerInteraction(playerObject, null, InteractionTypes.ReputationChange, OutcomeStrings.Reputation.Fame_Dropped_Low);
         // }
+    }
+
+    public int OldFame
+    {
+        get { return oldFame; }
+        private set { oldFame = value; }
+    }
+
+    public int CurrentPlayerFame
+    {
+        get { return currentPlayerFame; }
+        private set { currentPlayerFame = value; }
     }
 
     // --- Optional Save/Load Stubs ---

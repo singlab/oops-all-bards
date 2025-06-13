@@ -48,32 +48,44 @@ namespace Viv
             }
         }
 
-        public static void RegisterCharacter(VivCharacter character)
+        public static void RegisterCharacter(VivCharacter newCharacter)
         {
-            // Register the character with the Viv system.
-            if (character.characterID == -1)
+            if (newCharacter == null || newCharacter.characterID == -1)
             {
-                Debug.LogError("VivCharacter ID is not set. Please assign a valid ID.");
+                Debug.LogError("Attempted to register an invalid character.");
                 return;
             }
 
-            if (!characterRegistry.ContainsKey(character.characterID))
+            int id = newCharacter.characterID;
+            if (characterRegistry.TryGetValue(id, out VivCharacter existingCharacter))
             {
-                characterRegistry.Add(character.characterID, character);
-                Debug.Log($"Registered VivCharacter '{character.characterName}' with ID {character.characterID}.");
+                if (existingCharacter != newCharacter)
+                {
+                    Debug.LogWarning($"Duplicate ID {id} detected. Destroying stale character '{existingCharacter.name}' and replacing it with new character '{newCharacter.name}'.");
+                    characterRegistry.Remove(id);
+                    Destroy(existingCharacter.gameObject);
+                }
             }
-            else
-            {
-                Debug.LogWarning($"VivCharacter with ID {character.characterID} is already registered. Please use a unique ID.");
-            }
+            characterRegistry[id] = newCharacter;
+            Debug.Log($"Successfully registered '{newCharacter.characterName}' with ID {id}.");
         }
 
-        public static void UnregisterCharacter(int characterId)
+        public static void UnregisterCharacter(VivCharacter characterToUnregister)
         {
-            if (Instance != null && characterRegistry.ContainsKey(characterId))
+            if (Instance == null || characterToUnregister == null) return;
+
+            int id = characterToUnregister.characterID;
+            if (characterRegistry.TryGetValue(id, out VivCharacter currentlyRegisteredCharacter))
             {
-                characterRegistry.Remove(characterId);
-                Debug.Log($"Unregistered character ID: {characterId}");
+                if (currentlyRegisteredCharacter == characterToUnregister)
+                {
+                    characterRegistry.Remove(id);
+                    Debug.Log($"Unregistered character '{characterToUnregister.characterName}' with ID: {id}");
+                }
+                else
+                {
+                    Debug.Log($"Ignoring unregister request from stale character '{characterToUnregister.name}' because a new character with the same ID is already registered.");
+                }
             }
         }
 
@@ -264,8 +276,18 @@ namespace Viv
         // A function that evaluates the given supertask with respect to its component behaviors.
         public void BeginEvaluation()
         {
-            // Don't start a new evaluation if one is already in progress.
-            if (currentState == EvaluationState.Evaluating) return;
+            if (currentState == EvaluationState.Evaluating)
+            {
+                Debug.LogWarning($"<color=red>Evaluation for '{this.Name}' was interrupted by a new request. Cancelling pending assumptions...</color>");
+
+                foreach (var behavior in behaviors)
+                {
+                    foreach (var assumption in behavior.Assumptions)
+                    {
+                        assumption.CancelValidation();
+                    }
+                }
+            }
 
             Debug.Log($"<color=yellow>Beginning evaluation for Supertask '{this.Name}'...</color>");
             currentState = EvaluationState.Evaluating;
@@ -548,6 +570,12 @@ namespace Viv
             DELPQuery query = new DELPQuery(this.ToString());
             DELPMessage msg = query.PrepareQuery();
             TCPTestClient.Instance.SendMessage<DELPMessage>(msg);
+        }
+
+        // A utility function to cancel the validation of this assumption.
+        public void CancelValidation()
+        {
+            EventManager.Instance.UnsubscribeToEvent(EventType.DelpResponse, onDelpResponse);
         }
 
         private void AssignDELPResponse(object eventData)
