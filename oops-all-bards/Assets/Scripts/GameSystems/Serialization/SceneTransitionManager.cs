@@ -43,6 +43,8 @@ public class SceneTransitionManager : MonoBehaviour
     {
         if (!charactersToCarryOver.Exists(c => c.characterId == character.characterID))
         {
+            Debug.Log($"Carrying character {character.characterName} (ID: {character.characterID}) to next scene with method: {method}, delay: {delay}");
+            
             charactersToCarryOver.Add(new PersistentCharacterState(character, method, delay));
         }
     }

@@ -11,11 +11,24 @@ public class CustomDictionary : MonoBehaviour
     private Dictionary<string, List<string>> supertaskDict = new Dictionary<string, List<string>>();
     private Dictionary<string, BehaviorData> behaviorDict = new Dictionary<string, BehaviorData>();
     private Dictionary<int, string> characterDict = new Dictionary<int, string>();
+    private static CustomDictionary _instance;
+    public static CustomDictionary Instance => _instance;
 
     // Start is called before the first frame update
     void Awake()
     {
-        foreach (var kvp in supertaskBindings) 
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        else if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
+
+        foreach (var kvp in supertaskBindings)
         {
             supertaskDict[kvp.key] = kvp.val;
         }
@@ -29,8 +42,6 @@ public class CustomDictionary : MonoBehaviour
         {
             characterDict[kvp.key] = kvp.val;
         }
-
-        Debug.Log(supertaskDict["SabotagePlayer"]);
     }
 
     public Dictionary<string, List<string>> SupertaskDict

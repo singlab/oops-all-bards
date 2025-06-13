@@ -2,27 +2,43 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Viv;
 using System.Collections;
+using System.Collections.Generic;
+
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using Viv;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterSpawner : MonoBehaviour
 {
+    // A small helper class to temporarily hold a character and its state
+    private class SpawnedCharacterInfo
+    {
+        public VivCharacter CharacterInstance;
+        public PersistentCharacterState CharacterState;
+    }
+
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += LaunchSpawnerCoroutine;
     }
 
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= LaunchSpawnerCoroutine;
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    void LaunchSpawnerCoroutine(Scene scene, LoadSceneMode mode)
     {
-        // Check if the persistent manager exists and has characters to spawn
-        if (SceneTransitionManager.Instance == null || SceneTransitionManager.Instance.charactersToCarryOver.Count == 0)
+        if (SceneTransitionManager.Instance != null && SceneTransitionManager.Instance.charactersToCarryOver.Count > 0)
         {
-            return;
+            StartCoroutine(OnSceneLoadedCoroutine(scene, mode));
         }
+    }
 
+    private IEnumerator OnSceneLoadedCoroutine(Scene scene, LoadSceneMode mode)
+    {
         Debug.Log("Character Spawner detected characters to carry over.");
 
         // Find the spawn point for this transition
@@ -30,58 +46,82 @@ public class CharacterSpawner : MonoBehaviour
         if (spawnPoint == null)
         {
             Debug.LogError($"Cannot find spawn point with tag: {SceneTransitionManager.Instance.targetSpawnPointTag}");
-            return;
+            yield break; // Use yield break to exit a coroutine
         }
 
-        // Spawn and re-initialize each character
-        foreach (var charState in SceneTransitionManager.Instance.charactersToCarryOver)
+        var spawnedCharacterInfos = new List<SpawnedCharacterInfo>();
+        var characterStatesToProcess = new List<PersistentCharacterState>(SceneTransitionManager.Instance.charactersToCarryOver);
+
+        SceneTransitionManager.Instance.charactersToCarryOver.Clear();
+
+        foreach (var charState in characterStatesToProcess)
         {
+            VivCharacter existingChar = Viv.Viv.Instance.FindVivCharacter(charState.characterId);
+            if (existingChar != null)
+            {
+                Destroy(existingChar.gameObject);
+            }
+
+            // Load the prefab from the Resources folder
+            GameObject prefab = Resources.Load<GameObject>(charState.prefabResourcePath);
+            if (prefab == null)
+            {
+                Debug.LogError($"Failed to load character prefab from path: {charState.prefabResourcePath}");
+                continue;
+            }
+
+            GameObject newCharGO = null;
+            VivCharacter newChar = null;
+
             switch (charState.spawnMethod)
             {
                 case SpawnMethod.Instant:
-                    // Spawn immediately
-                    SpawnCharacter(charState, spawnPoint.position, spawnPoint.rotation);
+                    newCharGO = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+                    Debug.Log($"Instantiated {charState.characterName} instantly.");
                     break;
 
                 case SpawnMethod.Delayed:
-                    // Start a coroutine to spawn after a delay
-                    StartCoroutine(SpawnCharacterWithDelay(charState, spawnPoint.position, spawnPoint.rotation));
+                    newCharGO = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+                    newCharGO.SetActive(false); // Start disabled
+                    StartCoroutine(EnableCharacterAfterDelay(newCharGO, charState.spawnDelay, charState.characterName));
+                    Debug.Log($"Instantiated {charState.characterName} (inactive, pending delay).");
                     break;
+            }
 
-                    // case SpawnMethod.FromCover:
-                    // (Future logic to find a cover point and spawn there)
-                    // break;
+            if (newCharGO != null)
+            {
+                newChar = newCharGO.GetComponent<VivCharacter>();
+                if (newChar != null)
+                {
+                    spawnedCharacterInfos.Add(new SpawnedCharacterInfo { CharacterInstance = newChar, CharacterState = charState });
+                }
+                else
+                {
+                    Debug.LogError($"Prefab at {charState.prefabResourcePath} does not have a VivCharacter component.");
+                }
             }
         }
 
-        // Clear the list so these characters don't get re-spawned on the next scene load
-        SceneTransitionManager.Instance.charactersToCarryOver.Clear();
-    }
+        yield return new WaitForEndOfFrame();
 
-    private void SpawnCharacter(PersistentCharacterState charState, Vector3 position, Quaternion rotation)
-    {
-        VivCharacter existingChar = Viv.Viv.Instance.FindVivCharacter(charState.characterId);
-        if (existingChar != null)
+        Debug.Log("Initializing state for newly spawned characters...");
+        foreach (var info in spawnedCharacterInfos)
         {
-            Destroy(existingChar.gameObject);
+            info.CharacterInstance.InitializeFromState(info.CharacterState);
         }
 
-        GameObject prefab = Resources.Load<GameObject>(charState.prefabResourcePath);
-        if (prefab != null)
-        {
-            GameObject newCharGO = Instantiate(prefab, position, rotation);
-            VivCharacter newChar = newCharGO.GetComponent<VivCharacter>();
-            newChar.InitializeFromState(charState);
-            Debug.Log($"Spawned {charState.characterName} instantly.");
-        }
+        Debug.Log("Character spawning and initialization complete.");
     }
 
-    private IEnumerator SpawnCharacterWithDelay(PersistentCharacterState charState, Vector3 position, Quaternion rotation)
+    // Coroutine to handle delayed activation
+    private IEnumerator EnableCharacterAfterDelay(GameObject characterObject, float delay, string characterName)
     {
-        Debug.Log($"Delaying spawn for {charState.characterName} by {charState.spawnDelay} seconds...");
-        yield return new WaitForSeconds(charState.spawnDelay);
-        SpawnCharacter(charState, position, rotation);
-        Debug.Log($"{charState.characterName} spawned after delay.");
+        yield return new WaitForSeconds(delay);
+        if (characterObject != null)
+        {
+            characterObject.SetActive(true);
+            Debug.Log($"{characterName} activated after delay.");
+        }
     }
 }
 

@@ -33,12 +33,12 @@ namespace Viv
         // A character calls this method to get a new instance of a supertask by name.
         public Supertask CreateSupertaskForCharacter(string supertaskName, VivCharacter character)
         {
-            if (bindings.SupertaskDict.ContainsKey(supertaskName))
+            if (CustomDictionary.Instance.SupertaskDict.ContainsKey(supertaskName))
             {
                 int targetCharacterId = 0; // Assuming Player target for now
 
                 // Create a new instance of the Supertask, passing the full 'character' object as the owner.
-                Supertask newTask = new Supertask(supertaskName, character, targetCharacterId, bindings);
+                Supertask newTask = new Supertask(supertaskName, character, targetCharacterId, CustomDictionary.Instance);
                 return newTask;
             }
             else
@@ -142,7 +142,7 @@ namespace Viv
             this.owner = owner;
             this.actingCharacter = owner.characterID;
             this.targetCharacter = targetCharacter;
-            this.behaviors = this.FormBehaviors(name, bindings);
+            this.behaviors = this.FormBehaviors(name, CustomDictionary.Instance);
         }
 
         private VivWME ToVivWME()
@@ -157,18 +157,18 @@ namespace Viv
             List<Behavior> behaviors = new List<Behavior>();
 
             // Get the list of behavior names associated with this supertask
-            List<string> behaviorNames = bindings.SupertaskDict[name];
+            List<string> behaviorNames = CustomDictionary.Instance.SupertaskDict[name];
 
             foreach (string bname in behaviorNames)
             {
-                BehaviorData data = bindings.BehaviorDict[bname];
+                BehaviorData data = CustomDictionary.Instance.BehaviorDict[bname];
                 Behavior toAdd = new Behavior(
                     bname,
                     this.actingCharacter,
                     this.targetCharacter,
                     this,         
                     data.incompatibleWith,
-                    bindings
+                    CustomDictionary.Instance
                 );
                 behaviors.Add(toAdd);
             }
@@ -439,7 +439,7 @@ namespace Viv
             this.actingCharacter = actingCharacter;
             this.parentSupertask = parent;
             this.incompatibleWith = incompatibleWith ?? new List<string>();
-            this.assumptions = this.FormAssumptions(name, actingCharacter, targetCharacter, bindings);
+            this.assumptions = this.FormAssumptions(name, actingCharacter, targetCharacter, CustomDictionary.Instance);
         }
 
         private List<Assumption> FormAssumptions(string name, int actingCharacter, int targetCharacter, CustomDictionary bindings)
@@ -447,7 +447,7 @@ namespace Viv
             List<Assumption> assumptions = new List<Assumption>();
 
             // Get the assumption templates from the bindings
-            List<string> assumptionTemplates = bindings.BehaviorDict[name].assumptionTemplates;
+            List<string> assumptionTemplates = CustomDictionary.Instance.BehaviorDict[name].assumptionTemplates;
 
             // Create the role bindings dict
             var roleBindings = new Dictionary<string, string>();

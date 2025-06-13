@@ -20,6 +20,8 @@ public class KnowledgeUpdater : MonoBehaviour
         handleInteractionLambda = (eventData) => HandleInteraction(eventData);
 
         EventManager.Instance.SubscribeToEvent(EventType.OnInteraction, handleInteractionLambda);
+
+        Debug.Log("KnowledgeUpdater initialized and subscribed to OnInteraction event.");
     }
 
     void OnDestroy()
@@ -32,19 +34,29 @@ public class KnowledgeUpdater : MonoBehaviour
 
     private void HandleInteraction(object eventData)
     {
-        if (vivInstance == null) return;
+        Debug.Log($"KnowledgeUpdater received interaction event: {eventData}");
+        if (vivInstance == null)
+        {
+            Debug.Log("Viv instance is null. Cannot process interaction event.");
+            return;
+        }
 
         Dictionary<string, object> data = eventData as Dictionary<string, object>;
-        if (data == null) { /* Error handling */ return; }
+        if (data == null)
+        {
+            Debug.Log("KnowledgeUpdater received null or invalid event data.");
+            return;
+        }
 
         GameObject actor = data.TryGetValue("actor", out object actorObj) ? actorObj as GameObject : null;
         GameObject target = data.TryGetValue("target", out object targetObj) ? targetObj as GameObject : null;
         string interactionType = data.TryGetValue("interactionType", out object typeObj) ? typeObj as string : null;
         string receivedOutcome = data.TryGetValue("outcome", out object outcomeObj) ? outcomeObj as string : null; // <-- Get the string outcome
+        Debug.Log($"KnowledgeUpdater unpacked interaction: Actor: {actor?.name}, Target: {target?.name}, InteractionType: {interactionType}, Outcome: {receivedOutcome}");
 
         if (actor == null || string.IsNullOrEmpty(interactionType) || string.IsNullOrEmpty(receivedOutcome)) // <-- Check string outcome
         {
-            Debug.LogWarning("KnowledgeUpdater received incomplete interaction data after unpacking.");
+            Debug.Log("KnowledgeUpdater received incomplete interaction data after unpacking.");
             return;
         }
 
@@ -53,10 +65,13 @@ public class KnowledgeUpdater : MonoBehaviour
             if (string.Equals(rule.interactionType, interactionType, System.StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(rule.outcome, receivedOutcome, System.StringComparison.Ordinal))
             {
+                Debug.Log($"KnowledgeUpdater found matching rule: {rule.name} for interactionType: {interactionType}, outcome: {receivedOutcome}");
                 List<VivCharacter> affectedCharacters = GetAffectedCharacters(actor, target, rule);
+                Debug.Log($"KnowledgeUpdater found {affectedCharacters.Count} affected characters for rule: {rule.name}");
 
                 foreach (VivCharacter recipientCharacter in affectedCharacters)
                 {
+                    Debug.Log($"Applying rule '{rule.name}' to recipient: {recipientCharacter.characterName} (ID: {recipientCharacter.characterID})");
                     ApplyRuleToRecipient(actor, target, recipientCharacter, rule);
                 }
             }
@@ -220,6 +235,5 @@ public class KnowledgeUpdater : MonoBehaviour
             }
         }
         return nearby;
-        // Alternative: Iterate through Viv.Instance.GetAllRegisteredCharacters() and check distance.
     }
 }

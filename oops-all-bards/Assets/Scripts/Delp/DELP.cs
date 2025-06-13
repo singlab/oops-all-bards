@@ -22,6 +22,7 @@ namespace DELP
 
         public DELPMessage PrepareQuery()
         {
+            Debug.Log($"Preparing DELP query: {query}");
             string data = JsonUtility.ToJson(this);
             DELPMessage msg = new DELPMessage(4, "delp", data);
             return msg;

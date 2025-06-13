@@ -8,7 +8,9 @@ public class BasePlayer : ITargetable
     [SerializeField] private string name;
     [SerializeField] private int id;
     [SerializeField] private int health;
+    [SerializeField] private int maxHealth;
     [SerializeField] private int flourish;
+    [SerializeField] private int maxFlourish;
     [SerializeField] private int shield;
     [SerializeField] private int elan;
     [SerializeField] private BaseClass playerClass;
@@ -30,7 +32,9 @@ public class BasePlayer : ITargetable
         this.name = "Default";
         this.id = 0;
         this.health = 0;
+        this.maxHealth = health;
         this.flourish = 0;
+        this.maxFlourish = flourish;
         this.shield = 0;
         this.elan = 0;
         this.playerClass = null;
@@ -53,7 +57,9 @@ public class BasePlayer : ITargetable
         this.name = name;
         this.id = id;
         this.health = health;
+        this.maxHealth = health;
         this.flourish = flourish;
+        this.maxFlourish = flourish;
         this.shield = shield;
         this.elan = elan;
         this.playerClass = playerClass;
@@ -87,10 +93,22 @@ public class BasePlayer : ITargetable
         set { this.health = value; }
     }
 
+    public int MaxHealth
+    {
+        get { return this.maxHealth; }
+        set { this.maxHealth = value; }
+    }
+
     public override int Flourish
     {
         get { return this.flourish; }
         set { this.flourish = value; }
+    }
+
+    public int MaxFlourish
+    {
+        get { return this.maxFlourish; }
+        set { this.maxFlourish = value; }
     }
 
     public override int Shield

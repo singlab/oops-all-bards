@@ -91,7 +91,7 @@
             "parallelStages": [],
             "triggersInteractionOnComplete": true,
             "onCompleteInteractionType": "Assist",
-            "onCompleteInteractionOutcome": "Assist_SuccessGuildAlly",
+            "onCompleteInteractionOutcome": "Assist_GuildAllySuccess",
             "onCompleteInteractionTargetName": "Alera"
         }
     ]

@@ -178,12 +178,12 @@ namespace Viv
                 this.delpEntity.AddFact(fact);
             }
 
-            // Re-assign the supertask
-            if (!string.IsNullOrEmpty(state.activeSupertaskName))
-            {
-                Supertask myTask = Viv.Instance.CreateSupertaskForCharacter(state.activeSupertaskName, this);
-                this.AssignSupertask(myTask);
-            }
+            // // Re-assign the supertask
+            // if (!string.IsNullOrEmpty(state.activeSupertaskName))
+            // {
+            //     Supertask myTask = Viv.Instance.CreateSupertaskForCharacter(state.activeSupertaskName, this);
+            //     this.AssignSupertask(myTask);
+            // }
         }
     }
 }

@@ -697,6 +697,11 @@ GameObject:
   - component: {fileID: 6059823600080305900}
   - component: {fileID: 6059823600080305899}
   - component: {fileID: 6059823600080305898}
+  - component: {fileID: 696579695}
+  - component: {fileID: 696579696}
+  - component: {fileID: 696579697}
+  - component: {fileID: 696579698}
+  - component: {fileID: 2437953498590556200}
   m_Layer: 0
   m_Name: Wurguth
   m_TagString: Untagged
@@ -754,7 +759,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Wurguth
-  characterID: -1
+  characterID: 2
+  prefabPath: Prefabs/NPCs/Wurguth/Wurguth
+  currentSupertask:
+    name: 
+    behaviors: []
+    actingCharacter: 0
+    targetCharacter: 0
+    inProgress: 0
+    evaluation: []
+  persona: {fileID: 11400000, guid: 8a07b002dca883242ad12b82e9a2f292, type: 2}
   delpEntity: {fileID: 11400000, guid: d0468b3ecea915944be3f35ae343b5cb, type: 2}
   characterController: {fileID: 6059823600080305899}
 --- !u!114 &6059823600080305899
@@ -769,14 +783,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddec34346dceb714eadd5c2ccd9c9a69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
-  sensitiveAreaTag: SensitiveArea
-  observationTriggerCooldown: 5
-  interactionDistance: 2
-  rotationSpeed: 5
   animator: {fileID: 392451832566252414}
   navMeshAgent: {fileID: 6059823600080305898}
   vivCharacter: {fileID: 6059823600080305900}
+  availableBehaviorComponents:
+  - {fileID: 696579695}
+  - {fileID: 696579696}
+  - {fileID: 696579697}
+  - {fileID: 696579698}
+  interactionDistance: 2
+  rotationSpeed: 5
+  sensitiveAreaTag: LocationTrigger_SensitiveArea
+  observationTriggerCooldown: 5
 --- !u!195 &6059823600080305898
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -799,6 +817,72 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &696579695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6402351363428025278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cac207a89fead38459ba8a55df32197b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueIDToStart: 13
+--- !u!114 &696579696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6402351363428025278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8532cb4c486874428d85aa915081099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueIDToStart: 14
+--- !u!114 &696579697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6402351363428025278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2a75c4d425a6b346ac64ef1e2bb72ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &696579698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6402351363428025278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df841f33983b24242a5e1bf073b8eabb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &2437953498590556200
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6402351363428025278}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6797378013178071826
 GameObject:
   m_ObjectHideFlags: 0
