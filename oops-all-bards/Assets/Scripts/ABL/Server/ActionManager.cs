@@ -51,7 +51,6 @@ public class ActionManager : MonoBehaviour
             {
                 // Pass the extracted JSON data string to the action
                 action.Execute(jsonData);
-                // The listener system would also be called here
             });
         }
     }

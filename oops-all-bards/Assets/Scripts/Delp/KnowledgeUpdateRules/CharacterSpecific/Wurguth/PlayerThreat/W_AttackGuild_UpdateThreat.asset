@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionType: Attack
   outcome: Attack_Success_TargetGuildAffiliated
-  factToAdd: considersConfirmedThreat({self}, {eventActor})
-  factToRemove: considersPotentialThreat({self}, {eventActor})
+  factToAdd: considersConfirmedThreat({self}, {eventActor}).
+  factToRemove: considersPotentialThreat({self}, {eventActor}).
   applicability: 1
   specificCharacterID: 2
   specificFaction: 

@@ -13,6 +13,7 @@ public static class ABLActionFactory
         { "Protect", new ProtectAction() },
         { "RequestAssistance", new RequestAssistanceAction() },
         { "Quip", new QuipAction() },
+        { "moveToTarget", new MoveToTargetAction() },
     };
 
     public static IABLAction CreateAction(string actionName)

@@ -271,7 +271,7 @@ public class VivCharacterController : MonoBehaviour
                 Target = target,
                 OptionalData = null
             });
-            Debug.Log("Command 'MoveToPosition' added to queue.");
+            Debug.Log("Command 'CalmConfrontation' added to queue.");
         }
     }
 
@@ -287,6 +287,21 @@ public class VivCharacterController : MonoBehaviour
                 OptionalData = destination
             });
             Debug.Log("Command 'MoveToPosition' added to queue.");
+        }
+    }
+
+    public virtual void Action_MoveToTarget(GameObject target)
+    {
+        MoveToTargetBehavior moveComp = GetBehavior<MoveToTargetBehavior>();
+        if (moveComp != null)
+        {
+            commandQueue.Enqueue(new ActionCommand
+            {
+                Behavior = moveComp,
+                Target = target,
+                OptionalData = null
+            });
+            Debug.Log($"Command 'MoveToTarget' (Target: {target.name}) added to queue.");
         }
     }
 

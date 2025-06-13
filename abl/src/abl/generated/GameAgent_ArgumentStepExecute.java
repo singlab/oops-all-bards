@@ -51,11 +51,9 @@ public class GameAgent_ArgumentStepExecute {
          }
          case 19: {
             // investigateSuspiciousActivity_1Step2
-            final Object[] args = new Object[4];
+            final Object[] args = new Object[2];
             args[0] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[0]).i);
-            args[1] = new Float(10.0);
-            args[2] = new Float(0.0);
-            args[3] = new Float(25.5);
+            args[1] = new Integer(((__ValueTypes.IntVar)__$behaviorFrame[1]).i);
             return args;
          }
          case 21: {

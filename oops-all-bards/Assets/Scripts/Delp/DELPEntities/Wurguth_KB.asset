@@ -30,7 +30,8 @@ MonoBehaviour:
     alera).
   - ~isHighlySuspiciousOf(wurguth, player) -< playerHelped(player, alera), isAlly(wurguth,
     alera).
-  - shouldAttackPlayerAtMeetingSpot(wurguth) -< isHighlySuspiciousOf(wurguth, player).
-  - shouldConfrontPlayerInstead(wurguth) -< considersPotentialThreat(wurguth, player),
-    ~isSuspiciousOf(wurguth, player), ~isHighlySuspiciousOf(wurguth, player).
+  - shouldAttackPlayerAtMeetingSpot(wurguth) -< considersPotentialThreat(wurguth,
+    player), isHighlySuspiciousOf(wurguth, player).
+  - shouldConfrontPlayerInstead(wurguth) -< ~isSuspiciousOf(wurguth, player), ~isHighlySuspiciousOf(wurguth,
+    player).
   - ~shouldAttackPlayerAtMeetingSpot(wurguth) -< shouldConfrontPlayerInstead(wurguth).

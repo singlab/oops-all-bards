@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionType: Assist
   outcome: Assist_GuildAllySuccess
-  factToAdd: playerHelped({eventActor}, {eventTarget})
+  factToAdd: playerHelped({eventActor}, {eventTarget}).
   factToRemove: 
   applicability: 1
   specificCharacterID: 2

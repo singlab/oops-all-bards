@@ -21,6 +21,12 @@ public class MoveToPositionData : ActionEventData
     public float z;
 }
 
+[System.Serializable]
+public class MoveToTargetData : ActionEventData
+{
+    public int targetId;
+}
+
 [Serializable]
 public class ProtectData : ActionEventData
 {

@@ -36,7 +36,6 @@ public class CalmConfrontationBehavior : MonoBehaviour, ICharacterBehavior
         {
             TransitionPhase(Phase.MovingToTarget);
             controller.navMeshAgent.SetDestination(confrontTarget.transform.position);
-            controller.animator.SetFloat("Speed", 1f); // Indicate movement
         }
         else
         {
@@ -60,7 +59,6 @@ public class CalmConfrontationBehavior : MonoBehaviour, ICharacterBehavior
         {
             case Phase.MovingToTarget:
                 controller.FaceTarget(confrontTarget); // Face while approaching
-                // NavMeshAgent speed will be set by controller's UpdateAnimatorSpeed
                 if (!controller.navMeshAgent.pathPending && controller.navMeshAgent.remainingDistance <= controller.navMeshAgent.stoppingDistance)
                 {
                     if (!controller.navMeshAgent.hasPath || controller.navMeshAgent.velocity.sqrMagnitude < 0.1f)
@@ -74,8 +72,6 @@ public class CalmConfrontationBehavior : MonoBehaviour, ICharacterBehavior
             case Phase.InDialogue:
                 controller.FaceTarget(confrontTarget);
                 controller.animator.SetFloat("Speed", 0f); // Ensure stationary for dialogue
-                // Dialogue was started in TransitionPhase or EnterBehavior.
-                // Now, just wait for it to end.
                 if (DialogueManager.Instance != null && !DialogueManager.Instance.isInDialogue)
                 {
                     Debug.Log($"{controller.GetCharacterName()}: Calm confrontation dialogue with {confrontTarget.name} finished.");
@@ -111,6 +107,7 @@ public class CalmConfrontationBehavior : MonoBehaviour, ICharacterBehavior
         {
             case Phase.MovingToTarget:
                 if (controller.navMeshAgent.enabled) controller.navMeshAgent.updateRotation = true;
+                controller.navMeshAgent.isStopped = false;
                 break;
             case Phase.InDialogue:
                 if (controller.navMeshAgent.enabled && controller.navMeshAgent.isOnNavMesh) controller.navMeshAgent.ResetPath(); // Stop movement

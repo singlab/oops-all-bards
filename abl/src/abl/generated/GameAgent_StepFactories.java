@@ -108,7 +108,7 @@ public class GameAgent_StepFactories {
          }
          case 19: {
             // investigateSuspiciousActivity_1Step2
-            return new PrimitiveStepDebug(19, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, new MoveToPosition(), null, "moveToPosition");
+            return new PrimitiveStepDebug(19, __$stepFactory, __$behaviorParent, false, false, false, false, false, false, (short)-32768, (short)0, false, null, GameAgent.__$argumentExecute0_rfield, null, null, null, new MoveToTarget(), null, "moveToTarget");
          }
          case 20: {
             // investigateSuspiciousActivity_1Step3

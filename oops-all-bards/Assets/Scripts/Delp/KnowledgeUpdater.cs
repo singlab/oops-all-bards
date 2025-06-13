@@ -186,6 +186,16 @@ public class KnowledgeUpdater : MonoBehaviour
     // Process fact string.
     private string ProcessFactString(GameObject eventActor, GameObject eventTarget, VivCharacter recipient, string factTemplate)
     {
+        // HACK: Preprocess eventActor and eventTarget gameobjects -- if either tagged as "Player", use the name "player" instead of the actual name.
+        if (eventActor != null && eventActor.CompareTag("Player"))
+        {
+            eventActor.name = "player";
+        }
+        if (eventTarget != null && eventTarget.CompareTag("Player"))
+        {
+            eventTarget.name = "player";
+        }
+        
         if (string.IsNullOrEmpty(factTemplate) || recipient == null)
         {
             Debug.LogWarning("ProcessFactString: Null factTemplate or recipient.");
@@ -195,13 +205,13 @@ public class KnowledgeUpdater : MonoBehaviour
         string processedFact = factTemplate;
 
         // 1. Replace "{self}" with the recipient's identifier
-        processedFact = processedFact.Replace("{self}", recipient.characterName);
+        processedFact = processedFact.Replace("{self}", recipient.characterName.ToLower());
 
         // 2. Replace "{eventActor}"
         if (eventActor != null)
         {
             VivCharacter evActorVivChar = eventActor.GetComponent<VivCharacter>();
-            processedFact = processedFact.Replace("{eventActor}", evActorVivChar?.characterName ?? eventActor.name);
+            processedFact = processedFact.Replace("{eventActor}", evActorVivChar?.characterName.ToLower() ?? eventActor.name.ToLower());
         }
         else
         {
@@ -212,7 +222,7 @@ public class KnowledgeUpdater : MonoBehaviour
         if (eventTarget != null)
         {
             VivCharacter evTargetVivChar = eventTarget.GetComponent<VivCharacter>();
-            processedFact = processedFact.Replace("{eventTarget}", evTargetVivChar?.characterName ?? eventTarget.name);
+            processedFact = processedFact.Replace("{eventTarget}", evTargetVivChar?.characterName.ToLower() ?? eventTarget.name.ToLower());
         }
         else
         {

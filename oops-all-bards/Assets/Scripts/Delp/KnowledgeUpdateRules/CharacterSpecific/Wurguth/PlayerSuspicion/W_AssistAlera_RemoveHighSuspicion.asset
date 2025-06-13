@@ -15,7 +15,7 @@ MonoBehaviour:
   interactionType: Assist
   outcome: Assist_GuildAllySuccess
   factToAdd: 
-  factToRemove: isHighlySuspiciousOf({self}, {eventActor})
+  factToRemove: isHighlySuspiciousOf({self}, {eventActor}).
   applicability: 1
   specificCharacterID: 2
   specificFaction: 

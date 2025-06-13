@@ -1,3 +1,4 @@
+// Place this in your abl.actions package
 package abl.actions;
 
 import org.json.simple.JSONObject;
@@ -5,30 +6,23 @@ import server.Message;
 import server.TCPServer;
 
 /**
- * Triggers the MoveBehavior on a character in Unity.
+ * Triggers a character to move towards a specific target entity in Unity.
  * Args:
- * [0] - int characterId
- * [1] - float x
- * [2] - float y
- * [3] - float z
+ * [0] - int characterId (the actor)
+ * [1] - int targetId (the entity to move towards)
  */
-public class MoveToPosition extends BaseAction {
+public class MoveToTarget extends BaseAction {
 
     @Override
     public void execute(Object[] args) {
         int characterId = (int) args[0];
-        float x = ((Number) args[1]).floatValue();
-        float y = ((Number) args[2]).floatValue();
-        float z = ((Number) args[3]).floatValue();
-
+        int targetId = (int) args[1];
         int code = 2;
-        String msg = "moveToPosition";
+        String msg = "moveToTarget";
 
         JSONObject data = new JSONObject();
         data.put("characterId", characterId);
-        data.put("x", x);
-        data.put("y", y);
-        data.put("z", z);
+        data.put("targetId", targetId);
 
         Message toSend = new Message(code, msg, data);
         JSONObject jo = toSend.toJSON();

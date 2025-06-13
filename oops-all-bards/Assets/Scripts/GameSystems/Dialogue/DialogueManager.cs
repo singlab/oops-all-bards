@@ -86,6 +86,12 @@ public class DialogueManager : MonoBehaviour
 
         string npcNameFromDialogue = dialogue.SpeakerName;
         currentSpeaker_eventActor = GameObject.Find(npcNameFromDialogue);
+        // If NPC name is not found, try to find the name+"(Clone)" variant
+        if (currentSpeaker_eventActor == null)
+        {
+            currentSpeaker_eventActor = GameObject.Find(npcNameFromDialogue + "(Clone)");
+        }
+        // If still not found, log an error
         if (currentSpeaker_eventActor == null)
         {
             Debug.LogError($"DialogueManager: NPC GameObject named '{npcNameFromDialogue}' (from dialogue.SpeakerName) not found. Cannot set as speaker for event triggering.");
@@ -93,6 +99,10 @@ public class DialogueManager : MonoBehaviour
 
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         GameObject npcObject = GameObject.Find(dialogue.SpeakerName); // This is the NPC whose dialogue it is
+        if (npcObject == null)
+        {
+            npcObject = GameObject.Find(dialogue.SpeakerName + "(Clone)"); // Check for "(Clone)" variant
+        }
 
         if (playerObject != null && npcObject != null)
         {

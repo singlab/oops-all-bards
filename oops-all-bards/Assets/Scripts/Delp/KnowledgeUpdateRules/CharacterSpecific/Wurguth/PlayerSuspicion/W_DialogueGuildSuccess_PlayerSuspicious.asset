@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionType: Dialogue
   outcome: Dialogue_GuildInfoSuccess
-  factToAdd: isSuspiciousOf({self}, {eventActor})
+  factToAdd: isSuspiciousOf({self}, {eventActor}).
   factToRemove: 
   applicability: 1
   specificCharacterID: 2

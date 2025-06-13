@@ -154,11 +154,11 @@ public class DELPEntity : ScriptableObject
     {
         if (runtimeAddedFacts == null || runtimeAddedFacts.Count == 0)
         {
-            Debug.Log($"<color=orange>[{this.name}] No runtime facts to reset.");
+            Debug.Log($"<color=orange>[{this.name}] No runtime facts to reset.</color>");
             return;
         }
 
-        Debug.Log($"<color=orange>[{this.name}] Resetting state. Removing {runtimeAddedFacts.Count} runtime fact(s)...");
+        Debug.Log($"<color=orange>[{this.name}] Resetting state. Removing {runtimeAddedFacts.Count} runtime fact(s)...</color>");
 
         // Remove each runtime-added fact from the main facts list
         foreach (var factToRemove in runtimeAddedFacts)

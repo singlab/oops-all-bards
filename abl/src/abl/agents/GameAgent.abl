@@ -11,6 +11,7 @@ behaving_entity GameAgent {
     
 	// Register all low-level physical acts that map to ICharacterBehaviors in Unity.
     register act moveToPosition(int, float, float, float) with MoveToPosition;
+    register act moveToTarget(int, int) with MoveToTarget;
     register act observeTarget(int, int, float) with ObserveTarget;
     register act calmConfrontation(int, int) with CalmConfrontation;
     register act aggressiveConfrontation(int, int) with AggressiveConfrontation;
@@ -85,7 +86,7 @@ behaving_entity GameAgent {
 
     sequential behavior investigateSuspiciousActivity(int characterId, int targetId) {
         mental_act { System.out.println("ABL Tactic: Character " + characterId + " is investigating " + targetId); }
-        act moveToPosition(characterId, 10.0f, 0.0f, 25.5f);
+        act moveToTarget(characterId, targetId);
         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Move" status=="Success") }) wait;
         act observeTarget(characterId, targetId, 15.0f);
         with(success_test { (BehaviorStatusWME characterID==characterId behaviorName=="Observe" status=="Success") }) wait;

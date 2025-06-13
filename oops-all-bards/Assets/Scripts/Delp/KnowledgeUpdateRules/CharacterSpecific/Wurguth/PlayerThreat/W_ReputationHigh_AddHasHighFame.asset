@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionType: ReputationChange
   outcome: Reputation_Fame_High_Combat
-  factToAdd: hasHighFame({eventActor})
+  factToAdd: hasHighFame({eventActor}).
   factToRemove: 
   applicability: 1
   specificCharacterID: 2
